@@ -1,0 +1,140 @@
+<template>
+  <div class="data-storage">
+    <chain-header title="数据存管域管理" :btn="true" />
+    <div class="bg-white padding">
+      <div class="section-title clear">
+        <span>数据存管域列表</span>
+        <div class="fr float-right" style="margin-top: -5px;">
+          <Button type="primary">创建新域</Button>
+          <Button type="primary" style="margin-left: 24px;">连接现有域</Button>
+        </div>
+      </div>
+      <div>
+        <Table :columns="columns1" :data="data1"></Table>
+      </div>
+      <div class="page">
+        <div class="page-inner">
+          <Page :total="total" @on-change="pageChange" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    var that = this
+    var columns1 = [
+      {
+        title: "数据存管域名称",
+        key: "name",
+        width: 140,
+      },
+      {
+        title: "数据存管域唯一标识",
+        key: "id"
+      },
+      {
+        title: "创建时间",
+        key: "time"
+      },
+      {
+        title: "最大许可存储容量",
+        key: "maxstorage"
+      },
+      {
+        title: '状态',
+        key: 'status',
+        width: 120
+      },
+      {
+        title:'操作',
+        render(h,p) {
+          var index = p.index
+          var row = p.row || {}
+          var type = row.type
+          var opt1 = h('a', {
+            on: {
+              click() {
+                that.data1.splice(index,1)
+              }
+            }
+          }, '断开联接')
+          var opt2 = h('a', {
+            on: {
+              click() {
+                var index = p.index
+                that.$router.push({
+                  name: 'data-detail',
+                  query: {
+                    mainActive: 'data',
+                    activeIndex: '1',
+                    subActive: 'data-detail'
+                  }
+                })
+              }
+            }
+          }, '详情')
+          var opt3 = h('a', {
+            on: {
+              click() {
+                var index = p.index
+                
+              }
+            }
+          }, '删除')
+          var opts = [opt1]
+          switch (type) {
+            case '1':
+              opts.push(opt2)
+              break;
+            case '2':
+              opts.push(opt2)
+              opts.push(opt3)
+              break;
+            default:
+              break;
+          }
+          return h('div',{
+            'class': 'opt-btns'
+          },opts)
+        }
+        
+      }
+    ];
+    var data1 = [
+      { name: '泛融存管域', id: '00740f...bdca2', time: '2020-1-5 15:34:57', maxstorage: '5.0TB',status: '删除审核中', type: '0'},
+      { name: '从法存管域', id: '00740f...facb7', time: '2020-1-5 10:21:32', maxstorage: '5.0TB',status: '运行', type: '1'},
+      { name: '金融共享域', id: '00740f...ccbb3', time: '2020-1-5 12:34:04', maxstorage: '5.0TB',status: '停运', type: '2'},
+    ];
+    return {
+      columns1, 
+      data1,
+      total: 103
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  watch: {
+
+  },
+  computed: {
+
+  },
+  methods: {
+    init() {
+
+    },
+    pageChange(value) {
+      
+    } 
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  
+</style>

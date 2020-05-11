@@ -1,0 +1,126 @@
+<template>
+  <div class="admin-header">
+    <div class="header-inner clear">
+      <div class="header-left">
+        <img src="~@/assets/logo_text.png" @click="route('/')">
+      </div>
+      <!-- <div class="header-right">
+        <div><i class="icon-message"></i><span>消息</span></div>
+        <div><i class="icon-user"></i><span>{{user}}</span></div>
+      </div> -->
+      <div class="header-center">
+        <!-- <Input search placeholder="搜索" clearable /> -->
+      </div>
+      <div class="header-right">
+        <div class="badge">
+          <Badge dot>
+            <a href="#" class="demo-badge">
+              <Icon type="ios-notifications-outline" />
+            </a>
+          </Badge>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      user: '0x8fada****d2ab3e'
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+
+    },
+    route(path='home') {
+      this.$router.push({
+        path
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .admin-header {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 100px;
+    overflow: hidden;
+    height: 70px;
+  }
+  .header-inner {
+    // border: 1px solid #F6F6F6;
+  }
+  .header-left {
+    padding: 16px 40px;
+    float: left;
+    width: 251px;
+    border-right: 1px solid #F5F6F9;
+    img {
+      display: block;
+      width: 130px;
+      margin: 4px auto;
+    }
+  }
+  .header-center {
+    float: left;
+    width: 35%;
+    padding: 20px;
+    .ivu-input {
+    }
+  }
+  // .header-right {
+  //   float: right;
+  //   & > div {
+  //     line-height: 42px;
+  //     display: inline-block;
+  //     font-weight: 500;
+  //     margin-left: 40px;
+  //     vertical-align: middle;
+  //     cursor: pointer;
+  //     &:hover {
+  //       color: #356BDB;
+  //     }
+  //     i {
+  //       display: inline-block;
+  //       vertical-align: middle;
+  //       width: 24px;
+  //       height: 24px;
+  //       background-size: 100% 100%;
+  //       background-position: center;
+  //       margin-right: 6px;
+  //     }
+  //     .icon-message {
+  //       background-image: url(~@/assets/icon/note.png);
+  //     }
+  //     .icon-user {
+  //       background-image: url(~@/assets/icon/user.png);
+  //     }
+  //   }
+  // }
+  .header-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    padding: 0 32px;
+    border-left: 1px solid #F5F6F9;
+    .badge {
+      padding-top: 25px;
+      .ivu-icon {
+        font-size: 24px;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,236 @@
+.admin-main {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background: #F5F6F9;
+  overflow: hidden;
+}
+.admin-content-inner {
+  color: #131313;
+}
+.split-line {
+  height: 1px;
+  background-color: #F0F0F0;
+  margin: 10px 0;
+}
+.side-bar {
+  width: 250px;
+  height: 100%;
+  background: #fff;
+  position: absolute;
+  top: 1px;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  overflow: auto;
+}
+.admin-content {
+  // background: #fff;
+  position: absolute;
+  left: 276px;
+  right: 0;
+  padding-right: 20px;
+  top: 25px;
+  bottom: 16px;
+  margin: auto;
+  overflow: auto;
+}
+.audit-title {
+  font-size: 22px;
+  color: #273D52;
+}
+.content-title {
+  font-size: 22px;
+  height: 22px;
+  line-height: 20px;
+  color: #273D52;
+  margin-bottom: 13px;
+}
+// 链实例
+.chain-baseinfo {
+  color: #464545;
+  margin-bottom: 30px;
+  .fl {
+    width: 50%;
+  }
+}
+.chain-info-left {
+  
+}
+.chain-info-right {
+  .chain-content {
+    float: left;
+    width: 49%;
+    margin-right: 2%;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+.chain-content {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  .chain-content-item .ivu-col {
+    p {
+      color: #759BFA;
+      font-size: 28px;
+      line-height: 1.5em;
+    }
+    div {
+      color: #273D52;
+      line-height: 1.5em;
+      font-size: 13px;
+    }
+  }
+}
+.sub-content-title {
+  color: #273D52;
+  font-weight: 600;
+  padding: 4px 0;
+}
+.chain-content-item {
+  padding-top: 30px;
+  color: #464545;
+  text-align: center;
+  span {
+    font-size: 20px;
+    margin-left: 4px;
+  }
+  .ivu-col {
+    position: relative;
+    &:not(:last-child) {
+      border-right: 1px solid #EEEFF1;
+    }
+  }
+}
+
+.opt-input {
+  textarea {
+    background: #F5F6F9;
+  }
+}
+.section-title {
+  color: #273D52;
+  margin-bottom: 25px;
+  span {
+    font-weight: 600;
+  }
+}
+.opt-btns {
+  a {
+    margin-right: 10px;
+  }
+}
+.condition-item {
+  display: flex;
+  padding: 10px 10px 20px 0;
+  position: relative;
+  .condition-label {
+    float: left;
+    vertical-align: middle;
+    line-height: 32px;
+  }
+  .ivu-input-wrapper {
+    width: 50%;
+  }
+  .ivu-select {
+    width: 60%;
+  }
+}
+.data-tips {
+  color: #A2A2A2;
+  font-size: 13px;
+  line-height: 2.5em;
+}
+
+// 审核
+.tab-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  .tab-item {
+    button {
+      display: inline-block;
+      padding: 0 16px;
+      height:38px;
+      background:rgba(255,255,255,1);
+      border-radius:2px;
+      border:1px solid rgba(245,245,245,1);
+      outline: none;
+      color: #2D8cF0;
+      transition: .3s;
+      border-radius: 4px;
+    }
+    &.active {
+      button {
+        background: #2D8cF0;
+        color: #fff;
+        font-weight: 500;
+      }
+    }
+  }
+}
+.change-notice div{
+  padding-top: 10px;
+}
+.audit {
+  .content-title {
+    font-size: 17px;
+    color: #273D52;
+  }
+}
+// 审核
+.audit-item-content {
+  padding: 10px;
+  border: 1px dashed #F3A320;
+  margin: 10px 0 30px 0;
+  color: #434445;
+  p {
+    color: #F5A623;
+    font-weight: 500;
+  }
+  div {
+    &:after {
+      content: '';
+      display: block;
+      height: 0;
+      clear: both;
+    }
+    padding-top: 8px;
+    span {
+      float: right;
+    }
+  }
+}
+.audit-item-btns {
+  &:after {
+    content: '';
+    display: block;
+    height: 0;
+    clear: both;
+  }
+  .btn-inner {
+    float: right;
+    button {
+      border: 0;
+      width:137px;
+      height:30px;
+      border-radius:4px;
+      color: #fff;
+      box-shadow: 0;
+      outline: none;
+      margin-left: 24px;
+    }
+    .refuse-btn {
+      background:rgba(233,92,109,1);
+    }
+    .agree-btn {
+      background:rgba(134,211,88,1);
+    }
+  }
+}
