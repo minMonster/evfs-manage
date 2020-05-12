@@ -2,7 +2,7 @@
   <div class="business-detail">
     <data-header title="业务域详情"/>
     <div class="business-detail-item">
-      <div class="section-title"><span>业务域信息</span></div>
+      <div class="section-title" style="margin-bottom: 4px;"><span>业务域信息</span></div>
       <div>
         <Row>
           <Col :span="8">
@@ -30,54 +30,54 @@
         </Row>
       </div>
     </div>
-    <div class="business-detail-item">
-      <div class="section-title"><span>业务域运营信息</span></div>
-      <div>
-        <Row>
-          <Col :span="8">
-            <div>占用存储容量：5.00 TB</div>
-          </Col>
-          <Col :span="8">
-            <div>域内合约数量：5</div>
-          </Col>
-          <Col :span="8">
-            <div>业务系统数量：3</div>
-          </Col>
-        </Row>
-        <Row>
-          <Col :span="8">
-            <div>接入企业数量：3</div>
-          </Col>
-          <Col :span="8">
-            <div>接入用户数量：100</div>
-          </Col>
-        </Row>
-      </div>
-    </div>
-    <div class="business-detail-item">
+    <div class="business-detail-item padding bg-white mb20" style="margin-top: 20px;">
       <div class="section-title"><span>域内文件操作规则信息</span></div>
       <div>
-        <Row>
+        <Row style="color: #000;">
           <Col :span="8">
-            <div>占用存储容量：5.00 TB</div>
+            <div>允许信息监管：<a href="javascript:;">允许</a></div>
           </Col>
           <Col :span="8">
-            <div>域内合约数量：5</div>
+            <div>允许文件删除：<a href="javascript:;">允许</a></div>
           </Col>
           <Col :span="8">
-            <div>业务系统数量：3</div>
-          </Col>
-        </Row>
-        <Row>
-          <Col :span="8">
-            <div>接入企业数量：3</div>
-          </Col>
-          <Col :span="8">
-            <div>接入用户数量：100</div>
+            <div>允许任何人域内保存文件：<a href="javascript:;">允许</a></div>
           </Col>
         </Row>
       </div>
     </div>
+    <div class="business-detail-item">
+      <div class="chain-content-item">
+        <div class="section-title bg-white" style="margin-bottom: 0; padding-bottom: 10px;text-align: left;padding-top: 24px;padding-left: 24px;"><span>业务域运营信息</span></div>
+        <div>
+          <Row class="bg-white" style="margin-bottom: 10px; padding: 20px 0;">
+            <Col :span="8">
+              <p><span>5.00 TB</span></p>
+              <div>占用存储容量</div>
+            </Col>
+            <Col :span="8">
+              <p><span>5</span></p>
+              <div>域内合约数量</div>
+            </Col>
+            <Col :span="8">
+              <p><span>3</span></p>
+              <div>业务系统数量</div>
+            </Col>
+          </Row>
+          <Row class="bg-white" style="padding: 20px 0;">
+            <Col :span="8">
+              <p><span>3</span></p>
+              <div>接入企业数量</div>
+            </Col>
+            <Col :span="8">
+              <p><span>100</span></p>
+              <div>接入用户数量</div>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </div>
+    
   </div>
 </template>
 
@@ -104,9 +104,5 @@ export default {
 <style lang="less" >
   .business-detail-item {
     color: #7D8B97;
-    line-height: 2em;
-    .section-title {
-      margin: 30px 0 10px 0;
-    }
   }
 </style>

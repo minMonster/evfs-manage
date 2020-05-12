@@ -1,7 +1,7 @@
 <template>
   <div class="clear chain-baseinfo">
     <h2 class="content-title">{{title}}
-      <Button v-if="btn" @click="route" type="primary" style="float: right;margin-top: 30px;">待审核事项</Button>
+      <Button v-if="btn" @click="route" type="primary">待审核事项</Button>
     </h2>
     <Row class="chain-header-content">
       <Col span="8">
@@ -67,8 +67,11 @@ export default {
     color: #7D8B97;
   }
   .chain-baseinfo {
+    position: relative;
     .ivu-btn {
-      position: relative;
+      position: absolute;
+      right: 10px;
+      bottom: -3px;
       z-index: 2;
     }
   }

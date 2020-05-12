@@ -8,7 +8,7 @@
         <div class="tab-item" v-for="item in tabs" :key="item.name" :class="{active: active == item.name}"
           @click="changeTab(item.name)"
         >
-          <Badge :count="item.count">
+          <Badge :dot="item.count > 0">
               <button>{{item.text}}</button>
           </Badge>
         </div>

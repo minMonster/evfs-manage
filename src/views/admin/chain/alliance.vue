@@ -64,16 +64,16 @@
             </Col>
             <Col span="6">
               <div class="condition-item">
-                <Button style="width: 100px;" type="primary">查询</Button>
+                <Button style="width: 80px;" type="primary">查询</Button>
               </div>
             </Col>
           </Row>
         </div>
         <Table :columns="columns1" :data="data1"></Table>
-      </div>
-      <div class="page">
-        <div class="page-inner">
-          <Page :total="total" @on-change="pageChange"/>
+        <div class="page">
+          <div class="page-inner">
+            <Page :total="total" @on-change="pageChange"/>
+          </div>
         </div>
       </div>
       <Modal

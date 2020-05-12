@@ -13,11 +13,9 @@
       </div>
       <div class="header-right">
         <div class="badge">
-          <Badge dot>
-            <a href="#" class="demo-badge">
-              <Icon type="ios-notifications-outline" />
-            </a>
-          </Badge>
+          <a href="#" class="demo-badge">
+            <img src="~@/assets/alarm.png" alt="">
+          </a>
         </div>
       </div>
     </div>
@@ -68,8 +66,8 @@ export default {
     border-right: 1px solid #F5F6F9;
     img {
       display: block;
-      width: 130px;
-      margin: 4px auto;
+      width: 154px;
+      margin: 2px auto;
     }
   }
   .header-center {
@@ -117,9 +115,9 @@ export default {
     padding: 0 32px;
     border-left: 1px solid #F5F6F9;
     .badge {
-      padding-top: 25px;
-      .ivu-icon {
-        font-size: 24px;
+      img {
+        margin-top: 22px;
+        width: 24px;
       }
     }
   }

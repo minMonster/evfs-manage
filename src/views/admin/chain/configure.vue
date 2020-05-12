@@ -30,7 +30,7 @@
               <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
             </RadioGroup>
           </div>
-          <Button type="primary" style="width: 100px; float: right;margin-top: 10px;">修改</Button>
+          <Button type="primary" style="width: 100px; float: right;margin-top: 4px;">修改</Button>
         </Col>
       </Row>
     </div>
@@ -69,6 +69,6 @@ export default {
     margin-right: 40px;
   }
   .encryption-wrapper {
-    padding-top: 4px;
+    
   }
 </style>

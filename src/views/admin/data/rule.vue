@@ -38,7 +38,7 @@
           </Col>
           <Col :span="8">
             <div class="clear">
-              <Button class="fr" style="width: 100px;" type="primary">修改</Button>
+              <Button class="fr" style="width: 80px;" type="primary">修改</Button>
             </div>
           </Col>
         </Row>
@@ -76,7 +76,7 @@
           </Col>
           <Col :span="8">
             <div class="clear">
-              <Button class="fr" style="width: 100px;" type="primary">修改</Button>
+              <Button class="fr" style="width: 80px;" type="primary">修改</Button>
             </div>
           </Col>
         </Row>

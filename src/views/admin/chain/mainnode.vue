@@ -55,7 +55,7 @@
         </Col>
         <Col span="6">
           <div class="condition-item">
-            <Button style="width: 100px;" type="primary">查询</Button>
+            <Button style="width: 80px;" type="primary">查询</Button>
           </div>
         </Col>
       </Row>
