@@ -33,9 +33,11 @@ export default {
   methods: {
     route() {
       var name = this.$route.name
+      var query = this.$route.query
       this.$router.push({
         name: 'chain-audit',
         query: {
+          ...query,
           mainActive: 'chain',
           subActive: 'chain-audit',
           activeIndex: '0',
@@ -56,8 +58,9 @@ export default {
     position: relative;
     .ivu-btn {
       position: absolute;
-      bottom: -3px;
+      bottom: -2px;
       right: 10px;
+      z-index: 3;
     }
   }
 </style>

@@ -46,7 +46,7 @@
     <div class="padding bg-white" style="margin-bottom: 20px;">
       <div style="margin-bottom: 10px; color: #273D52;" class="clear">
         文件存储域许可证分布信息：
-        <Button class="fr float-right" size="small" type="primary">添加</Button>
+        <Button class="fr float-right" type="primary">添加</Button>
       </div>
       <div>
         <Row>

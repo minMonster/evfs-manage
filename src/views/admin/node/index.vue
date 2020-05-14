@@ -65,9 +65,11 @@ export default {
             },
             on: {
               click() {
+                var query = that.$route.query
                 that.$router.push({
                   name: 'nodedetail',
                   query: {
+                    ...query,
                     status,
                     mainActive: 'node',
                     activeIndex: 3

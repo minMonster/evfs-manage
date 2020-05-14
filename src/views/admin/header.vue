@@ -2,7 +2,7 @@
   <div class="admin-header">
     <div class="header-inner clear">
       <div class="header-left">
-        <img src="~@/assets/logo_text.png" @click="route('/')">
+        <img src="~@/assets/logo_text.png" @click="route('admin')">
       </div>
       <!-- <div class="header-right">
         <div><i class="icon-message"></i><span>消息</span></div>
@@ -36,9 +36,13 @@ export default {
     init() {
 
     },
-    route(path='home') {
+    route(name='admin') {
+      var {showBusinessSubmenu, showDataSubmenu} = this.$route.query
       this.$router.push({
-        path
+        name: name,
+        query: {
+          showDataSubmenu, showBusinessSubmenu
+        }
       })
     }
   }

@@ -76,12 +76,15 @@ export default {
             on: {
               click() {
                 var index = p.index
+                let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 that.$router.push({
                   name: 'business-detail',
                   query: {
                     mainActive: 'business',
                     activeIndex: '2',
-                    subActive: 'business-detail'
+                    subActive: 'business-detail',
+                    showDataSubmenu,
+                    showBusinessSubmenu: '1'
                   }
                 })
               }

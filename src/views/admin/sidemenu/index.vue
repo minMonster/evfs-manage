@@ -5,7 +5,7 @@
         <div class="main-menu-content" :class="{active: mainActive == item.name}" @click="mainMenu(item, index)">
           <i :class="[item.icon,{active: mainActive == item.name}]"></i><span>{{item.text}}</span>
         </div>
-        <div class="sub-menu" :class="{active: activeIndex == index && menu[activeIndex] && menu[activeIndex].children}">
+        <div v-if="showSubmenu" class="sub-menu" :class="{active: activeIndex == index && menu[activeIndex] && menu[activeIndex].children}">
           <div class="sub-menu-item" 
             v-for="(subitem, i) in item.children" 
             :key="subitem.name"
@@ -33,7 +33,7 @@ const menu = [
     { text: '待审核事项', name: 'chain-audit'},
   ]},
   { icon: 'icon-file',name: 'data', text: '数据存管域', children: [
-    {text: '域内固存规则', name: 'data-rule'},
+    { text: '域内固存规则', name: 'data-rule'},
     { text: '节点准入', name: 'data-node'},
     { text: '运行许可证', name: 'data-permission'},
     { text: '业务域授权', name: 'data-business'},
@@ -58,6 +58,7 @@ export default {
       mainActive: 'chain',
       subActive: '',
       activeIndex: '0',
+      showDataSubmenu: true,
     }
   },
   mounted() {
@@ -69,7 +70,17 @@ export default {
     }
   },
   computed:{
-    
+    showSubmenu() {
+      let { mainActive, showDataSubmenu, showBusinessSubmenu } = this.$route.query
+      if ((mainActive == 'data' && showDataSubmenu == '1') ||
+        mainActive == 'chain' ||
+        !mainActive ||
+       (mainActive == 'business' && showBusinessSubmenu == '1')) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     init() {
@@ -80,6 +91,10 @@ export default {
       let mainActive = query.mainActive
       let subActive = query.subActive
       let activeIndex = query.activeIndex
+      let showDataSubmenu = query.showDataSubmenu
+      let showBusinessSubmenu = query.showBusinessSubmenu
+      this.showDataSubmenu = showDataSubmenu
+      this.showBusinessSubmenu = showBusinessSubmenu
       if (mainActive) {
         this.mainActive = mainActive
       }
@@ -94,8 +109,10 @@ export default {
       if (this.mainActive == item.name) {
         if (!this.activeIndex) {
           this.activeIndex = index + ''
+          // this.subActive = ''
         } else {
           this.activeIndex = ''
+          this.subActive = ''
         }
       } else {
         this.mainActive = item.name
@@ -112,10 +129,12 @@ export default {
       let mainActive = this.mainActive
       let subActive = this.subActive
       let activeIndex = this.activeIndex
+      let showDataSubmenu = this.$route.query.showDataSubmenu
+      let showBusinessSubmenu = this.$route.query.showBusinessSubmenu
       this.$router.push({
         name,
         query: {
-          mainActive, subActive, activeIndex
+          mainActive, subActive, activeIndex, showDataSubmenu, showBusinessSubmenu
         }
       })
     }

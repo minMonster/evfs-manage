@@ -34,7 +34,7 @@
       <div class="bg-white padding">
         <div class="league-mem">
           <span>联盟委员会成员</span>
-          <button class="fr" @click="addModal = true"><Icon type="md-add-circle" />添加</button>
+          <Button @click="addModal = true" type="primary" class="fr">添加</Button>
         </div>
         <div>
           <Row>
@@ -187,16 +187,16 @@ export default {
       color: #273D52;
       font-weight: 600;
     }
-    .fr {
-      color: #6094FF;
-      background: #fff;
-      border: 1px solid #6094FF;
-      padding: 0 8px;
-      border-radius: 12px;
-      box-shadow: 0;
-      outline: none;
-      cursor: pointer;
-    }
+    // .fr {
+    //   color: #6094FF;
+    //   background: #fff;
+    //   border: 1px solid #6094FF;
+    //   padding: 0 8px;
+    //   border-radius: 12px;
+    //   box-shadow: 0;
+    //   outline: none;
+    //   cursor: pointer;
+    // }
   }
   .add-modal-body {
     & > div:nth-child(1) {

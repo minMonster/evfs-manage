@@ -1,6 +1,6 @@
 <template>
   <div class="data-storage">
-    <chain-header title="数据存管域管理" :btn="true" />
+    <chain-header title="数据存管域管理" />
     <div class="bg-white padding">
       <div class="section-title clear">
         <span>数据存管域列表</span>
@@ -58,7 +58,7 @@ export default {
           var opt1 = h('a', {
             on: {
               click() {
-                that.data1.splice(index,1)
+                // that.data1.splice(index,1)
               }
             }
           }, '断开联接')
@@ -66,9 +66,12 @@ export default {
             on: {
               click() {
                 var index = p.index
+                let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 that.$router.push({
                   name: 'data-detail',
                   query: {
+                    showDataSubmenu: '1',
+                    showBusinessSubmenu,
                     mainActive: 'data',
                     activeIndex: '1',
                     subActive: 'data-detail'

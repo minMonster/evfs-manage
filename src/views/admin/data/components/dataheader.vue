@@ -47,10 +47,12 @@ export default {
   methods: {
     route() {
       var name = this.$route.name
+      var query = this.$route.query
       console.log(name)
       this.$router.push({
         name: 'data-audit',
         query: {
+          ...query,
           mainActive: 'data',
           subActive: 'data-audit',
           activeIndex: '1',
