@@ -5,7 +5,7 @@
         <div class="main-menu-content" :class="{active: mainActive == item.name}" @click="mainMenu(item, index)">
           <i :class="[item.icon,{active: mainActive == item.name}]"></i><span>{{item.text}}</span>
         </div>
-        <div v-if="showSubmenu" class="sub-menu" :class="{active: activeIndex == index && menu[activeIndex] && menu[activeIndex].children}">
+        <div v-show="showSubmenu" class="sub-menu" :class="{active: activeIndex == index && menu[activeIndex] && menu[activeIndex].children}">
           <div class="sub-menu-item" 
             v-for="(subitem, i) in item.children" 
             :key="subitem.name"
@@ -154,7 +154,7 @@ export default {
       padding: 16px 0 16px 30px;
       position: relative;
       transition: .2s;
-      color: #464545;
+      color: #fff;
       &::before {
         transition: .2s;
         content: '';
@@ -167,14 +167,15 @@ export default {
         background: #fff;
       }
       &:hover{
-        background: #F5F8FF;
-        color: #1844B0;
+        background: #1955B7;
+        color: #fff;
         &::before {
-          background: #21CFF8;
+          background:transparent;
         }
       }
       &.active {
-        color: #1844B0;
+        background: #1955B7;
+        font-weight: 500;
       }
       &:hover {
         opacity: .8;
@@ -191,28 +192,28 @@ export default {
       .icon-chain {
         background-image: url(~@/assets/icon/chain.png);
         &.active {
-          background-image: url(~@/assets/icon/chain-active.png) 
+          // background-image: url(~@/assets/icon/chain-active.png) 
         }
       }
       .icon-file {
         background-image: url(~@/assets/icon/file.png);
         background-size: 20px;
         &.active {
-          background-image: url(~@/assets/icon/file-active.png) 
+          // background-image: url(~@/assets/icon/file-active.png) 
         }
       }
       .icon-business {
         background-image: url(~@/assets/icon/business.png);
         background-size: 20px;
         &.active {
-          background-image: url(~@/assets/icon/business-active.png) 
+          // background-image: url(~@/assets/icon/business-active.png) 
         }
       }
       .icon-node {
         background-image: url(~@/assets/icon/node.png);
         background-size: 20px;
         &.active {
-          background-image: url(~@/assets/icon/node-active.png) 
+          // background-image: url(~@/assets/icon/node-active.png) 
         }
       }
     }
@@ -228,12 +229,13 @@ export default {
       padding: 14px 0 14px 60px;
       font-size: 14px;
       font-weight: 400;
-      color: #767676;
+      color: #CEDEF7;
       position: relative;
       transition: .3s;
       &:hover, &.active {
-        background: #F5F8FF;
-        color: #1844B0;
+        background: transparent;
+        color: #fff;
+        font-weight: 500;
         &::before {
           content: '';
           display: block;
@@ -242,7 +244,7 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
-          background: #21CFF8;
+          background: transparent;
         }
       }
     }

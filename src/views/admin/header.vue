@@ -1,8 +1,9 @@
 <template>
   <div class="admin-header">
     <div class="header-inner clear">
-      <div class="header-left">
-        <img src="~@/assets/logo_text.png" @click="route('admin')">
+      <div class="header-left" @click="route('admin')">
+        <img src="~@/assets/logo_white.png">
+        <span>从法链运维管理平台</span>
       </div>
       <!-- <div class="header-right">
         <div><i class="icon-message"></i><span>消息</span></div>
@@ -64,14 +65,41 @@ export default {
     // border: 1px solid #F6F6F6;
   }
   .header-left {
-    padding: 16px 40px;
+    height: 70px;
+    overflow: hidden;
+    padding: 17px 0;
     float: left;
-    width: 251px;
-    border-right: 1px solid #F5F6F9;
-    img {
+    width: 250px;
+    // border-right: 1px solid #F5F6F9;
+    background: #2C77EF;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    &:after {
+      content: '';
       display: block;
-      width: 154px;
+      position: absolute;
+      bottom: 0;
+      left: 20px;
+      width: 100%;
+      width: 210px;
+      // height: 1px;
+      border: 1px solid;
+      border-image: linear-gradient(270deg, rgba(255,255,255,0), #ffffff 53%, rgba(255,255,255,0)) 1 1;
+    }
+    img {
+      display: inline-block;
+      vertical-align: middle;
+      width: 46px;
       margin: 2px auto;
+      margin-right: 4px;
+    }
+    span {
+      display: inline-block;
+      font-size: 17px;
+      vertical-align: middle;
+      color: #fff;
+      font-weight: 500;
     }
   }
   .header-center {
