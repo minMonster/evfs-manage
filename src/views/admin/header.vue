@@ -40,10 +40,7 @@ export default {
     route(name='admin') {
       var {showBusinessSubmenu, showDataSubmenu} = this.$route.query
       this.$router.push({
-        name: name,
-        query: {
-          showDataSubmenu, showBusinessSubmenu
-        }
+        path: '/chain?mainActive=chain&subActive=&activeIndex=0&showDataSubmenu=1'
       })
     }
   }

@@ -145,6 +145,8 @@ export default {
 <style lang="less" scoped>
   .admin-side-menu-inner {
     margin-top: 20px;
+    position: relative;
+    z-index: 2;
   }
   .menu-item {
     cursor: default;

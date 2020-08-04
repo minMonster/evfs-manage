@@ -5,6 +5,7 @@
       <div class="admin-main">
         <div class="side-bar">
           <side-menu></side-menu>
+          <img class="side-bar-img" src="~@/assets/logo_white_big.png" alt="">
         </div>
         <div class="admin-content">
           <div class="admin-content-inner">
