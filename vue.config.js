@@ -10,11 +10,11 @@ module.exports = {
   devServer: {
     proxy: {
       "/fbs": {
-        target: 'http://114.115.166.19:8090/fbs',
+        target: 'http://47.116.17.247:9000/fbs',
         ws: true,
         pathRewrite: {
           // 路径重写
-          "^/fbs": "" // 这个意思就是以api开头的，定向到哪里, 如果你的后边还有路径的话， 会自动拼接上
+          "^/fbs": "" // 这个意思就是以fbs开头的，定向到哪里, 如果你的后边还有路径的话， 会自动拼接上
         }
       }
     }

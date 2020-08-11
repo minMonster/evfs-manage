@@ -237,7 +237,7 @@ export default {
       &:hover, &.active {
         background: transparent;
         color: #fff;
-        font-weight: 500;
+        font-weight: 700;
         &::before {
           content: '';
           display: block;
