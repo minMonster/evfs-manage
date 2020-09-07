@@ -64,7 +64,7 @@
             </Col>
             <Col span="6">
               <div class="condition-item">
-                <Button style="width: 80px;" type="primary">查询</Button>
+                <Button style="width: 80px;" @click="search" type="primary">查询</Button>
               </div>
             </Col>
           </Row>
@@ -85,6 +85,10 @@
           <div><Input placeholder="请输入管理员名称" v-model="name" /></div>
           <div><Input placeholder="请输入管理员身份标志地址" v-model="address" /></div>
         </div>
+        <div slot="footer">
+            <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >添加</Button>
+            <Button style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
+         </div>
       </Modal>
     </div>
   </div>
@@ -142,9 +146,11 @@ export default {
       columns1,
       data1,
       total: 100,
+      addLoading:false,
       form: {
         name: '',
-        address: ''
+        address: '',
+        status:''
       }
     }
   },
@@ -161,12 +167,42 @@ export default {
     init() {
 
     },
+    //添加列表功能
     ok() {
+       let name = this.name.trim()
+       let address = this.address.trim()
+       if (!name) {
+        this.$Message.error('请输入管理员名称')
+          return
+        }
+        if (!address) {
+          this.$Message.error('请输入管理员身份标识密钥')
+          return
+        }
+        this.add()
+    },
+    add(){
+          let address = this.address.trim()
+          let name= this.name.trim()
+          this.addLoading = true
+          var data = {
+            address,name
+          }
+            this.$http.post('',data).then(res=> {
+                res = res.data
+            }).catch(() => {
 
+            }).then(res => {
+                  this.cancel()
+            })
     },
     cancel() {
-
+            this.name = ''
+            this.address = ''
+            this.addModal = false
+            this.addLoading = false
     },
+    search(){},
     pageChange(page) {
       console.log(page)
     }

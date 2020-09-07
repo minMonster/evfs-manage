@@ -70,7 +70,7 @@ const steps = [
     {text: '4.1.节点网络准入设置', name: 'step4.1'},
     {text: '4.2.区块链联盟委员会信息设置', name: 'step4.2'},
     {text: '4.3.链管理员设置', name: 'step4.3'},
-    {text: '4.4.链全局参数配置', name: 'step4.4'},
+    {text: '4.4.行为审计配置', name: 'step4.4'},
     {text: '4.5.链前置节点访问许可配置', name: 'step4.5'},
   ],
   join:[
@@ -119,7 +119,7 @@ const setHeader = {
     step: 'step4.3'
   },
   'step4.5': {
-    text: '链全局参数配置',
+    text: '行为审计',
     step: 'step4.4'
   },
   'step5': {

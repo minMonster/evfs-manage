@@ -49,7 +49,8 @@
           <div class="league-mem">
             <span>联盟委员会成员操作明细：</span>
           </div>
-          <Table :columns="columns1" :data="data1"></Table>
+          <Table :columns="columns1" :data="data1">
+          </Table>
         </div>
         <div class="page">
           <div class="page-inner">
@@ -89,8 +90,15 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a',{},'查看')
-        }
+          var row = p.row
+           return  h('a', {
+            on:{
+              click() {
+                that.adds(row)
+              }
+            }
+          },'查看')
+      }
       },
       {
         title:'操作',
@@ -105,7 +113,6 @@ export default {
             on: {
               click() {
                 var index = p.index
-                
               }
             }
           },'同意')
@@ -128,7 +135,20 @@ export default {
       }
     ]
     var data1 = [
-      
+      {
+          name: '金桥信息',
+          address: '00740f...feac3',
+          time: '--',
+          status: '添加审核中',
+          applicant: '从法科技',
+        },
+        {
+          name: '泛融信息',
+          address: '00740f...afea5',
+          time: '2020-1-1 12:04:43',
+          status: '删除审核中',
+          applicant: '从法科技',
+        }
     ]
     return {
       acceptLimit: '2/3',
@@ -154,22 +174,15 @@ export default {
   },
   methods: {
     init() {
-      this.data1 = [
-        {
-          name: '金桥信息',
-          address: '00740f...feac3',
-          time: '--',
-          status: '添加审核中',
-          applicant: '从法科技',
-        },
-        {
-          name: '泛融信息',
-          address: '00740f...afea5',
-          time: '2020-1-1 12:04:43',
-          status: '删除审核中',
-          applicant: '从法科技',
-        }
-      ]
+    
+    },
+    //查看
+    adds(obj){
+        this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+        })
     },
     ok() {
 

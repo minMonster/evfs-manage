@@ -1,15 +1,15 @@
 <template>
   <div>
     <data-header title="数据存管域节点准入许可管理" :btn="true" />
-    <div class="padding bg-white" style="margin-bottom: 20px;">
-      <div class="section-title">
+    <!-- <div class="padding bg-white" style="margin-bottom: 20px;">
+     <div class="section-title">
         <span>数据存管域节点准入审批</span>
       </div>
       <div>
         <Row>
           <Col :span="6">
             数据存管域节点准入审批
-            <Icon type="ios-help-circle-outline" />
+            <Icon type="ios-help-circle-outline" />-->
             <!-- <Tooltip
               placement="top"
               max-width="600"
@@ -17,9 +17,9 @@
             >
               <Icon type="ios-help-circle-outline" />
             </Tooltip> -->
-          </Col>
+         <!-- </Col> -->
           <!-- 文件保存副本数量 -->
-          <Col :span="10">
+         <!-- <Col :span="10">
             <RadioGroup class="approval" v-model="myswitch" style="width: 50%;">
               <Row style="margin-right: 20px;">
                 <Col span="12">
@@ -38,10 +38,11 @@
           </Col>
         </Row>
       </div>
-    </div>
+    </div> -->
     <div class="padding bg-white">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">准入节点服务器列表</span>
+         <Button type="primary" @click="confirmAdd" class="fr">添加</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -54,19 +55,19 @@
         <Col span="5">
           <div class="condition-item">
             <span class="condition-label">隶属企业名称：</span>
-            <Input type="text" placeholder="隶属企业名称"></Input>
+            <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
           </div>
         </Col>
         <Col span="7">
           <div class="condition-item">
             <span class="condition-label">服务器身份标识：</span>
-            <Input type="text" placeholder="节点服务器身份标识"></Input>
+            <Input type="text"  v-model="form.address" placeholder="节点服务器身份标识"></Input>
           </div>
         </Col>
         <Col span="6">
           <div class="condition-item">
             <span class="condition-label">状态：</span>
-            <Select value="0">
+            <Select v-model="form.status" value="0">
               <Option value="0">全部</Option>
               <Option value="1">已添加</Option>
               <Option value="2">已删除</Option>
@@ -77,7 +78,7 @@
         </Col>
         <Col span="6">
           <div class="condition-item">
-            <Button style="width: 80px;" type="primary">查询</Button>
+            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
           </div>
         </Col>
       </Row>
@@ -154,6 +155,11 @@ export default {
       columns1,
       data1,
       total: 100,
+      form:{
+        name:'',
+        address:'',
+        status:''
+      }
     }
   },
   mounted() {
@@ -168,6 +174,26 @@ export default {
   methods: {
     init() {
 
+    },
+    //查询
+    search(){
+      var that = this;
+      var storageId = that.$router.params && that.$router.params.storageId
+      const url = `/cmw/pbqml.do/${storageId}`;
+      this.$http.post(url).then(res =>{
+         res = res.data
+         console.log(res)
+         if(res.retCode == '1'){
+               that.$Message.success('查询成功')
+          }else{
+             if(res.retMsg){
+               that.$Message.error(res.retMsg)
+             }
+          }
+      }).catch(err => {})
+    },
+    confirmAdd(){
+           this.$router.push('/data-nodeAddAdmin')
     },
     pageChange(value) {
       

@@ -33,12 +33,12 @@ import business from './business'
 import manager from './manager'
 import alliance from './alliance'
 var tabs = [
-  {text: '域内固存规则',name: 'data-rule', count: 0},
+  // {text: '域内固存规则',name: 'data-rule', count: 0},
   {text: '节点准入',name: 'data-node', count: 3},
-  // {text: '运行许可证',name: 'data-permission', count: 8},
+  {text: '运行许可证',name: 'data-permission', count: 8},
   {text: '业务域授权',name: 'data-business', count: 6},
   {text: '域管理员',name: 'data-manager', count: 0},
-  {text: '联盟委员会',name: 'data-alliance', count: 22},
+  // {text: '联盟委员会',name: 'data-alliance', count: 22},
 ]
 export default {
   components: {

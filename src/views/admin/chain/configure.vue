@@ -1,40 +1,72 @@
 <template>
   <div class="chain-configure">
-    <chain-header title="链全局参数" :btn="true"/>
-    <div class="encryption-wrapper padding bg-white">
-      <Row>
-        <Col span="24">
-          <div class="encryption-item">
-            <span>前置节点数据传输加密：</span>
-            <Tooltip
-              placement="top"
-              max-width="600"
-              transfer
-              content='选项说明：外部系统调用的前置节点和任何一个链的节点服务器间使用加密传输，从而进一步加强网络传输过程中的数据安全性。'>
-              <Icon type="ios-help-circle-outline" />
-            </Tooltip>
-            <RadioGroup v-model="encryption1" style="margin-left: 20px;">
-              <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
-            </RadioGroup>
-          </div>
-          <div class="encryption-item">
-            <span>节点间数据传输加密：</span>
-            <Tooltip
-              placement="top"
-              max-width="600"
-              transfer
-              content='选项说明：节点网络中的节点服务器之间使用加密传输，使得节点间的系统内数据交换安全性得到进一步加强。'>
-              <Icon type="ios-help-circle-outline" />
-            </Tooltip>
-            <RadioGroup style="margin-left: 20px;" v-model="encryption2">
-              <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
-            </RadioGroup>
-          </div>
-          <Button type="primary" style="width: 100px; float: right;margin-top: 4px;">修改</Button>
-        </Col>
-      </Row>
+    <chain-header title="行为审计" :btn="true"/>
+    <div class="encryption-wrapper bg-white padding " style="margin-bottom:20px;">
+      <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
+       <span>行为审计信息查询条件：</span>
+         <Button @click="addModal = true" type="primary" class="fr">查询</Button>
+      </div>
+       <Row>
+          <Col span="8"> 开始时间:
+          <date-picker type="datetime" v-model="startTime" placeholder="请选择开始时间" :options="startTimeOption" @on-change="onStartTimeChange"></date-picker>
+          </Col>
+          <Col span="8"> 结束时间:
+          <date-picker type="datetime" v-model="endTime" placeholder="请选择结束时间" :options="endTimeOption" @on-change="onEndTimeChange"></date-picker>
+          </Col>
+       </Row>
+   </div>
+  <div class="encryption-wrapper bg-white padding" style="margin-bottom: 20px;">
+        <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
+          <span>链管理行为：</span>
+         <RadioGroup 
+        style="margin: 0 20px;"
+        v-model="switch1">
+        <Radio label="1">全部管理员行为(默认)</Radio>
+        <Radio label="0">自定义</Radio>
+      </RadioGroup>
+      </div>
+       <div class="audit-item" style="margin:0 80px;line-height:30px;">
+          <CheckboxGroup class="approval" v-model="detailData">
+            <Row>
+              <Col span ="6">
+                 <Checkbox label="0">节点准入</Checkbox>
+              </Col>
+                <Col span ="6">
+                 <Checkbox label="1">前置节点准入</Checkbox>
+              </Col>
+                <Col span ="6">
+                 <Checkbox label="2">运行许可</Checkbox>
+              </Col>
+                <Col span ="6">
+                 <Checkbox label="3">主节点授权</Checkbox>
+              </Col>
+              </Row>
+                  <Row>
+              <Col span ="6">
+                 <Checkbox label="4">数据存管域准入</Checkbox>
+              </Col>
+                <Col span ="6">
+                 <Checkbox label="5">链联盟委员会</Checkbox>
+              </Col>
+                <Col span ="6">
+                 <Checkbox label="6">联盟委员决议审批规则</Checkbox>
+              </Col>
+                <Col span ="6">
+                 <Checkbox label="7">链管理员</Checkbox>
+              </Col>
+              </Row>
+          </CheckboxGroup>
+        </div>
+    </div>
+    <div class="encryption-wrapper bg-white padding" style="margin-bottom: 20px;">
+        <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
+          <span>审查信息查询状态：</span>
+            <Button @click="addModal = true" type="primary" class="fr">查询结果下载</Button>
+        </div>
+       
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -42,11 +74,21 @@ export default {
   data() {
     return {
       encryption1: '0',
-      encryption2: '0'
+      encryption2: '0',
+      startTime: '',
+      endTime: '',
+      startTimeOption: {},
+      endTimeOption: {},
+      switch1: '1',
+      detailData:['0','2','5']
     }
   },
   mounted() {
     this.init()
+    this.startTime = '2018-08-08 00:00:00'
+    this.endTime = '2018-08-11 23:59:59'
+    this.onStartTimeChange(this.startTime)
+    this.onEndTimeChange(this.endTime)
   },
   watch: {
 
@@ -57,7 +99,27 @@ export default {
   methods: {
     init() {
 
-    }
+    },
+     /**
+         * 开始时间发生变化时触发,设置结束时间不可选择的日期
+         * 结束时间应大于等于开始时间,且小于等于当前时间
+         * @param {string} startTime 格式化后的日期
+         * @param {string} type 当前的日期类型
+         */
+    onStartTimeChange(startTime, type) {
+      this.endTimeOption = {
+          disabledDate(endTime) {
+          return endTime < new Date(startTime) || endTime > Date.now()
+          }
+      }
+    },
+    onEndTimeChange(endTime, type) {
+      this.startTimeOption = {
+          disabledDate(startTime) {
+              return startTime > new Date(endTime) || startTime > Date.now()
+          }
+      }
+    },
   }
 }
 </script>
@@ -68,7 +130,10 @@ export default {
     padding: 10px 0 0 0;
     margin-right: 40px;
   }
-  .encryption-wrapper {
-    
+  .approval {
+    display: block;
+    & > div {
+      padding: 6px 0;
+    }
   }
 </style>

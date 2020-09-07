@@ -7,14 +7,14 @@
           <div class="sub-content-title">链上联盟成员信息</div>
           <div class="chain-content-item">
             <Row>
-              <Col span="12">
-                <p>2</p>
+              <Col span="24">
+                <p>{{chianCommitteeGroupNum}}</p>
                 <div>联盟委员数量</div>
               </Col>
-              <Col span="12">
+              <!-- <Col span="12">
                 <p>2</p>
                 <div>加盟企业成员数量</div>
-              </Col>
+              </Col> -->
             </Row>
           </div>
         </div>
@@ -23,11 +23,11 @@
           <div class="chain-content-item">
             <Row>
               <Col span="12">
-                <p>2</p>
+                <p>{{clientNum}}</p>
                 <div>接入前置节点数量</div>
               </Col>
               <Col span="12">
-                <p>2</p>
+                <p>{{clientCompanyNum}}</p>
                 <div>前置隶属企业数量</div>
               </Col>
             </Row>
@@ -40,15 +40,15 @@
           <div class="chain-content-item">
             <Row>
               <Col span="8">
-                <p>3</p>
+                <p>{{storageNum}}</p>
                 <div>数据存管域数量</div>
               </Col>
               <Col span="8">
-                <p>1</p>
+                <p>{{runStorageNum}}</p>
                 <div>运行数据存管域数量</div>
               </Col>
               <Col span="8">
-                <p>2</p>
+                <p>{{outStorageNum}}</p>
                 <div>停运数据存管域数量</div>
               </Col>
             </Row>
@@ -59,15 +59,15 @@
           <div class="chain-content-item">
             <Row>
               <Col span="8">
-                <p>3</p>
+                <p>{{bizNum}}</p>
                 <div>业务域数量</div>
               </Col>
               <Col span="8">
-                <p>1</p>
+                <p>{{runBizNum}}</p>
                 <div>运行业务域数量</div>
               </Col>
               <Col span="8">
-                <p>2</p>
+                <p>{{outBizNum}}</p>
                 <div>停运业务域数量</div>
               </Col>
             </Row>
@@ -77,17 +77,21 @@
           <div class="sub-content-title">链内主节点服务器信息</div>
           <div class="chain-content-item">
             <Row>
-              <Col span="8">
-                <p>3</p>
+              <Col span="6">
+                <p>{{accountNum}}</p>
                 <div>主节点服务器数量</div>
               </Col>
-              <Col span="8">
-                <p>3</p>
+              <Col span="6">
+                <p>{{usedAccountNum}}</p>
                 <div>在线主节点服务器数量</div>
               </Col>
-              <Col span="8">
+              <Col span="6">
                 <p>0</p>
                 <div>离线主节点服务器数量</div>
+              </Col>
+                <Col span="6">
+                <p>10</p>
+                <div>主节点隶属企业数量</div>
               </Col>
             </Row>
           </div>
@@ -96,17 +100,36 @@
           <div class="sub-content-title">链内资源节点服务器信息</div>
           <div class="chain-content-item">
             <Row>
-              <Col span="8">
-                <p>1</p>
+              <Col span="6">
+                <p>{{resourceNum}}</p>
                 <div>资源节点服务器数量</div>
               </Col>
-              <Col span="8">
-                <p>0</p>
+              <Col span="6">
+                <p>{{usedResourceNum}}</p>
                 <div>在线资源节点服务器数量</div>
               </Col>
-              <Col span="8">
+              <Col span="6">
                 <p>1</p>
                 <div>离线资源节点服务器数量</div>
+              </Col>
+              <Col span="6">
+                <p>10</p>
+                <div>资源节点隶属企业数量</div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <div class="chain-content">
+          <div class="sub-content-title">链内接入业务系统信息</div>
+          <div class="chain-content-item">
+            <Row>
+              <Col span="12">
+                <p>10</p>
+                <div>接入业务系统数量</div>
+              </Col>
+              <Col span="12">
+                <p>50</p>
+                <div>业务系统隶属企业数量</div>
               </Col>
             </Row>
           </div>
@@ -166,7 +189,23 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      chianCommitteeGroupNum:'',
+      clientNum:'',
+      clientCompanyNum:'',
+      storageNum:'',
+      runStorageNum:'',
+      outStorageNum:'',
+      bizNum:'',
+      runBizNum:'',
+      outBizNum:'',
+      accountNum:''	,				//主节点
+			usedAccountNum:''	,		//在线主节点
+      resourceNum:'',
+      usedResourceNum:'',			//在线资源节点
+		  syncNum:'',							//只读节点
+			usedSyncNum:'',					//在线只读节点
+    };
   },
   mounted() {
     this.init();
@@ -174,7 +213,38 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    init() {}
+    init() {
+      this.initList()
+    },
+    //链统计
+    initList(){
+      this.loading = true
+      var self = this
+      setTimeout(() => {
+        this.$http.post('/cmw/pbqct.do').then(res=> {
+          console.log(res)
+          if(res.retCode == '1'){
+              self.chianCommitteeGroupNum = res.data.chianCommitteeGroupNum;
+              self.clientNum = res.data.clientNum;
+              self.clientCompanyNum = res.data.clientCompanyNum;
+              self.storageNum = res.data.storageNum;
+              self.runStorageNum = res.data.runStorageNum;
+              self.outStorageNum = res.data.outStorageNum;
+              self.bizNum = res.data.bizNum;
+              self.runBizNum = res.data.runBizNum;
+              self.outBizNum = res.data.outBizNum;
+              self.accountNum = res.data.accountNum;
+              self.usedAccountNum = res.data.usedAccountNum;		//在线主节点
+              self.resourceNum = res.data.resourceNum;
+              self.usedResourceNum = res.data.usedResourceNum;		//在线资源节点
+		          self.syncNum = res.data.syncNum;		//只读节点
+		        	self.usedSyncNum = res.data.usedSyncNum
+          }
+        }).catch(err => {
+
+        })
+      },100)
+    }
   }
 };
 </script>

@@ -4,6 +4,21 @@
     <div class="bind-inner">
       <div class="bind-body" v-if="!success">
         <h3>绑定首位服务器管理员</h3>
+         <Row>
+                  <Col>
+                    <div>授权流程确认码：{{serverName}}</div>
+                  </Col>
+                  <Col>
+                    <div class="condition-item">
+                      <span class="condition-label">初始管理员名称：</span>
+                      <input class="condition-int" type="text"  v-model="paramStr" placeholder="请输入要加入链实例的企业的完整名称"></input>
+                    </div>
+                  </Col>
+                  <!-- <div  v-show="popup">
+                    <div id="qrcode"></div>
+                    <div class="over"></div>
+                  </div> -->
+                </Row>
         <p>请通过身份签名安全插件，用需要绑定的管理员身份完成签名确认。</p>
         <Button type="primary" :loading="loading" long @click="bind">绑定</Button>
         <div class="download-extension">身份签名安全插件请从此链接下载安装：<a href="">http://wwww.dfdfd.com</a></div>
@@ -23,7 +38,9 @@ export default {
     return {
       success: false,
       loading: false,
-      timer: null
+      timer: null,
+      serverName:"",
+      paramStr:''
     }
   },
   destroyed() {

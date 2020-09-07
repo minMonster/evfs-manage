@@ -13,22 +13,22 @@
         >
           <Icon type="ios-help-circle-outline" />
         </Tooltip> -->
-        <Button type="primary" style="float: right;">添加合约</Button>
+        <Button type="primary"  @click="addModal = true"  style="float: right;">添加合约</Button>
       </div>
       <Row>
         <Col span="5">
           <div class="condition-item">
             <span class="condition-label">合约名称：</span>
-            <Input type="text" placeholder="合约名称"></Input>
+            <Input type="text" v-model="form.name" placeholder="合约名称"></Input>
           </div>
         </Col>
         <Col span="7">
           <div class="condition-item">
             <span class="condition-label">合约链上唯一标识：</span>
-            <Input type="text" placeholder="合约链上唯一标识："></Input>
+            <Input type="text" v-model="form.address" placeholder="合约链上唯一标识："></Input>
           </div>
         </Col>
-        <Col span="6">
+        <!-- <Col span="6">
           <div class="condition-item">
             <span class="condition-label">状态：</span>
             <Select value="0">
@@ -39,26 +39,47 @@
               <Option value="2">解冻审核中</Option>
             </Select>
           </div>
-        </Col>
+        </Col> -->
         <Col span="6">
           <div class="condition-item">
-            <Button style="width: 80px;" type="primary">查询</Button>
+            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
           </div>
         </Col>
       </Row>
       <div>
         <Table :columns="columns1" :data="data1"></Table>
       </div>
+      <div  v-show="popup">
+               <div id="qrcode"></div>
+               <div class="over"></div>
+            </div>
       <div class="page">
         <div class="page-inner">
           <Page :total="total" @on-change="pageChange" />
         </div>
       </div>
+       <Modal
+        v-model="addModal"
+        title="合约发布"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <div class="add-modal-body">
+          <span>选择编译好的合约文件，申请上链发布！</span>
+          <div><span Style="margin-bottom:10px;">合约名称：</span><Input placeholder="请输入合约名称" v-model="conName" /></div>
+          <div><span Style="margin-bottom:10px;">备注：</span>  <i-input type="textarea" v-model="remarks" placeholder="请输入..."></i-input></div>
+          <div><span Style="margin-bottom:10px;">合约内容</span><i-input type="textarea" v-model="conCent" :rows="4" placeholder="请输入..."></i-input></div>
+        </div>
+        <div slot ="footer">
+             <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >申请发布</Button>
+             <Button  style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
+        </div>
+      </Modal>
     </div>
   </div>
 </template>
 
 <script>
+import QRCode from 'qrcodejs2';
 export default {
   data() {
     var that = this
@@ -119,25 +140,109 @@ export default {
       switch2: '0',
       switch3: '0',
       total: 90,
-      columns1, data1
+      columns1, data1,
+      addModal:false,
+      conName:'',remarks:'',conCent:'',
+      addLoading:false,
+      form:{
+        name:"",
+        address:""
+      },
+      popup:0
+
     }
   },
   watch: {},
   computed: {},
   mounted() {
     this.init()
+    this.creatQrCode()
   },
   methods: {
     init() {
+         this.initList()
+    },
+    initList(){
+         this.loading = true
+         let biz_id = this.form.name
+         let params = {
+            biz_id	
+         }
+         setTimeout(() =>{
+           this.$http.post('/cmw/pbqbc.do',params).then(res =>{
+            console.log(res)
+            if(res.retCode == '1'){
+              this.$Message.success('查询成功')
+            }else{
+              if (res.retMsg) {
+               this.$Message.error(res.retMsg)
+              }
+            }
+           }).catch(err => {
 
+           })
+         },100)
+    },
+    ok() {
+       this.popup = 1
+       this.add()
+    },
+    add(){
+        this.cancel()
+    },
+    search(){},
+    cancel() {
+            this.conName = ''
+            this.remarks = ''
+            this.conCent = ''
+            this.addModal = false
+            this.addLoading = false
     },
     pageChange(val) {
       
-    }
+    },
+    //生成二维码
+     creatQrCode() {
+            let linkData = {
+                // url:"http://47.116.17.247:9000/api/clt/pblin.do",
+                // func:"Login",
+                // data:{
+                // }
+            };
+            var qrcode = new QRCode('qrcode', {
+                text: JSON.stringify(linkData), // 需要转换为二维码的内容
+                width: 260,
+                height: 260,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: 3,//容错率，L/M/H
+            })
+            console.log(qrcode)
+        },
   }
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+#qrcode {
+   position: fixed;
+   border:10px solid  white;
+   margin:12px;
+   border-radius: 0.25rem;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   z-index: 1000;
+ }
+  .over {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;//透明度为70%
+    filter: alpha(opacity=70);
+    top: 0;
+    left: 0;
+    z-index: 999;
+    background-color: #111111;
+  }
 </style>

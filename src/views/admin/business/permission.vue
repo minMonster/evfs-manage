@@ -1,7 +1,7 @@
 <template>
   <div class="node-admission">
     <business-header title="业务系统访问许可管理" :btn="true"/>
-    <div class="bg-white padding" style="margin-bottom: 30px;color: #373737;">
+    <!-- <div class="bg-white padding" style="margin-bottom: 30px;color: #373737;">
       <span>业务域匿名调用访问：</span>
       <Tooltip
         placement="top"
@@ -15,7 +15,7 @@
         <Radio label="0">禁止</Radio>
       </RadioGroup>
       <Button type="primary" style="float: right;margin-top: -5px; ">修改</Button>
-    </div>
+    </div> -->
     <div class="bg-white padding">
       <div style="margin-bottom: 25px;color: #273D52;">
         <span>
@@ -30,25 +30,25 @@
         >
           <Icon type="ios-help-circle-outline" />
         </Tooltip>
-        <Button type="primary" style="float: right;">添加</Button>
+        <Button type="primary"  @click="confirmAdd" style="float: right;">添加</Button>
       </div>
       <Row>
         <Col span="5">
           <div class="condition-item">
             <span class="condition-label">业务系统名称：</span>
-            <Input type="text" placeholder="业务系统名称"></Input>
+            <Input type="text" v-model="form.name" placeholder="业务系统名称"></Input>
           </div>
         </Col>
         <Col span="7">
           <div class="condition-item">
             <span class="condition-label">业务系统身份标识：</span>
-            <Input type="text" placeholder="业务系统身份标识"></Input>
+            <Input type="text" v-model="form.address" placeholder="业务系统身份标识"></Input>
           </div>
         </Col>
         <Col span="6">
           <div class="condition-item">
             <span class="condition-label">状态：</span>
-            <Select value="0">
+            <Select v-model="form.status" value="0">
               <Option value="0">全部</Option>
               <Option value="1">已添加</Option>
               <Option value="2">已删除</Option>
@@ -59,7 +59,7 @@
         </Col>
         <Col span="6">
           <div class="condition-item">
-            <Button style="width: 80px;" type="primary">查询</Button>
+            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
           </div>
         </Col>
       </Row>
@@ -135,7 +135,8 @@ export default {
       total: 100,
       form: {
         name: "",
-        address: ""
+        address: "",
+        status:''
       },
       switch1: "0"
     };
@@ -147,7 +148,11 @@ export default {
   computed: {},
   methods: {
     init() {},
+    confirmAdd(){
+        this.$router.push('/business-addpermission')
+    },
     ok() {},
+    search(){},
     cancel() {},
     pageChange(page) {
       console.log(page);

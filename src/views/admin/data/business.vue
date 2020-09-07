@@ -1,7 +1,7 @@
 <template>
   <div class="data-business">
     <data-header title="数据存管域内业务域授权管理" :btn="true" />
-    <div class="padding bg-white" style="margin-bottom: 20px;">
+   <!-- <div class="padding bg-white" style="margin-bottom: 20px;">
       <div class="section-title">
         <span>业务域创建审批</span>
       </div>
@@ -9,7 +9,7 @@
         <Row>
           <Col :span="6">
             业务域创建审批：
-            <Icon type="ios-help-circle-outline" />
+            <Icon type="ios-help-circle-outline" />-->
             <!-- <Tooltip
               placement="top"
               max-width="600"
@@ -17,9 +17,9 @@
             >
               <Icon type="ios-help-circle-outline" />
             </Tooltip> -->
-          </Col>
+        <!--  </Col>-->
           <!-- 文件保存副本数量 -->
-          <Col :span="10">
+        <!--  <Col :span="10">
             <RadioGroup class="approval" v-model="myswitch" style="width: 50%;">
               <Row style="margin-right: 20px;">
                 <Col span="12">
@@ -38,8 +38,8 @@
           </Col>
         </Row>
       </div>
-    </div>
-    <div class="bg-white padding" style="margin-bottom: 20px;color: #373737;">
+    </div> -->
+    <!-- <div class="bg-white padding" style="margin-bottom: 20px;color: #373737;">
       <span>数据存管域创建审批：</span>
       <Tooltip
         placement="top"
@@ -54,10 +54,11 @@
         <Radio label="0">关闭</Radio>
       </RadioGroup>
       <Button type="primary" style="float: right;">修改</Button>
-    </div>
+    </div>-->
     <div class="padding bg-white" style="margin-bottom: 20px;">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">业务域列表</span>
+        <Button type="primary" @click="addEstablish" class="fr">创建业务域</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -70,18 +71,18 @@
         <Col span="7">
           <div class="condition-item">
             <span class="condition-label">业务域名称：</span>
-            <Input type="text" placeholder="请填写"></Input>
+            <Input type="text" v-model="form.name" placeholder="请填写"></Input>
           </div>
         </Col>
         <Col span="8">
           <div class="condition-item">
             <span class="condition-label">业务域唯一标识：</span>
-            <Input type="text" placeholder="请填写"></Input>
+            <Input type="text" v-model="form.address" placeholder="请填写"></Input>
           </div>
         </Col>
         <Col span="6">
           <div class="condition-item">
-            <Button style="width: 80px;" type="primary">查询</Button>
+            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
           </div>
         </Col>
       </Row>
@@ -94,7 +95,7 @@
         </div>
       </div>
     </div>
-    <div class="padding bg-white clear">
+   <!-- <div class="padding bg-white clear">
       <div style="margin-bottom: 10px;color: #273D52;" class="clear">
         <span style="color: #273D52;font-weight: 600;">创建许可企业列表</span>
         <Tooltip
@@ -144,7 +145,7 @@
           <Page :total="total" @on-change="pageChange"/>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -174,16 +175,30 @@ export default {
         title:'操作',
         render(h,p) {
           var row = p.row || {}
-          var label = row.status == '2' ? '删除' : '撤销'
-          label = row.status == '0' ? '--' : label
-          return h('a', {
-            on: {
-              click() {
+          var status = row.status || ''
+          var opt = h('a',{
+
+          })
+          var opt2 = h('a',{
+            on:{
+               click(){
                 var index = p.index
-                that.data1.splice(index,1)
+                let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                that.$router.push({
+                   name:"business-detail",
+                   query:{
+                      showDataSubmenu: '1',
+                      showBusinessSubmenu,
+                      mainActive: 'business',
+                      activeIndex: '1',
+                      subActive: 'business-detail'
+                }
+              })
               }
             }
-          }, label)
+          },'详情')
+          var opts = [opt2]
+          return h('div', {},opts)
         }
       }
     ]
@@ -267,6 +282,10 @@ export default {
     },
     cancel() {
 
+    },
+    search(){},
+    addEstablish(){
+        this.$router.push('/data-busestablish')
     },
     pageChange(page) {
       console.log(page)

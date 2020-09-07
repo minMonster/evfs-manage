@@ -2,7 +2,7 @@
   <div class="chain-configure">
     <div class="configure-in">
       <h3>创建新的链实例</h3>
-      <h4>链全局参数配置</h4>
+      <h4>行为审计</h4>
       <div class="configure-body">
         <div>
           <span>前端数据传输加密：</span>

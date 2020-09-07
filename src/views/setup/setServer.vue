@@ -80,7 +80,6 @@ export default {
   }
 }
 </script>
-
 <style lang="less" scoped>
   .set-body {
     h3 {

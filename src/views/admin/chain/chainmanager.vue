@@ -5,6 +5,7 @@
       <div class="bg-white padding" style="margin-bottom: 20px;">
         <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
           <span>链管理员决议审批规则：</span>
+              <input type="hidden" id="signResult">
           <Tooltip
             placement="top"
             max-width="600"
@@ -76,6 +77,10 @@
           </div>
         </div>
       </div>
+      <div v-show="popup">
+               <div id="qrcode"></div>
+               <div class="over"></div>
+      </div>
       <Modal
         v-model="addModal"
         title="添加管理"
@@ -85,12 +90,17 @@
           <div><Input placeholder="请输入管理员名称" v-model="name" /></div>
           <div><Input placeholder="请输入管理员身份标志地址" v-model="address" /></div>
         </div>
+         <div slot="footer">
+            <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >添加</Button>
+            <Button style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
+         </div>
       </Modal>
     </div>
   </div>
 </template>
 
 <script>
+import QRCode from 'qrcodejs2'
 export default {
   data() {
     var that = this
@@ -141,11 +151,14 @@ export default {
       addModal: false,
       columns1,
       data1,
+      addLoading:false,
       total: 100,
       form: {
         name: '',
-        address: ''
-      }
+        address: '',
+        status:''
+      },
+      popup:0
     }
   },
   mounted() {
@@ -160,21 +173,97 @@ export default {
   methods: {
     init() {
 
-    },
+    },  
+    //添加列表功能
     ok() {
+       let name = this.name.trim()
+       let address = this.address.trim()
+       if (!name) {
+        this.$Message.error('请输入管理员名称')
+          return
+        }
+        if (!address) {
+          this.$Message.error('请输入管理员身份标识密钥')
+          return
+        }
+        this.add()
+    },
+    add(){
+          this.popup=1,
+          this.creatQrCode()
+          let address = this.address.trim()
+          let name= this.name.trim()
+          this.addLoading = true
+          var data = {
+            address,name
+          }
+            this.$http.post('',data).then(res=> {
+                res = res.data
+            }).catch(() => {
 
+            }).then(res => {
+                  this.cancel()
+            })
     },
     cancel() {
-
+            this.name = ''
+            this.address = ''
+            this.addModal = false
+            this.addLoading = false
     },
+    del(obj){
+        var that = this
+                // var index = p.index
+                // that.data1.splice(index,1)
+    },
+    search(){},
+    //删除管理页面
     pageChange(page) {
       console.log(page)
-    }
+    },
+    creatQrCode() {
+            let linkData = {
+                // url:"http://47.116.17.247:9000/api/clt/pblin.do",
+                // func:"Login",
+                // data:{
+                // }
+            };
+            var qrcode = new QRCode('qrcode', {
+                text: JSON.stringify(linkData), // 需要转换为二维码的内容
+                width: 260,
+                height: 260,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: 3,//容错率，L/M/H
+            })
+            console.log(qrcode)
+        },
   }
 }
 </script>
 
 <style lang="less" scoped>
+#qrcode {
+   position: fixed;
+   border:10px solid  white;
+   margin:12px;
+   border-radius: 0.25rem;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   z-index: 1000;
+ }
+  .over {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;//透明度为70%
+    filter: alpha(opacity=70);
+    top: 0;
+    left: 0;
+    z-index: 999;
+    background-color: #111111;
+  }
   .approval {
     display: block;
     & > div {

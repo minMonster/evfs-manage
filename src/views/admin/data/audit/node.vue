@@ -1,8 +1,9 @@
 <template>
   <div>
-    <data-header title="数据存管域节点准入许可管理" :btn="true" />
-    <div class="content-title clear"><span></span></div>
-    <div class="padding bg-white" style="margin-bottom: 20px;">
+     <div class="content-title"><span>数据存管域节点准入许可管理</span></div>
+    <!-- <data-header title="数据存管域节点准入许可管理" :btn="true" />
+    <div class="content-title clear"><span></span></div> -->
+    <!-- <div class="padding bg-white" style="margin-bottom: 20px;">
       <div class="section-title">
         <span>数据存管域节点准入审批</span>
       </div>
@@ -17,10 +18,10 @@
               transfer
             >
               <Icon type="ios-help-circle-outline" />
-            </Tooltip> -->
-          </Col>
+            </Tooltip> 
+          </Col>-->
           <!-- 文件保存副本数量 -->
-          <Col :span="10">
+          <!--<Col :span="10">
             <RadioGroup class="approval" v-model="myswitch" style="width: 50%;">
               <Row style="margin-right: 20px;">
                 <Col span="12">
@@ -47,7 +48,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="padding bg-white mb20">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600; margin-bottom: 30px;display: block;">准入节点服务器列表</span>
@@ -99,7 +100,7 @@
         </div>
       </div>
     </div>
-    <div class="padding bg-white mb20">
+    <!-- <div class="padding bg-white mb20">
       <div class="section-title"><span>数据存管域节点准入企业名单</span></div>
       <div>
         <Table :columns="columns2" :data="data2"></Table>
@@ -120,7 +121,7 @@
           <Page :total="total" @on-change="pageChange"/>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -160,7 +161,14 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a',{},'查看')
+          var row = p.row
+          return h('a',{
+            on:{
+              click() {
+                that.adds(row)
+              }
+            }
+          },'查看')
         }
       },
       {
@@ -202,154 +210,10 @@ export default {
       {name: '从法科技', address: '00630e...cabc3', nodetype:'主节点', time: '--',type: '主节点',applicant: '张力', statuslabel: '添加审核中', status: '2' },
       {name: '泛融科技', address: '00740f...dafc7', nodetype:'资源节点', time: '2020-1-5 10:05:13',type: '资源节点',applicant: '张力', statuslabel: '删除审核中', status: '2' },
     ]
-    var columns2 = [
-      {
-        title: "隶属企业名称",
-        key: "name"
-      },
-      {
-        title: "企业身份标识",
-        key: "address"
-      },
-      {
-        title: '节点类型',
-        key: 'type'
-      },
-      {
-        title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
-      {
-        title: '申请人',
-        key: 'applicant'
-      },
-      {
-        title: '审核通过人',
-        render(h,p) {
-          return h('a',{},'查看')
-        }
-      },
-      {
-        title:'操作',
-        render(h,p) {
-          var agree = h('a', {
-            style: {
-              marginRight: '8px'
-            },
-            domProps: {
-              href: 'javascript:;'
-            },
-            on: {
-              click() {
-                var index = p.index
-                
-              }
-            }
-          },'同意')
-          var refuse =  h('a', {
-            domProps: {
-              href: 'javascript:;'
-            },
-            on: {
-              click() {
-                var index = p.index
-              }
-            }
-          },'拒绝')
-          return h('div',{
-            'class': 'opt-btns'
-          },[
-            agree, refuse
-          ])
-        }
-      }
-    ]
-    var data2 = [
-      {name: '从法科技', address: '00630e...cabc3', nodetype:'主节点', time: '--',type: '主节点',applicant: '张力', statuslabel: '添加审核中', status: '2' },
-      {name: '泛融科技', address: '00740f...dafc7', nodetype:'资源节点', time: '2020-1-5 10:05:13',type: '资源节点',applicant: '张力', statuslabel: '删除审核中', status: '2' },
-    ]
-    var columns3 = [
-      {
-        title: "隶属企业名称",
-        key: "name"
-      },
-      {
-        title: "服务器身份标识",
-        key: "address"
-      },
-      {
-        title: '节点类型',
-        key: 'type'
-      },
-      {
-        title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
-      {
-        title: '申请人',
-        key: 'applicant'
-      },
-      {
-        title: '审核通过人',
-        render(h,p) {
-          return h('a',{},'查看')
-        }
-      },
-      {
-        title:'操作',
-        render(h,p) {
-          var agree = h('a', {
-            style: {
-              marginRight: '8px'
-            },
-            domProps: {
-              href: 'javascript:;'
-            },
-            on: {
-              click() {
-                var index = p.index
-                
-              }
-            }
-          },'同意')
-          var refuse =  h('a', {
-            domProps: {
-              href: 'javascript:;'
-            },
-            on: {
-              click() {
-                var index = p.index
-              }
-            }
-          },'拒绝')
-          return h('div',{
-            'class': 'opt-btns'
-          },[
-            agree, refuse
-          ])
-        }
-      }
-    ]
-    var data3 = [
-      {name: '从法科技', address: '00630e...cabc3', nodetype:'主节点', time: '--',type: '主节点',applicant: '张力', statuslabel: '添加审核中', status: '2' },
-      {name: '泛融科技', address: '00740f...dafc7', nodetype:'资源节点', time: '2020-1-5 10:05:13',type: '资源节点',applicant: '张力', statuslabel: '删除审核中', status: '2' },
-    ]
     return {
       myswitch: '1',
       columns1,
-      columns2,
-      columns3,
       data1,
-      data2,
-      data3,
       total: 100,
     }
   },
@@ -365,6 +229,14 @@ export default {
   methods: {
     init() {
 
+    },
+     //查看
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+         })
     },
     pageChange(value) {
       

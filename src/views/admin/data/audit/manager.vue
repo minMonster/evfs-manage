@@ -134,7 +134,14 @@ export default {
         title: '审核通过人',
         width: 130,
         render(h,p) {
-          return h('a',{},'查看')
+          var row = p.row
+          return h('a',{
+            on:{
+              click() {
+                that.adds(row)
+              }
+            }
+          },'查看')
         }
       },
       {
@@ -203,6 +210,14 @@ export default {
   methods: {
     init() {
 
+    },
+    //查看
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+         })
     },
     ok() {
 

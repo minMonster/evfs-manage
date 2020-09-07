@@ -1,7 +1,7 @@
 <template>
   <div class="node-admission">
     <chain-header title="链内主节点授权管理" :btn="true" />
-    <div class="bg-white padding" style="margin-bottom: 10px;color: #373737;">
+    <!-- <div class="bg-white padding" style="margin-bottom: 10px;color: #373737;">
       <span>主节点授权审批：</span>
       <Tooltip
         placement="top"
@@ -16,10 +16,11 @@
         <Radio label="0">禁止</Radio>
       </RadioGroup>
       <Button type="primary" style="float: right;">修改</Button>
-    </div>
+    </div> -->
     <div class="padding bg-white">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">主节点服务器列表</span>
+         <Button type="primary"  @click="confirmAdd" class="fr">添加</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -27,24 +28,25 @@
           content='功效说明：在“主节点网络准入审批”选择“开启”时，主节点服务器列表中的节点服务器才可以加入链的节点网络。'>
           <Icon type="ios-help-circle-outline" />
         </Tooltip>
+        
       </div>
       <Row>
         <Col span="5">
           <div class="condition-item">
             <span class="condition-label">隶属企业名称：</span>
-            <Input type="text" placeholder="隶属企业名称"></Input>
+            <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
           </div>
         </Col>
         <Col span="7">
           <div class="condition-item">
             <span class="condition-label">服务器身份标识：</span>
-            <Input type="text" placeholder="节点服务器身份标识"></Input>
+            <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
           </div>
         </Col>
         <Col span="6">
           <div class="condition-item">
             <span class="condition-label">状态：</span>
-            <Select value="0">
+            <Select v-model="form.status" value="0">
               <Option value="0">全部</Option>
               <Option value="1">已添加</Option>
               <Option value="2">已删除</Option>
@@ -55,7 +57,7 @@
         </Col>
         <Col span="6">
           <div class="condition-item">
-            <Button style="width: 80px;" type="primary">查询</Button>
+            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
           </div>
         </Col>
       </Row>
@@ -133,7 +135,8 @@ export default {
       total: 100,
       form: {
         name: '',
-        address: ''
+        address: '',
+        status:''
       },
       switch1: '0'
     }
@@ -149,13 +152,35 @@ export default {
   },
   methods: {
     init() {
+        this.initList()
+    },
+    initList(){
+         setTimeout(() => {
+           this.$http.post('/cmw/pbqmn.do').then(res =>{
+             console.log(res)
+             if(res.retCode == '1'){
+               this.$Message.success('查询成功')
+             }else{
+               if (res.retMsg) {
+                this.$Message.error(res.retMsg)
+               }
+             }
+           }).catch(err => {
 
+           })
+         },100)
     },
     ok() {
 
     },
     cancel() {
 
+    },
+    search(){
+
+    },
+    confirmAdd(){
+           this.$router.push('/chain-nodeManage')
     },
     pageChange(page) {
       console.log(page)

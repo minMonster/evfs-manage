@@ -3,10 +3,10 @@
     <div class="new-in">
       <h3>创建新的链实例</h3>
       <div class="create-form">
-        <!-- <div class="clear current-node">
+        <div class="clear current-node">
           <div class="fl">当前节点服务器加入节点网络</div>
-          <div class="fr" @click="getServerInfo">获得当前服务器信息</div>
-        </div> -->
+          <!-- <div class="fr" @click="getServerInfo">获得当前服务器信息</div> -->
+        </div>
         <div class="form-item">
           <div class="label">服务器名称</div>
           <Input v-model="serverName" readonly placeholder="当前节点服务器名称" />
@@ -27,7 +27,7 @@
       <div class="split-line"></div>
       <div class="node-network">
         <div class="node-network-title">节点网络准入</div>
-        <div class="node-netword-approval">
+        <!-- <div class="node-netword-approval">
           <span>节点网络准入审批：</span>
           <Tooltip
             placement="top"
@@ -41,8 +41,8 @@
             <Radio label="on">开启</Radio>
             <Radio label="off">关闭（默认）</Radio>
           </RadioGroup>
-        </div>
-        <!-- <div class="node-list">
+        </div> -->
+        <div class="node-list">
           <div>
             <span>准入节点服务器列表：</span>
             <Tooltip
@@ -56,7 +56,7 @@
           <div class="node-list-table">
             <Table :columns="columns1" :data="data1"></Table>
           </div>
-        </div> -->
+        </div>
         <div class="node-list">
           <!-- <div class="clear">
             <span>节点网络准入企业名单：</span>

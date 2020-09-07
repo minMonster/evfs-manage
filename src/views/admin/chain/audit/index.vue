@@ -42,7 +42,7 @@ import frontnode from './frontNode'
 import filestroage from './fileStorage'
 var tabs = [
   {text: '联盟委员会',name: 'chain-alliance', count: 0},
-  {text: '链全局参数',name: 'chain-configure', count: 3},
+  // {text: '行为审计',name: 'chain-configure', count: 3},
   {text: '节点准入',name: 'chain-nodeadmission', count: 8},
   {text: '前置节点准入',name: 'chain-frontnodelicence', count: 6},
   {text: '运行许可证',name: 'chain-operation', count: 0},

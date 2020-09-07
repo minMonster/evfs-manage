@@ -3,7 +3,7 @@
     <h2 class="content-title clear">
       链内主节点授权管理
     </h2>
-    <div class="padding bg-white mb20">
+    <!-- <div class="padding bg-white mb20">
       <Row>
         <Col :span="6">
           <div>主节点授权审批：</div>
@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="padding bg-white mb20">
       <div style="margin-bottom: 0px;color: #273D52;">
         <b>主节点服务器列表</b>
@@ -56,7 +56,7 @@ export default {
       },
       {
         title: "服务器身份标识",
-        key: "id"
+        key: "address"
       },
       {
         title: '节点类型',
@@ -81,7 +81,14 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a', {}, '查看')
+          var row = p.row
+          return h('a', {
+             on:{
+               click(){
+                  that.adds(row)
+               }
+             }
+          }, '查看')
         }
       },
       {
@@ -101,7 +108,7 @@ export default {
     var data1 = [
       {
         name: '从法科技',
-        id: '00740f...aeea2',
+        address: '00740f...aeea2',
         nodeType: '主节点',
         time: '--',
         storagename: '从法存管域',
@@ -111,7 +118,7 @@ export default {
       // 收回授权审核中
       {
         name: '从法科技',
-        id: '00740f...acbea3',
+        address: '00740f...acbea3',
         nodeType: '主节点',
         storagename: '从法存管域',
         time: '2020-1-5 13:12:40',
@@ -140,6 +147,13 @@ export default {
   computed: {},
   methods: {
     init() {},
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+         })
+    },
     ok() {},
     cancel() {},
     pageChange(page) {

@@ -20,6 +20,7 @@
     <div class="padding bg-white" style="margin-bottom: 20px;">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">数据存管域列表</span>
+          <Button type="primary" @click="addSee" class="fr">添加</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -32,18 +33,18 @@
         <Col span="7">
           <div class="condition-item">
             <span class="condition-label">数据存管域名称：</span>
-            <Input type="text" placeholder="数据存管域名称"></Input>
+            <Input type="text" v-model="form.name" placeholder="数据存管域名称"></Input>
           </div>
         </Col>
         <Col span="8">
           <div class="condition-item">
             <span class="condition-label">数据存管域唯一标识：</span>
-            <Input type="text" placeholder="数据存管域唯一标识"></Input>
+            <Input type="text" v-model="form.address" placeholder="数据存管域唯一标识"></Input>
           </div>
         </Col>
         <Col span="6">
           <div class="condition-item">
-            <Button style="width: 80px;" type="primary">查询</Button>
+            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
           </div>
         </Col>
       </Row>
@@ -56,7 +57,9 @@
         </div>
       </div>
     </div>
-    <div class="padding bg-white clear">
+
+    
+    <!-- <div class="padding bg-white clear">
       <div style="margin-bottom: 10px;color: #273D52;" class="clear">
         <span style="color: #273D52;font-weight: 600;">创建许可企业列表</span>
         <Tooltip
@@ -106,7 +109,7 @@
           <Page :total="total" @on-change="pageChange"/>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -135,16 +138,31 @@ export default {
         title:'操作',
         render(h,p) {
           var row = p.row || {}
-          var label = row.status == '2' ? '删除' : '撤销'
-          label = row.status == '0' ? '--' : label
-          return h('a', {
+          var status = row.status || ''
+          // var label = row.status == '2' ? '删除' : '撤销'
+          // label = row.status == '0' ? '--' : label
+          var opt = h('a', {
+          })
+          var opt2 = h('a',{
             on: {
-              click() {
+              click(){
                 var index = p.index
-                that.data1.splice(index,1)
+                let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                that.$router.push({
+                   name:"data-detail",
+                   query:{
+                      showDataSubmenu: '1',
+                      showBusinessSubmenu,
+                      mainActive: 'data',
+                      activeIndex: '1',
+                      subActive: 'data-detail'
+                }
+              })
               }
             }
-          }, label)
+          },'详情')
+          var opts = [opt2]
+          return h('div',{},opts)
         }
       }
     ]
@@ -153,58 +171,19 @@ export default {
       {name: '泛融存管域', address: '00740f...bdca2', time: '2020-1-5 15:34:57', statuslabel: '删除审核中', status: '1' },
       {name: '从法存管域', address: '00740f...facb7', time: '2020-1-5 10:21:32', statuslabel: '已创建', status: '2' },
     ]
-    var columns2 = [
-      {
-        title: "企业名称",
-        key: "name"
-      },
-      {
-        title: "企业身份标识",
-        key: "address"
-      },
-      {
-        title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
-      {
-        title:'操作',
-        render(h,p) {
-          var row = p.row || {}
-          var label = row.status == '2' ? '删除' : '撤销'
-          label = row.status == '0' ? '--' : label
-          return h('a', {
-            on: {
-              click() {
-                var index = p.index
-                that.data1.splice(index,1)
-              }
-            }
-          }, label)
-        }
-      }
-    ]
-    var data2 = [
-      {name: '从法科技', address: '00740f...ccbb1', time: '2020-1-5 10:05:51', statuslabel: '已添加', status: '2' },
-      {name: '金桥信息', address: '00740f...feac3', time: '', statuslabel: '添加审核中', status: '2' },
-      {name: '泛融科技', address: '00740f...bdae4', time: '2020-1-5 10:15:31', statuslabel: '删除审核中', status: '1' },
-    ]
+    
     return {
       acceptLimit: '1/3',
       name: '',
       address: '',
       addModal: false,
       columns1,
-      columns2,
       data1,
-      data2,
       total: 100,
       form: {
         name: '',
-        address: ''
+        address: '',
+        status:''
       },
       switch1: '0'
     }
@@ -227,6 +206,12 @@ export default {
     },
     cancel() {
 
+    },
+    search(){
+
+    },
+    addSee(){
+         this.$router.push('/chain-chdetial')
     },
     pageChange(page) {
       console.log(page)

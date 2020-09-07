@@ -46,7 +46,7 @@
         </RadioGroup>
       </div>
     </div>
-    <div class="bg-white padding">
+    <!-- <div class="bg-white padding">
       <div style="margin-bottom: 25px;color: #273D52;">
         <span>
           <b>业务域调用访问</b>
@@ -101,7 +101,7 @@
           <Page :total="total" @on-change="pageChange" />
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -109,60 +109,59 @@
 export default {
   data() {
     var that = this
-    var columns1 = [
-      {
-        title: "用户姓名",
-        key: "name"
-      },
-      {
-        title: "用户身份标识",
-        key: "address"
-      },
-      {
-        title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
-      {
-        title:'操作',
-        render(h,p) {
-          var row = p.row || {}
-          var label = '--'
-          var status = row.status
-          if (status == '2') {
-            label = '删除'
-          } 
-          if (status == '3') {
-            label = '撤销'
-          }
-          return h('a', {
-            on: {
-              click() {
-                var index = p.index
-                if (status == '2') {
-                  that.data1.splice(index,1)
-                }
-              }
-            }
-          }, label)
-        }
-      }
-    ]
-    var data1 = [
-      {name: '张力', address: '008b0f...acfe5',  time: '2020-1-5 10:46:18', statuslabel: '已添加', status: '2' },
-      {name: '李志伟', address: '008b0f...abbc3',  time: '--', statuslabel: '添加审核中', status: '1' },
-      {name: '郭志', address: '008b0f...edb28',  time: '--', statuslabel: '添加审核中', status: '1' },
-      {name: '吴载舟', address: '008b0f...aeafc', time: '2020-1-5 10:50:11', statuslabel: '删除审核中', status: '2' },
-    ]
+    // var columns1 = [
+    //   {
+    //     title: "用户姓名",
+    //     key: "name"
+    //   },
+    //   {
+    //     title: "用户身份标识",
+    //     key: "address"
+    //   },
+    //   {
+    //     title: '添加时间',
+    //     key: 'time'
+    //   },
+    //   {
+    //     title: '状态',
+    //     key: 'statuslabel'
+    //   },
+    //   {
+    //     title:'操作',
+    //     render(h,p) {
+    //       var row = p.row || {}
+    //       var label = '--'
+    //       var status = row.status
+    //       if (status == '2') {
+    //         label = '删除'
+    //       } 
+    //       if (status == '3') {
+    //         label = '撤销'
+    //       }
+    //       return h('a', {
+    //         on: {
+    //           click() {
+    //             var index = p.index
+    //             if (status == '2') {
+    //               that.data1.splice(index,1)
+    //             }
+    //           }
+    //         }
+    //       }, label)
+    //     }
+    //   }
+    // ]
+    // var data1 = [
+    //   {name: '张力', address: '008b0f...acfe5',  time: '2020-1-5 10:46:18', statuslabel: '已添加', status: '2' },
+    //   {name: '李志伟', address: '008b0f...abbc3',  time: '--', statuslabel: '添加审核中', status: '1' },
+    //   {name: '郭志', address: '008b0f...edb28',  time: '--', statuslabel: '添加审核中', status: '1' },
+    //   {name: '吴载舟', address: '008b0f...aeafc', time: '2020-1-5 10:50:11', statuslabel: '删除审核中', status: '2' },
+    // ]
     return {
       switch1: '0',
       switch2: '0',
       switch3: '0',
-      total: 90,
-      columns1, data1
+
     }
   },
   watch: {},

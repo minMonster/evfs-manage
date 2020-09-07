@@ -15,7 +15,7 @@
     <div class="padding bg-white">
       <div class="section-title clear">
         <span>隶属节点服务器</span>
-        <Button style="float: right;" type="primary">连接节点服务器</Button>
+        <Button style="float: right;" @click="addModal = true" type="primary">连接节点服务器</Button>
       </div>
       <div>
         <Table :columns="columns1" :data="data1"></Table>
@@ -24,6 +24,19 @@
             <Page :total="total" @on-change="pageChange"/>
           </div>
         </div>
+         <Modal
+        v-model="addModal"
+        title="连接节点服务器"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <div class="add-modal-body">
+          <div><p Style="margin-bottom:10px;">节点服务器连接地址：</p><Input placeholder="请输入管理员名称" v-model="nodeAddress" /></div>
+        </div>
+         <div slot="footer">
+            <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >连接</Button>
+            <Button style="width:80px;" type="primary" class='clearBtn' @click="cancel" >取消</Button>
+         </div>
+      </Modal>
       </div>
     </div>
   </div>
@@ -97,6 +110,9 @@ export default {
       columns1,
       data1,
       total: 78,
+      addModal:false,
+      addLoading:false,
+      nodeAddress:""
     }
   },
   mounted() {
@@ -110,6 +126,12 @@ export default {
   },
   methods: {
     init() {
+
+    },
+     ok() {
+
+    },
+    cancel() {
 
     },
     pageChange(val) {

@@ -90,7 +90,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less"> 
   .create-field {
     h3 {
       font-size: 24px;

@@ -5,8 +5,8 @@
       <div class="section-title clear">
         <span>数据存管域列表</span>
         <div class="fr float-right" style="margin-top: -5px;">
-          <Button type="primary">创建新域</Button>
-          <Button type="primary" style="margin-left: 24px;">连接现有域</Button>
+          <!-- <Button type="primary">创建新域</Button> -->
+          <Button type="primary" @click="addModal = true" style="margin-left: 24px;">连接现有域</Button>
         </div>
       </div>
       <div>
@@ -17,6 +17,19 @@
           <Page :total="total" @on-change="pageChange" />
         </div>
       </div>
+       <Modal
+        v-model="addModal"
+        title="连接数据存管域"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <div class="add-modal-body">
+          <div><p style="margin-bottom:15px;">数据存管域唯一标识：</p><Input placeholder="请输入委员名称" v-model="address" /></div>
+        </div>
+        <div slot="footer">
+          <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >连接</Button>
+          <Button  style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
+      </div>
+      </Modal>
     </div>
 
   </div>
@@ -61,7 +74,7 @@ export default {
                 // that.data1.splice(index,1)
               }
             }
-          }, '断开联接')
+          }, '断开连接')
           var opt2 = h('a', {
             on: {
               click() {
@@ -115,7 +128,12 @@ export default {
     return {
       columns1, 
       data1,
-      total: 103
+      total: 103,
+      addLoading:false,
+      addModal: false,
+      name:'',
+      address:''
+
     }
   },
   mounted() {
@@ -131,6 +149,61 @@ export default {
     init() {
 
     },
+    destoryed(){
+         this.closeTimer()
+    },
+    closeTimer() {
+      if (this.timer) {
+        clearInterval(this.timer)
+        var signResult = document.getElementById('signResult')
+        signResult = ''
+      }
+    },
+    confirmAdd(){
+
+    },
+    ok() {
+          var timestamp = Date.now()
+          let signStr = this.timestamp + ''
+          sign(signStr)
+          this.timer = setInterval(() => {
+              var signResult = document.getElementById('signResult')
+              var signature = signResult.value
+              if (signature && !signature.match(/^(doing)|(fail)|(refuse)$/)) {
+                this.closeTimer()
+                console.log(signature)
+                this._add()
+              }
+              if (signature == 'fail') {
+                console.log('签名失败')
+                this.closeTimer()
+                // this.$toast('签名失败')
+              }
+              if (signature == 'refuse') {
+                console.log('拒绝签名')
+                this.closeTimer()
+                // this.$toast('签名失败')
+              }
+          },100)
+          let name = this.name.trim()
+          this.addLoading = true
+          var data = {
+            name
+          }
+          this.$http.post('',data).then(res => {
+            res = res.data
+          }).catch(() => {
+
+          }).then(res => {
+            this.cancel()
+          })
+    },
+    cancel() {
+            this.name = ''
+            this.address = ''
+            this.addModal = false
+            this.addLoading = false
+    },
     pageChange(value) {
       
     } 
@@ -139,5 +212,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  
+   .add-modal-body {
+    & > div:nth-child(1) {
+      margin-bottom: 20px;
+    }
+  }
 </style>

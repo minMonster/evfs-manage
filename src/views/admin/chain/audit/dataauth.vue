@@ -3,7 +3,7 @@
     <h2 class="content-title clear">
       数据存管域内业务域授权管理
     </h2>
-    <div class="padding bg-white mb20">
+    <!-- <div class="padding bg-white mb20">
       <Row>
         <Col :span="6">
           <div>数据存管域创建审批：</div>
@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="padding bg-white mb20">
       <div style="margin-bottom: 0px;color: #273D52;">
         <b>数据存管域列表</b>
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="padding bg-white mb20">
+    <!-- <div class="padding bg-white mb20">
       <div class="section-title"><span>创建许可企业列表</span></div>
       <div>
         <Table :columns="columns2" :data="data2" />
@@ -52,7 +52,7 @@
           <Page :total="100" />
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -67,7 +67,7 @@ export default {
       },
       {
         title: "数据存管域唯一标识",
-        key: "id"
+        key: "address"
       },
       {
         title: "创建时间",
@@ -84,7 +84,14 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a', {}, '查看')
+          var row = p.row
+          return h('a', {
+            on:{
+               click() {
+                that.adds(row)
+              }
+            }
+          }, '查看')
         }
       },
       {
@@ -104,65 +111,8 @@ export default {
     var data1 = [
       {
         name: '泛融存管域',
-        id: '00740f...aeea2',
+        address: '00740f...aeea2',
         time: '2020-1-5 15:34:57',
-        status: '删除审核中',
-        apply: '张力'
-      }
-    ]
-    var columns2 = [
-      {
-        title: "企业名称",
-        key: "name"
-      },
-      {
-        title: "企业身份标识",
-        key: "id"
-      },
-      {
-        title: "添加时间",
-        key: "time"
-      },
-      {
-        title: '状态',
-        key: 'status'
-      },
-      {
-        title: '申请人',
-        key: 'apply'
-      },
-      {
-        title: '审核通过人',
-        render(h,p) {
-          return h('a', {}, '查看')
-        }
-      },
-      {
-        title: '操作',
-        render(h,p) {
-          var agree = h('a', {
-            style: {
-              'margin-right': '10px'
-            }
-          }, '同意')
-          var disagree = h('a', {}, '拒绝')
-          var opts = [agree, disagree]
-          return h('div', {}, opts)
-        }
-      }
-    ];
-    var data2 = [
-      {
-        name: '金桥信息',
-        id: '00740f...feac3',
-        time: '--',
-        status: '添加审核中',
-        apply: '张力'
-      },
-      {
-        name: '泛融科技',
-        id: '00740f...feac5',
-        time: '2020-1-5 10:15:31',
         status: '删除审核中',
         apply: '张力'
       }
@@ -173,9 +123,7 @@ export default {
       address: "",
       addModal: false,
       columns1,
-      columns2,
       data1,
-      data2,
       total: 100,
       form: {
         name: "",
@@ -190,6 +138,14 @@ export default {
   computed: {},
   methods: {
     init() {},
+    //查看
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+         })
+    },
     ok() {},
     cancel() {},
     pageChange(page) {

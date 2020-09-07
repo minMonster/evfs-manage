@@ -75,11 +75,11 @@ export default {
       },
       {
         title: "数据存管域唯一标识",
-        key: "id"
+        key: "address"
       },
       {
         title: "节点运行许可数量",
-        key: "time"
+        key: "numbers"
       },
       {
         title: "现有许可存储容量",
@@ -100,7 +100,14 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a', {}, '查看')
+          var row = p.row
+          return h('a', {
+              on:{
+              click() {
+                that.adds(row)
+              }
+            }
+          }, '查看')
         }
       },
       {
@@ -120,7 +127,8 @@ export default {
     var data1 = [
       {
         name: '蜂巢链存证域',
-        id: '00740f...aeea2',
+        address: '00740f...aeea2',
+        numbers:"00740f...aeea2",
         capacity: '0.00 TB',
         applycapacity: '5.00 TB',
         status: '申请审核中',
@@ -134,7 +142,7 @@ export default {
       },
       {
         title: "数据存管域唯一标识",
-        key: "id"
+        key: "address"
       },
       {
         title: "现有许可证数量",
@@ -155,7 +163,14 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a', {}, '查看')
+          var row = p.row
+          return h('a', {
+            on:{
+              click() {
+                that.adds(row)
+              }
+            }
+          }, '查看')
         }
       },
       {
@@ -175,7 +190,7 @@ export default {
     var data2 = [
       {
         name: '蜂巢链存证域',
-        id: '00740f...aeea2',
+        address: '00740f...aeea2',
         num: '0',
         applynum: '10',
         status: '申请审核中',
@@ -207,6 +222,14 @@ export default {
   methods: {
     init() {},
     ok() {},
+     //查看
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+'',
+             oktext:"关闭"
+         })
+    },
     cancel() {},
     pageChange(page) {
       console.log(page);

@@ -1,6 +1,6 @@
 <template>
   <div class="node-admission">
-    <div class="padding bg-white mb20">
+    <!-- <div class="padding bg-white mb20">
       <h2 class="content-title clear">节点准入许可管理 <Button type="primary" style="float: right;">待审核事项</Button></h2>
       <div class="clear chain-baseinfo">
         <Row>
@@ -12,8 +12,8 @@
           </Col>
         </Row>
       </div>
-    </div>
-    <div class="bg-white padding mb20" style="color: #273D52;">
+    </div> -->
+    <!-- <div class="bg-white padding mb20" style="color: #273D52;">
       <span>节点网络准入审批</span>
       <Tooltip
         placement="top"
@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="padding bg-white mb20">
       <div style="color: #273D52;">
         <div class="section-title"><span><span>准入节点服务器列表</span></span></div>
@@ -97,21 +97,21 @@
         </div>
       </div>
     </div>
-    <div class="bg-white padding mb20">
+    <!--<div class="bg-white padding mb20">
       <div>
         <div class="league-mem">
           <div class="section-title"><span>节点网络准入企业名单：</span></div>
-          <!-- <Tooltip
+          <Tooltip
             placement="top"
             max-width="600"
             transfer
             content='功效说明：在“节点网络准入审批”选择“关闭”时，凡是隶属于节点网络准入企业名单中的节点服务器均可自动加入链的节点网络。'>
             <Icon type="ios-help-circle-outline" />
-          </Tooltip> -->
+          </Tooltip> 
           <button class="fr" @click="addModal = true"><Icon type="md-add-circle" />添加</button>
         </div>
         <div>
-          <!-- <Row>
+           <Row>
             <Col span="6">
               <div class="condition-item">
                 <span class="condition-label">委员名称：</span>
@@ -141,7 +141,7 @@
                 <Button style="width: 80px;" type="primary">查询</Button>
               </div>
             </Col>
-          </Row> -->
+          </Row>
         </div>
         <Table :columns="columns2" :data="data2"></Table>
       </div>
@@ -160,22 +160,22 @@
           <div><Input placeholder="请输入委员身份标志地址" v-model="address" /></div>
         </div>
       </Modal>
-    </div>
-    <div class="bg-white padding mb20">
+    </div> -->
+     <!--<div class="bg-white padding mb20">
       <div>
         <div class="league-mem">
           <div class="section-title"><span>准入节点服务器列表【黑名单】：</span></div>
-          <!-- <Tooltip
+          <Tooltip
             placement="top"
             max-width="600"
             transfer
             content='功效说明：在“节点网络准入审批”选择“开启”时，准入节点服务器列表中的节点服务器才可以加入链的节点网络。'>
             <Icon type="ios-help-circle-outline" />
-          </Tooltip> -->
+          </Tooltip> 
           <button class="fr" @click="addModal = true"><Icon type="md-add-circle" />添加</button>
         </div>
         <div>
-          <!-- <Row>
+           <Row>
             <Col span="6">
               <div class="condition-item">
                 <span class="condition-label">委员名称：</span>
@@ -205,7 +205,7 @@
                 <Button style="width: 80px;" type="primary">查询</Button>
               </div>
             </Col>
-          </Row> -->
+          </Row> 
         </div>
         <Table :columns="columns3" :data="data3"></Table>
       </div>
@@ -214,7 +214,7 @@
           <Page :total="total" @on-change="pageChange"/>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -254,105 +254,14 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a', {}, '查看')
-        }
-      },
-      {
-        title:'操作',
-        render(h,p) {
-          var agree = h('a', {
-            style: {
-              'margin-right': '10px'
-            }
-          },'同意')
-          var disagree = h('a', {
-
-          },'拒绝')
-          var opts = [agree, disagree]
-          return h('div', {
-            on: {
-              click() {
-                var index = p.index
+          var row = p.row
+          return h('a', {
+            on:{
+              click(){
+                that.adds(row)
               }
             }
-          },[opts])
-        }
-      }
-    ]
-    var columns2 = [
-      {
-        title: "隶属企业名称",
-        key: "name"
-      },
-      {
-        title: "服务器身份标识",
-        key: "address"
-      },
-      {
-        title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'status'
-      },
-      {
-        title: '申请人',
-        key: 'apply'
-      },
-      {
-        title: '审核通过人',
-        render(h,p) {
-          return h('a', {}, '查看')
-        }
-      },
-      {
-        title:'操作',
-        render(h,p) {
-          var agree = h('a', {
-            style: {
-              'margin-right': '10px'
-            }
-          },'同意')
-          var disagree = h('a', {
-
-          },'拒绝')
-          var opts = [agree, disagree]
-          return h('div', {
-            on: {
-              click() {
-                var index = p.index
-              }
-            }
-          },[opts])
-        }
-      }
-    ]
-    var columns3 = [
-      {
-        title: "隶属企业名称",
-        key: "name"
-      },
-      {
-        title: "服务器身份标识",
-        key: "address"
-      },
-      {
-        title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'status'
-      },
-      {
-        title: '申请人',
-        key: 'apply'
-      },
-      {
-        title: '审核通过人',
-        render(h,p) {
-          return h('a', {}, '查看')
+          }, '查看')
         }
       },
       {
@@ -397,58 +306,12 @@ export default {
         apply: '张力',
       }
     ]
-    var data2 = [
-      {
-        name: '从法科技',
-        address: '00740f...aecf6',
-        type: '资源节点',
-        storagename: '从法存管域',
-        time: '--',
-        status: '添加审批中',
-        apply: '黑子',
-      },
-      {
-        name: '泛融科技',
-        address: '00630e...cabc3',
-        type: '主节点',
-        storagename: '从法存管域',
-        time: '2020-1-5 13:05:10',
-        status: '删除审批中',
-        apply: '王丽',
-      }
-    ]
-    var data3 = [
-      {
-        name: '从法科技',
-        address: '00740f...aecf6',
-        type: '资源节点',
-        storagename: '从法存管域',
-        time: '--',
-        status: '添加审批中',
-        apply: '里斯',
-      },
-      {
-        name: '从法科技',
-        address: '00630e...cabc3',
-        type: '主节点',
-        storagename: '从法存管域',
-        time: '2020-1-5 13:05:10',
-        status: '删除审批中',
-        apply: '张强',
-      }
-    ]
     return {
       acceptLimit: '1/3',
       name: '',
       address: '',
       addModal: false,
-      columns1,
-      columns2,
-      columns3,
-      data1,
-      data2,
-      data3,
-      total: 100,
+      columns1,data1,total: 100,
       form: {
         name: '',
         address: ''
@@ -468,6 +331,14 @@ export default {
   methods: {
     init() {
 
+    },
+    //查看
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+         })
     },
     ok() {
 

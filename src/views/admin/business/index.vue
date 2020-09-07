@@ -5,8 +5,8 @@
       <div class="section-title clear">
         <span>业务域列表</span>
         <div class="fr float-right" style="margin-top: -5px;">
-          <Button type="primary">创建业务域</Button>
-          <Button type="primary" style="margin-left: 24px;">连接业务域</Button>
+          <!-- <Button type="primary">创建业务域</Button> -->
+          <Button type="primary" @click="addModal = true " style="margin-left: 24px;">连接业务域</Button>
         </div>
       </div>
       <div>
@@ -17,6 +17,19 @@
           <Page :total="total" @on-change="pageChange" />
         </div>
       </div>
+        <Modal
+        v-model="addModal"
+        title="连接业务域"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <div class="add-modal-body">
+          <div><p style="margin-bottom:15px;">业务域唯一标识：</p><Input placeholder="请输入要连接的链实例中的业务域唯一标识" v-model="businame" /></div>
+        </div>
+        <div slot="footer">
+            <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >连接</Button>
+            <Button style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
+         </div>
+      </Modal>
     </div>
 
   </div>
@@ -129,7 +142,10 @@ export default {
     return {
       columns1, 
       data1,
-      total: 103
+      total: 103,
+      addModal:false,
+      addLoading:false,
+      businame:''
     }
   },
   mounted() {
@@ -143,6 +159,29 @@ export default {
   },
   methods: {
     init() {
+         this.initList()
+    },
+    //查询业务域列表
+    initList(){
+        setTimeout(() =>{
+          this.$http.post('/cmw/pbqbl.do').then(res => {
+            console.log(res)
+            if(res.retCode == '1'){
+              this.$Message.success('查询成功')
+            }else{
+               if (res.retMsg) {
+               this.$Message.error(res.retMsg)
+              }
+            }
+          }).catch(err => {
+
+          })
+        })
+    },
+    ok(){
+
+    },
+    cancel(){
 
     },
     pageChange(value) {

@@ -69,14 +69,14 @@
       <div class="section-title"><span>域内业务域信息</span></div>
       <div class="chain-content-item">
         <Row>
-          <Col :span="8">
+          <Col :span="24">
             <p><span>2</span></p>
             <div>业务域数量</div>
           </Col>
-          <Col :span="8">
+          <!-- <Col :span="8">
             <p><span>2</span></p>
             <div>隶属企业数量</div>
-          </Col>
+          </Col> -->
         </Row>
       </div>
     </div>
@@ -134,7 +134,27 @@ export default {
   },
   methods: {
     init() {
+         this.initList()
+    },
+    initList(){
+        let params = {
+          storage_id:storage_id
+        }
+        //查询数据存管域详情
+        setTimeout(() => {
+           this.$http.poat('/cmw/pbqsd.do',params).then(res => {
+             console.log(res)
+             if(res.retCode == '1'){
+                this.$Message.success('查询成功')
+             }else{
+               if (res.retMsg) {
+               this.$Message.error(res.retMsg)
+              }
+             }
+           }).catch(err =>{
 
+           })
+        },1000)
     }
   }
 }

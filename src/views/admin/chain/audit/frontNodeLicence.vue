@@ -3,16 +3,16 @@
     <h2 class="content-title clear">
       <span>前置节点访问许可管理</span>
     </h2>
-    <div class="padding bg-white mb20">
+    <!-- <div class="padding bg-white mb20">
       <div style="margin-bottom: 0;color: #273D52;">
         <div class="section-title"><span>前置节点匿名调用访问：</span></div>
-        <!-- <Tooltip
+        <Tooltip
           placement="top"
           max-width="600"
           transfer
           content="选项说明：* 如果允许匿名调用访问，则任何前置节点无需任何授权，均可与链建立访问通道，向链上提交或访问链上数据，除了黑名单中的前置节点；* 如果禁止匿名调用访问，则只有白名单中的前置节点才可与链建立访问通道，向链上提交或访问链上数据。"
           <Icon type="ios-help-circle-outline" />
-        </Tooltip> -->
+        </Tooltip> 
         <RadioGroup style="margin: 0 20px;" v-model="switch1">
           <Radio label="1">允许</Radio>
           <Radio label="0">禁止</Radio>
@@ -31,8 +31,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="padding bg-white mb20">
+    </div>-->
+   <div class="padding bg-white mb20">
       <div style="margin-bottom: 20px;color: #273D52;">
         <span>
           前置节点调用访问
@@ -79,7 +79,7 @@
             </div>
           </Col>
         </Row>
-      </div> -->
+      </div>  -->
       <div>
         <Table :columns="columns1" :data="data1"></Table>
       </div>
@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-white padding mb20">
+    <!-- <div class="bg-white padding mb20">
       <div style="margin-bottom: 20px;color: #273D52;">
         <span>
           前置节点调用访问
@@ -104,7 +104,7 @@
           <Icon type="ios-help-circle-outline" />
         </Tooltip>
       </div>
-      <!-- <div>
+       <div>
         <Row>
           <Col span="5">
             <div class="condition-item">
@@ -136,14 +136,14 @@
             </div>
           </Col>
         </Row>
-      </div> -->
+      </div> 
       <Table :columns="columns1" :data="data1"></Table>
     </div>
     <div class="page">
       <div class="page-inner">
         <Page :total="total" @on-change="pageChange" />
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -175,7 +175,14 @@ export default {
       {
         title: '审核通过人',
         render(h,p) {
-          return h('a', {}, '查看')
+          var row = p.row
+          return h('a', {
+              on:{
+              click() {
+                that.adds(row)
+              }
+            }
+          }, '查看')
         }
       },
       {
@@ -220,26 +227,6 @@ export default {
         apply: '张力',
       }
     ]
-    var data2 = [
-      {
-        name: '从法科技',
-        address: '00740f...aecf6',
-        type: '资源节点',
-        storagename: '从法存管域',
-        time: '--',
-        status: '添加审批中',
-        apply: '黑子',
-      },
-      {
-        name: '泛融科技',
-        address: '00630e...cabc3',
-        type: '主节点',
-        storagename: '从法存管域',
-        time: '2020-1-5 13:05:10',
-        status: '删除审批中',
-        apply: '王丽',
-      }
-    ]
     return {
       acceptLimit: "1/3",
       name: "",
@@ -247,7 +234,7 @@ export default {
       addModal: false,
       columns1,
       data1,
-      data2,
+      // data2,
       total: 100,
       form: {
         name: "",
@@ -264,6 +251,14 @@ export default {
   methods: {
     init() {},
     ok() {},
+    //查看
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+         })
+    },
     cancel() {},
     pageChange(page) {
       console.log(page);

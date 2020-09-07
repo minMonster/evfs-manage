@@ -141,40 +141,50 @@
         </div>
       </div>
     </div>
+    <div v-show="popups">
+          <div id="qrcode"></div>
+          <div class="over"></div>
+    </div>
     <Modal
       v-model="addModal"
       title="添加服务器管理员"
       @on-ok="ok"
       @on-cancel="cancel">
       <div class="add-modal-body">
-        <div style="margin-bottom: 20px;"><Input placeholder="请输入链管理员姓名" v-model="name" /></div>
-        <div><Input placeholder="请输入链管理员身份标识" v-model="id" /></div>
+        <div style="margin-bottom: 20px;"><Input placeholder="请输入链管理员姓名" v-model="formItem.adminName" /></div>
+        <div><Input placeholder="请输入链管理员身份标识" v-model="formItem.address" /></div>
       </div>
+       <div slot="footer">
+            <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >添加</Button>
+            <Button style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
+         </div>
     </Modal>
   </div>
 </template>
 
 <script>
+import QRCode from 'qrcodejs2';
 export default {
   data() {
     var that = this
     var columns1 = [
       {
         title: '管理员姓名',
-        key: 'name'
+        key: 'adminName'
       }, 
       {
         title: '管理员身份标识', 
-        key: 'id'
+        key: 'address'
       },
       {
         title: '操作',
         render(h,p) {
-          var index = p.index
+          var row = p.row
           return h('a', {
             on: {
               click() {
-                that.data1.splice(index,1)
+                // that.data1.splice(index,1)
+                that.del(row)
               }
             }
           }, '删除')
@@ -182,9 +192,13 @@ export default {
       }
     ]
     var data1 = [
-      { name: '张力', id: '008b0f...acfe5' },
-      { name: '李志伟', id: '008b0f...abbc3' },
+      { adminName: '张力', address: '008b0f...acfe5' },
+      { adminName: '李志伟', address: '008b0f...abbc3' },
     ]
+    var formItem={
+        adminName:'',
+        address: ''
+      }
     return {
       title: '节点服务器管理',
       status: '',
@@ -196,12 +210,13 @@ export default {
       data1,
       disabled: true,
       addModal: false,
-      name: '',
-      id: '',
+      addLoading:false,
+      formItem,
       // 服务器存储许可容量信息
       all: '0.00',
       available: '0.00',
-      used: '0.00'
+      used: '0.00',
+      popups:0
     }
   },
   mounted() {
@@ -233,25 +248,60 @@ export default {
       }
     },
     ok() {
-      let name = this.name
-      let id = this.id
-      if (name && id) {
+      let adminName = this.adminName
+      let address = this.address
+      if (adminName && address) {
         this.data1.push({
-          name, id
+          adminName, address
         })
       }
       this.addModal = false
     },
+    del(obj){
+      var that = this;
+      this.$Modal.confirm({
+         title: '删除确认',
+         content:'<p style="color:black;font-size:15px;">确定将当前管理员从管理列表中删除？</p><br/> 管理员姓名： '+ obj.adminName + ' <br/> 管理员身份标识: '+ obj.address + '',
+         okText: '删除',
+         cancelText: '取消',
+         onOk(){
+            this.popups = 1
+            this.creatQrCode()
+            //  that.confirmDel(obj)
+         }
+      })
+    },
+    //确定删除管理员
+    // confirmDel(obj){
+    //    this.popups = 1
+    //    this.creatQrCode();
+    // },
     cancel() {
-
+     
     },
     pageChange(val) {
 
-    }
+    },
+    //二维码
+    creatQrCode() {
+        let linkData = {
+            // url:this.apiUrl + "/clt/pbsst.do",
+            // func:"margIn",
+            data:{             
+            }
+        };
+        var qrcode = new QRCode('qrcode', {
+            text: JSON.stringify(linkData), // 需要转换为二维码的内容
+            width: 260,
+            height: 260,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H,//容错率，L/M/H
+        })
+    },
   }
 }
 </script>
-
 <style lang="less" scoped>
   .chain-header-content{
     color: #7D8B97;

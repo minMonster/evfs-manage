@@ -63,7 +63,7 @@
             </Col>
             <Col span="6">
               <div class="condition-item">
-                <Button style="width: 80px;" type="primary">查询</Button>
+                <Button style="width: 80px;" @click="search" type="primary">查询</Button>
               </div>
             </Col>
           </Row>
@@ -148,7 +148,8 @@ export default {
       total: 100,
       form: {
         name: '',
-        address: ''
+        address: '',
+        status:''
       }
     }
   },
@@ -171,6 +172,7 @@ export default {
     cancel() {
 
     },
+    search(){},
     pageChange(page) {
       
     }

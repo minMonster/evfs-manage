@@ -1,7 +1,7 @@
 <template>
   <div class="node-admission">
     <div class="content-title"><span>业务系统访问许可管理</span></div>
-    <div class="bg-white padding" style="margin-bottom: 30px;color: #373737;">
+    <!-- <div class="bg-white padding" style="margin-bottom: 30px;color: #373737;">
       <span>业务域匿名调用访问：</span>
       <RadioGroup style="margin: 0 20px;" v-model="switch1">
         <Radio label="1" style="margin-right: 40px;">允许</Radio>
@@ -20,28 +20,12 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="bg-white padding mb20">
       <div style="margin-bottom: 25px;color: #273D52;">
         <span>
           <b>业务域调用访问</b>
           <b>【黑名单】</b>：
-        </span>
-      </div>
-      <div>
-        <Table :columns="columns1" :data="data1"></Table>
-      </div>
-      <div class="page">
-        <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
-        </div>
-      </div>
-    </div>
-    <div class="bg-white padding">
-      <div style="margin-bottom: 25px;color: #273D52;">
-        <span>
-          <b>业务域调用访问</b>
-          <b>【白名单】</b>：
         </span>
       </div>
       <div>
@@ -86,7 +70,14 @@ export default {
         width: 130,
         title: '审核通过人',
         render(h,p) {
-          return h('a',{},'查看')
+          var row = p.row
+          return h('a',{
+            on:{
+              click() {
+                that.adds(row)
+              }
+            }
+          },'查看')
         }
       },
       {
@@ -151,6 +142,14 @@ export default {
   computed: {},
   methods: {
     init() {},
+    //查看
+    adds(obj){
+          this.$Modal.confirm({
+             title: '已审核人列表',
+             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
+             oktext:"关闭"
+         })
+    },
     ok() {},
     cancel() {},
     pageChange(page) {
