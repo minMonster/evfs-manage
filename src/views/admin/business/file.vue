@@ -16,16 +16,16 @@
       </div>
       <Row>
         <Col span="5">
-          <div class="condition-item">
-            <span class="condition-label">文件名称：</span>
-            <Input type="text" v-model="form.name" placeholder="文件名称"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">文件名称：</span>
+          <Input type="text" v-model="form.name" placeholder="文件名称"></Input>
+        </div>
         </Col>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">文件链上唯一标识：</span>
-            <Input type="text" v-model="form.address" placeholder="文件链上唯一标识："></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">文件链上唯一标识：</span>
+          <Input type="text" v-model="form.address" placeholder="文件链上唯一标识："></Input>
+        </div>
         </Col>
         <!-- <Col span="6">
           <div class="condition-item">
@@ -40,9 +40,9 @@
           </div>
         </Col> -->
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -54,8 +54,8 @@
         </div>
       </div>
     </div>
-       <div class="bg-white padding clear" style="margin-top:20px;">
-        <div style="margin-bottom: 10px;color: #273D52;">
+    <div class="bg-white padding clear" style="margin-top:20px;">
+      <div style="margin-bottom: 10px;color: #273D52;">
         <span>
           <b>结构数据监管</b>
         </span>
@@ -69,19 +69,19 @@
       </div>
       <Row>
         <Col span="8">
-          <div class="condition-item">
-            <span class="condition-label">数据链上唯一标识：</span>
-            <Input type="text" placeholder="数据链上唯一标识："></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">数据链上唯一标识：</span>
+          <Input type="text" placeholder="数据链上唯一标识："></Input>
+        </div>
         </Col>
 
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
-        <div>
+      <div>
         <Table :columns="columns2" :data="data2"></Table>
       </div>
       <div class="page">
@@ -89,37 +89,37 @@
           <Page :total="total" @on-change="pageChange" />
         </div>
       </div>
-   </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "文件名称",
-        key: "name"
+        title: '文件名称',
+        key: 'name'
       },
       {
-        title: "文件链上唯一标识",
-        key: "id"
+        title: '文件链上唯一标识',
+        key: 'id'
       },
       {
         title: '状态',
         key: 'statuslabel'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var row = p.row || {}
           var label = '--'
           var status = row.status
           if (status == '1') {
             label = '冻结'
-          } 
-          if(status == '2') {
+          }
+          if (status == '2') {
             label = '解冻'
           }
           if (status > 2) {
@@ -127,10 +127,10 @@ export default {
           }
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
                 if (status == '2') {
-                  
+
                 }
               }
             }
@@ -139,30 +139,30 @@ export default {
       }
     ]
     var data1 = [
-      {name: '测试.doc', id: '00fb0a...ef34a', statuslabel: '正常', status: '1' },
-      {name: '照片.jpg', id: '00fb0a...eda4e',   statuslabel: '冻结', status: '2' },
-      {name: '视频.MP4', id: '00fb0a...eac4f',  statuslabel: '解冻审核中', status: '4' },
-      {name: '音频.MP3', id: '00fb0a...a43fe', statuslabel: '冻结审核中', status: '3' },
+      { name: '测试.doc', id: '00fb0a...ef34a', statuslabel: '正常', status: '1' },
+      { name: '照片.jpg', id: '00fb0a...eda4e', statuslabel: '冻结', status: '2' },
+      { name: '视频.MP4', id: '00fb0a...eac4f', statuslabel: '解冻审核中', status: '4' },
+      { name: '音频.MP3', id: '00fb0a...a43fe', statuslabel: '冻结审核中', status: '3' }
     ]
     var columns2 = [
       {
-        title: "数据链上唯一标识",
-        key: "id"
+        title: '数据链上唯一标识',
+        key: 'id'
       },
       {
         title: '状态',
         key: 'statuslabel'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var row = p.row || {}
           var label = '--'
           var status = row.status
           if (status == '1') {
             label = '冻结'
-          } 
-          if(status == '2') {
+          }
+          if (status == '2') {
             label = '解冻'
           }
           if (status > 2) {
@@ -170,10 +170,10 @@ export default {
           }
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
                 if (status == '2') {
-                  
+
                 }
               }
             }
@@ -181,37 +181,39 @@ export default {
         }
       }
     ]
-     var data2 = [
-      {id: '00fb0a...ef34a', statuslabel: '正常', status: '1' },
-      {id: '00fb0a...eda4e',   statuslabel: '冻结', status: '2' },
-      {id: '00fb0a...eac4f',  statuslabel: '解冻审核中', status: '4' },
-      {id: '00fb0a...a43fe', statuslabel: '冻结审核中', status: '3' },
+    var data2 = [
+      { id: '00fb0a...ef34a', statuslabel: '正常', status: '1' },
+      { id: '00fb0a...eda4e', statuslabel: '冻结', status: '2' },
+      { id: '00fb0a...eac4f', statuslabel: '解冻审核中', status: '4' },
+      { id: '00fb0a...a43fe', statuslabel: '冻结审核中', status: '3' }
     ]
     return {
       switch1: '0',
       switch2: '0',
       switch3: '0',
       total: 90,
-      columns1, data1,
-      columns2,data2,
-      form:{
-        name:'',
-        address:''
+      columns1,
+      data1,
+      columns2,
+      data2,
+      form: {
+        name: '',
+        address: ''
       }
     }
   },
   watch: {},
   computed: {},
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     },
-    search(){},
-    pageChange(val) {
-      
+    search () {},
+    pageChange (val) {
+
     }
   }
 }

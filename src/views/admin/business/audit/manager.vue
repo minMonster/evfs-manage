@@ -9,16 +9,16 @@
         <RadioGroup class="approval" v-model="acceptLimit">
           <Row>
             <Col span="6">
-              <Radio label="0">任意一个成员签批</Radio>
+            <Radio label="0">任意一个成员签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="1/3">1/3成员同时签批</Radio>
+            <Radio label="1/3">1/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="2/3">2/3成员同时签批</Radio>
+            <Radio label="2/3">2/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="3/3">所有成员同时签批</Radio>
+            <Radio label="3/3">所有成员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -63,16 +63,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "管理员姓名",
-        key: "name"
+        title: '管理员姓名',
+        key: 'name'
       },
       {
-        title: "管理员身份标志地址",
-        key: "address"
+        title: '管理员身份标志地址',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -90,20 +90,20 @@ export default {
       {
         width: 130,
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
-          return h('a',{
-            on:{
-              click() {
+          return h('a', {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
-          },'查看')
+          }, '查看')
         }
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var agree = h('a', {
             style: {
               marginRight: '8px'
@@ -112,34 +112,33 @@ export default {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
-                
               }
             }
-          },'同意')
-          var refuse =  h('a', {
+          }, '同意')
+          var refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },'拒绝')
-          return h('div',{
+          }, '拒绝')
+          return h('div', {
             'class': 'opt-btns'
-          },[
+          }, [
             agree, refuse
           ])
         }
       }
     ]
     var data1 = [
-      { name: '郭志',address: '008b0f...effbc',applicant: '张力', time: '--', status: '添加审核中',type: '1' },
-      { name: '吴载舟',address: '008b0f...abbc3', applicant: '张力',time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
-      { name: '张力',address: '008b0f...acfe5',applicant: '张力', time: '2020-1-5 19:41:11', status: '删除审核中', type: '2' },
+      { name: '郭志', address: '008b0f...effbc', applicant: '张力', time: '--', status: '添加审核中', type: '1' },
+      { name: '吴载舟', address: '008b0f...abbc3', applicant: '张力', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
+      { name: '张力', address: '008b0f...acfe5', applicant: '张力', time: '2020-1-5 19:41:11', status: '删除审核中', type: '2' }
     ]
     return {
       acceptLimit: '2/3',
@@ -155,7 +154,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -165,25 +164,25 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-         })
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    pageChange(page) {
-      
+    pageChange (page) {
+
     }
   }
 }

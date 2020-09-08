@@ -15,18 +15,18 @@
         <RadioGroup class="approval" v-model="acceptLimit">
           <Row>
             <Col span="6">
-              <Radio label="0">任意一个联盟委员签批</Radio>
+            <Radio label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="1/3">1/3联盟委员同时签批</Radio>
+            <Radio label="1/3">1/3联盟委员同时签批</Radio>
             </Col>
           </Row>
           <Row>
             <Col span="6">
-              <Radio label="2/3">2/3联盟委员同时签批</Radio>
+            <Radio label="2/3">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="3/3">所有联盟委员同时签批</Radio>
+            <Radio label="3/3">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -64,16 +64,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "委员名称",
-        key: "name"
+        title: '委员名称',
+        key: 'name'
       },
       {
-        title: "委员身份标志地址",
-        key: "address"
+        title: '委员身份标志地址',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -89,20 +89,20 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
-           return  h('a', {
-            on:{
-              click() {
+          return h('a', {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
-          },'查看')
-      }
+          }, '查看')
+        }
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var agree = h('a', {
             style: {
               marginRight: '8px'
@@ -111,24 +111,24 @@ export default {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },'同意')
-          var refuse =  h('a', {
+          }, '同意')
+          var refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },'拒绝')
-          return h('div',{
+          }, '拒绝')
+          return h('div', {
             'class': 'opt-btns'
-          },[
+          }, [
             agree, refuse
           ])
         }
@@ -136,19 +136,19 @@ export default {
     ]
     var data1 = [
       {
-          name: '金桥信息',
-          address: '00740f...feac3',
-          time: '--',
-          status: '添加审核中',
-          applicant: '从法科技',
-        },
-        {
-          name: '泛融信息',
-          address: '00740f...afea5',
-          time: '2020-1-1 12:04:43',
-          status: '删除审核中',
-          applicant: '从法科技',
-        }
+        name: '金桥信息',
+        address: '00740f...feac3',
+        time: '--',
+        status: '添加审核中',
+        applicant: '从法科技'
+      },
+      {
+        name: '泛融信息',
+        address: '00740f...afea5',
+        time: '2020-1-1 12:04:43',
+        status: '删除审核中',
+        applicant: '从法科技'
+      }
     ]
     return {
       acceptLimit: '2/3',
@@ -163,7 +163,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -173,24 +173,24 @@ export default {
 
   },
   methods: {
-    init() {
-    
-    },
-    //查看
-    adds(obj){
-        this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-        })
-    },
-    ok() {
+    init () {
 
     },
-    cancel() {
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
+    },
+    ok () {
 
     },
-    pageChange(page) {
+    cancel () {
+
+    },
+    pageChange (page) {
       console.log(page)
     }
   }

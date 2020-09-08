@@ -85,91 +85,91 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var columns1 = [
-        {
-          title: "隶属企业名称",
-          key: "name"
-        },
-        {
-          title: "隶属企业身份标识公钥",
-          key: "prikey"
-        },
-        {
-          title: "节点服务器身份标识公钥",
-          key: "nodeprikey"
-        },
-        {
-          title:'操作',
-          render(h,p) {
-            return h('a', '删除')
-          }
+      {
+        title: '隶属企业名称',
+        key: 'name'
+      },
+      {
+        title: '隶属企业身份标识公钥',
+        key: 'prikey'
+      },
+      {
+        title: '节点服务器身份标识公钥',
+        key: 'nodeprikey'
+      },
+      {
+        title: '操作',
+        render (h, p) {
+          return h('a', '删除')
         }
+      }
     ]
     var columns2 = [
-        {
-          title: "隶属企业名称",
-          key: "name"
-        },
-        {
-          title: "企业身份标识公钥",
-          key: "prikey"
-        },
-        {
-          title:'操作',
-          render(h,p) {
-            return h('a', '删除')
-          }
+      {
+        title: '隶属企业名称',
+        key: 'name'
+      },
+      {
+        title: '企业身份标识公钥',
+        key: 'prikey'
+      },
+      {
+        title: '操作',
+        render (h, p) {
+          return h('a', '删除')
         }
-      ]
+      }
+    ]
     var data1 = [
-        {name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…',nodeprikey: 'lksjljkfsljdflsjlfjsljflksjdflks…'}
-      ]
+      { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…', nodeprikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
+    ]
     var data2 = [
-        {name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…'}
-      ]
+      { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
+    ]
     return {
-      approval: "off",
+      approval: 'off',
       serverName: '',
-      pubKey: '',// 服务器身份标识
-      entPubkey: '', //企业身份标识
-      orgName: '', //企业名称
+      pubKey: '', // 服务器身份标识
+      entPubkey: '', // 企业身份标识
+      orgName: '', // 企业名称
       columns1,
       columns2,
       data1,
       data2
-    };
+    }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       // this.initServerName()
     },
-    initServerName() {
+    initServerName () {
       var serverName = this.$cookie.get('serverName')
       this.serverName = serverName
     },
-    next() {
-      this.$emit('next','step4.2')
+    next () {
+      this.$emit('next', 'step4.2')
     },
-    initPubkey() {
+    initPubkey () {
       let pubKey = cwv.genPubkey()
       let data = {
         seed: '',
         pubKey
       }
-      this.$http.post('/fbs/man/pbgnc.do',data).then(res => {
+      this.$http.post('/fbs/man/pbgnc.do', data).then(res => {
         res = res.data
         this.pubKey = res.pubKey || ''
-      }).catch( err => {
+      }).catch(err => {
         console.log(err)
       }).then(() => {
 
       })
     },
-    getServerInfo() {
+    getServerInfo () {
       // 读取服务器身份标识
       // key = org.brewchain.account.coinbase.pubkey
       // 读取企业身份标识
@@ -178,14 +178,14 @@ export default {
       // this.getEntbkey()
       // this.initPubkey()
     },
-    getEntbkey() {
+    getEntbkey () {
       let data = {
         key: 'org.brewchain.account.org.pubkey'
       }
-      this.$http.post('/fbs/man/pbgpo.do',data).then(res => {
+      this.$http.post('/fbs/man/pbgpo.do', data).then(res => {
         res = res.data
         if (res.retCode == '1') {
-          this.entPubkey =  res.value
+          this.entPubkey = res.value
         }
       }).catch(err => {
         console.log(err)
@@ -193,8 +193,8 @@ export default {
         console.log('complete')
       ])
     },
-    createChain() {
-      let needApprove = this.approval == 'on' ? true : false
+    createChain () {
+      let needApprove = this.approval == 'on'
       var orgName = this.orgName
       let data = {
         orgName: orgName,
@@ -204,7 +204,7 @@ export default {
         this.$Message.error('请输入企业名称')
         return
       }
-      this.$http.post('/fbs/man/pbscn.do', data).then(res=> {
+      this.$http.post('/fbs/man/pbscn.do', data).then(res => {
         res = res.data
         if (res.retCode == '1') {
           this.next()
@@ -213,27 +213,27 @@ export default {
     }
 
   },
-  created: function  () {
-      this.$http.post('/fbs/man/pbgpo.do', {'key': 'local.coinbase.address'}).then(res=> {
-        res = res.data
-        if (res.retCode == '1') {
-          this.pubKey = res.value;
-        }
-      })
-      this.$http.post('/fbs/man/pbgpo.do', {'key': 'org.brewchain.account.name'}).then(res=> {
-        res = res.data
-        if (res.retCode == '1') {
-          this.serverName = res.value;
-        }
-      })
-      this.$http.post('/fbs/man/pbgpo.do', {'key': 'org.brewchain.account.org.pubkey'}).then(res=> {
-        res = res.data
-        if (res.retCode == '1') {
-          this.entPubkey = res.value;
-        }
-      })
-    }
-};
+  created: function () {
+    this.$http.post('/fbs/man/pbgpo.do', { 'key': 'local.coinbase.address' }).then(res => {
+      res = res.data
+      if (res.retCode == '1') {
+        this.pubKey = res.value
+      }
+    })
+    this.$http.post('/fbs/man/pbgpo.do', { 'key': 'org.brewchain.account.name' }).then(res => {
+      res = res.data
+      if (res.retCode == '1') {
+        this.serverName = res.value
+      }
+    })
+    this.$http.post('/fbs/man/pbgpo.do', { 'key': 'org.brewchain.account.org.pubkey' }).then(res => {
+      res = res.data
+      if (res.retCode == '1') {
+        this.entPubkey = res.value
+      }
+    })
+  }
+}
 </script>
 
 <style lang="less" scoped>

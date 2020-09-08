@@ -34,33 +34,33 @@
       </div>
       <Row>
         <Col span="5">
-          <div class="condition-item">
-            <span class="condition-label">业务系统名称：</span>
-            <Input type="text" v-model="form.name" placeholder="业务系统名称"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">业务系统名称：</span>
+          <Input type="text" v-model="form.name" placeholder="业务系统名称"></Input>
+        </div>
         </Col>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">业务系统身份标识：</span>
-            <Input type="text" v-model="form.address" placeholder="业务系统身份标识"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">业务系统身份标识：</span>
+          <Input type="text" v-model="form.address" placeholder="业务系统身份标识"></Input>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <span class="condition-label">状态：</span>
-            <Select v-model="form.status" value="0">
-              <Option value="0">全部</Option>
-              <Option value="1">已添加</Option>
-              <Option value="2">已删除</Option>
-              <Option value="3">添加审核中</Option>
-              <Option value="4">删除审核中</Option>
-            </Select>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">状态：</span>
+          <Select v-model="form.status" value="0">
+            <Option value="0">全部</Option>
+            <Option value="1">已添加</Option>
+            <Option value="2">已删除</Option>
+            <Option value="3">添加审核中</Option>
+            <Option value="4">删除审核中</Option>
+          </Select>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -77,16 +77,16 @@
 
 <script>
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "业务系统名称",
-        key: "name"
+        title: '业务系统名称',
+        key: 'name'
       },
       {
-        title: "业务系统身份标识",
-        key: "address"
+        title: '业务系统身份标识',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -97,22 +97,22 @@ export default {
         key: 'statuslabel'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var row = p.row || {}
           var label = '--'
           var status = row.status
           if (status == '2') {
             label = '删除'
-          } 
+          }
           if (status == '3') {
             label = '撤销'
           }
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                that.data1.splice(index,1)
+                that.data1.splice(index, 1)
               }
             }
           }, label)
@@ -120,45 +120,45 @@ export default {
       }
     ]
     var data1 = [
-      {name: '上海公证系统', address: '00740f...aaba8',  time: '2020-1-5 10:45:25', statuslabel: '已添加', status: '2' },
-      {name: '四川公证系统', address: '00da0c...cfbe5',  time: '--', statuslabel: '删除审核中', status: '1' },
-      {name: '四川公证系统', address: '00da0c...cfbe5',  time: '--', statuslabel: '添加审核中', status: '1' },
-      {name: '北京公证系统', address: '00740f...dadaf', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '3' },
+      { name: '上海公证系统', address: '00740f...aaba8', time: '2020-1-5 10:45:25', statuslabel: '已添加', status: '2' },
+      { name: '四川公证系统', address: '00da0c...cfbe5', time: '--', statuslabel: '删除审核中', status: '1' },
+      { name: '四川公证系统', address: '00da0c...cfbe5', time: '--', statuslabel: '添加审核中', status: '1' },
+      { name: '北京公证系统', address: '00740f...dadaf', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '3' }
     ]
     return {
-      acceptLimit: "1/3",
-      name: "",
-      address: "",
+      acceptLimit: '1/3',
+      name: '',
+      address: '',
       addModal: false,
       columns1,
       data1,
       total: 100,
       form: {
-        name: "",
-        address: "",
-        status:''
+        name: '',
+        address: '',
+        status: ''
       },
-      switch1: "0"
-    };
+      switch1: '0'
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   watch: {},
   computed: {},
   methods: {
-    init() {},
-    confirmAdd(){
-        this.$router.push('/business-addpermission')
+    init () {},
+    confirmAdd () {
+      this.$router.push('/business-addpermission')
     },
-    ok() {},
-    search(){},
-    cancel() {},
-    pageChange(page) {
-      console.log(page);
+    ok () {},
+    search () {},
+    cancel () {},
+    pageChange (page) {
+      console.log(page)
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

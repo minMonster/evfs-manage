@@ -1,42 +1,40 @@
 import axios from 'axios'
-import Vue from 'vue'
-import cookies from "js-cookie";
-import { requestTimeout } from '../utils/const';
-import router from '../router';
+import { requestTimeout } from '@/utils/const'
 import { Message } from 'view-design'
 
-var inst = axios.create({
-  timeout: requestTimeout, //设置超时
-  transformRequest: [function (data, headers) {
+const service = axios.create({
+  timeout: requestTimeout, // 设置超时
+  transformRequest: [(data, headers) => {
     if (data) {
-      var cons = data.constructor
-      if (cons == FormData) {
+      const cons = data.constructor
+      if (cons === FormData) {
         return data
       } else {
         return JSON.stringify(data)
       }
     }
-  }],
+  }]
 })
-inst.interceptors.request.use(function (config,ss) { 
+service.interceptors.request.use((config) => {
   let address = window.localStorage.getItem('money-address')
   let publickey = window.localStorage.getItem('money-publickey')
-  if (address) {
-    // 添加headers
-    config.headers.address = address
+  // 添加headers
+  if (address) { config.headers['address'] = address }
+  config.params = {
+    ...config.params
   }
   if (publickey) {
     config.headers.publickey = publickey
   }
-  return config;
+  return config
 }, function (err) {
-  return Promise.reject(err);
+  return Promise.reject(err)
 })
 
-function removeValue() {
-  var uploadFile = document.getElementById('uploadFileResult')
-  var authFile = document.getElementById('authFileResult')
-  var customResult = document.getElementById('customResult')
+function removeValue () {
+  let uploadFile = document.getElementById('uploadFileResult')
+  let authFile = document.getElementById('authFileResult')
+  let customResult = document.getElementById('customResult')
   if (customResult) {
     customResult.value = ''
   }
@@ -47,13 +45,14 @@ function removeValue() {
     uploadFile.value = ''
   }
 }
-inst.interceptors.response.use(function (res) { 
+
+service.interceptors.response.use((res) => {
   //  清空签名的值
   removeValue()
   return res
-},function(err){
+}, function (err) {
   Message.error('服务请求错误')
   removeValue()
-  return Promise.reject(err);
-}) 
-export default inst;
+  return Promise.reject(err)
+})
+export default service

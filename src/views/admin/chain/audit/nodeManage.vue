@@ -6,12 +6,12 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
 
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -21,7 +21,7 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     }
   }

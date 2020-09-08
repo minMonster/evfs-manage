@@ -107,7 +107,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     // var columns1 = [
     //   {
@@ -134,7 +134,7 @@ export default {
     //       var status = row.status
     //       if (status == '2') {
     //         label = '删除'
-    //       } 
+    //       }
     //       if (status == '3') {
     //         label = '撤销'
     //       }
@@ -160,21 +160,21 @@ export default {
     return {
       switch1: '0',
       switch2: '0',
-      switch3: '0',
+      switch3: '0'
 
     }
   },
   watch: {},
   computed: {},
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     },
-    pageChange(val) {
-      
+    pageChange (val) {
+
     }
   }
 }

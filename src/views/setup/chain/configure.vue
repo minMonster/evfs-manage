@@ -30,26 +30,26 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       client: '1',
       node: '1'
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     },
-    next() {
+    next () {
       var client = this.client
       var node = this.node
       // 前端数据传输加密
-      var key1 = "org.brewchain.client.transfer.encryption"
+      var key1 = 'org.brewchain.client.transfer.encryption'
       // 节点间数据传输加密
-      var key2 = "org.brewchain.node.transfer.encryption"
+      var key2 = 'org.brewchain.node.transfer.encryption'
       var keys = [key1, key2]
       var values = [client, node]
       var data = {

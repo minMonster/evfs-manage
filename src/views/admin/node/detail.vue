@@ -7,59 +7,59 @@
         </h2>
         <Row class="chain-header-content">
           <Col span="8">
-            <div>服务器名称：从法存管域-节点4</div>
+          <div>服务器名称：从法存管域-节点4</div>
           </Col>
           <Col span="8">
-            <div>服务器身份标识：00630e...bbac5</div>
+          <div>服务器身份标识：00630e...bbac5</div>
           </Col>
         </Row>
         <Row class="chain-header-content">
           <Col span="8">
-            <div>企业名称：从法科技</div>
+          <div>企业名称：从法科技</div>
           </Col>
           <Col span="8">
-            <div>企业身份标识：00740f...ccbb1</div>
+          <div>企业身份标识：00740f...ccbb1</div>
           </Col>
           <Col span="8">
-            <div>创建时间： 2020-1-5 8:21:32</div>
+          <div>创建时间： 2020-1-5 8:21:32</div>
           </Col>
         </Row>
         <Row class="chain-header-content" v-if="status > 2">
           <Col span="8">
-            <div>隶属链ID：lskdjflkjsl…dfjsldkjfsd</div>
+          <div>隶属链ID：lskdjflkjsl…dfjsldkjfsd</div>
           </Col>
           <Col span="8">
-            <div>隶属数据存管域名称：：00740f...ccbb1</div>
+          <div>隶属数据存管域名称：：00740f...ccbb1</div>
           </Col>
           <Col span="8">
-            <div>隶属数据存管域ID： 200740f...ccbb9</div>
+          <div>隶属数据存管域ID： 200740f...ccbb9</div>
           </Col>
         </Row>
         <Row class="chain-header-content" v-else>
           <Col span="8" v-if="status == 1">
-            <div>隶属链ID：--</div>
+          <div>隶属链ID：--</div>
           </Col>
           <Col span="8" v-else>
-            <div>隶属链ID：00740f...aaba8</div>
+          <div>隶属链ID：00740f...aaba8</div>
           </Col>
           <Col span="8">
-            <div>隶属数据存管域名称：：--</div>
+          <div>隶属数据存管域名称：：--</div>
           </Col>
           <Col span="8">
-            <div>隶属数据存管域ID： --</div>
+          <div>隶属数据存管域ID： --</div>
           </Col>
         </Row>
       </div>
       <div class="padding bg-white" style="margin-bottom: 20px;">
         <Row>
           <Col :span="3">
-            <div>节点类型：</div>
+          <div>节点类型：</div>
           </Col>
           <Col :span="10">
-            <RadioGroup class="supervision" v-model="nodeType">
-              <Radio style="margin-right: 30px;" label="1">主节点</Radio>
-              <Radio label="2">资源节点</Radio>
-            </RadioGroup>
+          <RadioGroup class="supervision" v-model="nodeType">
+            <Radio style="margin-right: 30px;" label="1">主节点</Radio>
+            <Radio label="2">资源节点</Radio>
+          </RadioGroup>
           </Col>
         </Row>
       </div>
@@ -99,16 +99,16 @@
         <div class="node-detail-storage-info">
           <Row>
             <Col :span="8">
-              <div class="value">{{all}} <span>TB</span></div>
-              <p>文件存储总容量</p>
+            <div class="value">{{all}} <span>TB</span></div>
+            <p>文件存储总容量</p>
             </Col>
             <Col :span="8">
-              <div class="value">{{available}} <span>TB</span></div>
-              <p>可用文件存储容量</p>
+            <div class="value">{{available}} <span>TB</span></div>
+            <p>可用文件存储容量</p>
             </Col>
             <Col :span="8">
-              <div class="value">{{used}} <span>TB</span></div>
-              <p>已用文件存储容量</p>
+            <div class="value">{{used}} <span>TB</span></div>
+            <p>已用文件存储容量</p>
             </Col>
           </Row>
         </div>
@@ -142,8 +142,8 @@
       </div>
     </div>
     <div v-show="popups">
-          <div id="qrcode"></div>
-          <div class="over"></div>
+      <div id="qrcode"></div>
+      <div class="over"></div>
     </div>
     <Modal
       v-model="addModal"
@@ -154,35 +154,35 @@
         <div style="margin-bottom: 20px;"><Input placeholder="请输入链管理员姓名" v-model="formItem.adminName" /></div>
         <div><Input placeholder="请输入链管理员身份标识" v-model="formItem.address" /></div>
       </div>
-       <div slot="footer">
-            <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >添加</Button>
-            <Button style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
-         </div>
+      <div slot="footer">
+        <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >添加</Button>
+        <Button style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
+      </div>
     </Modal>
   </div>
 </template>
 
 <script>
-import QRCode from 'qrcodejs2';
+import QRCode from 'qrcodejs2'
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
         title: '管理员姓名',
         key: 'adminName'
-      }, 
+      },
       {
-        title: '管理员身份标识', 
+        title: '管理员身份标识',
         key: 'address'
       },
       {
         title: '操作',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           return h('a', {
             on: {
-              click() {
+              click () {
                 // that.data1.splice(index,1)
                 that.del(row)
               }
@@ -193,12 +193,12 @@ export default {
     ]
     var data1 = [
       { adminName: '张力', address: '008b0f...acfe5' },
-      { adminName: '李志伟', address: '008b0f...abbc3' },
+      { adminName: '李志伟', address: '008b0f...abbc3' }
     ]
-    var formItem={
-        adminName:'',
-        address: ''
-      }
+    var formItem = {
+      adminName: '',
+      address: ''
+    }
     return {
       title: '节点服务器管理',
       status: '',
@@ -210,16 +210,16 @@ export default {
       data1,
       disabled: true,
       addModal: false,
-      addLoading:false,
+      addLoading: false,
       formItem,
       // 服务器存储许可容量信息
       all: '0.00',
       available: '0.00',
       used: '0.00',
-      popups:0
+      popups: 0
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -229,10 +229,10 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
       this.initStatus()
     },
-    initStatus() {
+    initStatus () {
       var status = this.$route.query.status || ''
       this.status = status
       if (status == 4) {
@@ -241,13 +241,13 @@ export default {
       if (status > 2) {
         this.disabled = false
       }
-      if (status >=3 ) {
+      if (status >= 3) {
         this.all = '5.00'
         this.available = '1.21'
         this.used = '3.79'
       }
     },
-    ok() {
+    ok () {
       let adminName = this.adminName
       let address = this.address
       if (adminName && address) {
@@ -257,48 +257,48 @@ export default {
       }
       this.addModal = false
     },
-    del(obj){
-      var that = this;
+    del (obj) {
+      var that = this
       this.$Modal.confirm({
-         title: '删除确认',
-         content:'<p style="color:black;font-size:15px;">确定将当前管理员从管理列表中删除？</p><br/> 管理员姓名： '+ obj.adminName + ' <br/> 管理员身份标识: '+ obj.address + '',
-         okText: '删除',
-         cancelText: '取消',
-         onOk(){
-            this.popups = 1
-            this.creatQrCode()
-            //  that.confirmDel(obj)
-         }
+        title: '删除确认',
+        content: '<p style="color:black;font-size:15px;">确定将当前管理员从管理列表中删除？</p><br/> 管理员姓名： ' + obj.adminName + ' <br/> 管理员身份标识: ' + obj.address + '',
+        okText: '删除',
+        cancelText: '取消',
+        onOk () {
+          this.popups = 1
+          this.creatQrCode()
+          //  that.confirmDel(obj)
+        }
       })
     },
-    //确定删除管理员
+    // 确定删除管理员
     // confirmDel(obj){
     //    this.popups = 1
     //    this.creatQrCode();
     // },
-    cancel() {
-     
-    },
-    pageChange(val) {
+    cancel () {
 
     },
-    //二维码
-    creatQrCode() {
-        let linkData = {
-            // url:this.apiUrl + "/clt/pbsst.do",
-            // func:"margIn",
-            data:{             
-            }
-        };
-        var qrcode = new QRCode('qrcode', {
-            text: JSON.stringify(linkData), // 需要转换为二维码的内容
-            width: 260,
-            height: 260,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H,//容错率，L/M/H
-        })
+    pageChange (val) {
+
     },
+    // 二维码
+    creatQrCode () {
+      let linkData = {
+        // url:this.apiUrl + "/clt/pbsst.do",
+        // func:"margIn",
+        data: {
+        }
+      }
+      var qrcode = new QRCode('qrcode', {
+        text: JSON.stringify(linkData), // 需要转换为二维码的内容
+        width: 260,
+        height: 260,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H// 容错率，L/M/H
+      })
+    }
   }
 }
 </script>

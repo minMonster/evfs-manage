@@ -81,27 +81,27 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       step: '3'
     }
   },
   watch: {
-    step(n,o) {
-      console.log(n,o)
+    step (n, o) {
+      console.log(n, o)
       let that = this
       if (n == 2) {
         setTimeout(() => {
           that.step = '3'
-        }, 30300);
+        }, 30300)
       }
     }
   },
   methods: {
-    apply() {
+    apply () {
       this.step = '2'
     },
-    admin() {
+    admin () {
       this.$router.push({
         name: 'admin'
       })

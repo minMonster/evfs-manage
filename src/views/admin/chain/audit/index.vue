@@ -6,10 +6,10 @@
       </h2>
       <div class="tab-wrapper">
         <div class="tab-item" v-for="item in tabs" :key="item.name" :class="{active: active == item.name}"
-          @click="changeTab(item.name)"
+             @click="changeTab(item.name)"
         >
           <Badge :dot="item.count > 0">
-              <button>{{item.text}}</button>
+            <button>{{item.text}}</button>
           </Badge>
         </div>
       </div>
@@ -37,49 +37,58 @@ import operation from './operation'
 import dataauth from './dataauth'
 import mainnode from './mainnode'
 import chainadmin from './chainadmin'
-import node from './node'
-import frontnode from './frontNode'
-import filestroage from './fileStorage'
+// import node from './node'
+// import frontnode from './frontNode'
+// import filestroage from './fileStorage'
 var tabs = [
-  {text: '联盟委员会',name: 'chain-alliance', count: 0},
+  { text: '联盟委员会', name: 'chain-alliance', count: 0 },
   // {text: '行为审计',name: 'chain-configure', count: 3},
-  {text: '节点准入',name: 'chain-nodeadmission', count: 8},
-  {text: '前置节点准入',name: 'chain-frontnodelicence', count: 6},
-  {text: '运行许可证',name: 'chain-operation', count: 0},
-  {text: '数据存管域授权',name: 'dataauth', count: 22},
-  {text: '主节点授权',name: 'mainnode', count: 99},
-  {text: '链管理员',name: 'chainmanager',count: 4},
+  { text: '节点准入', name: 'chain-nodeadmission', count: 8 },
+  { text: '前置节点准入', name: 'chain-frontnodelicence', count: 6 },
+  { text: '运行许可证', name: 'chain-operation', count: 0 },
+  { text: '数据存管域授权', name: 'dataauth', count: 22 },
+  { text: '主节点授权', name: 'mainnode', count: 99 },
+  { text: '链管理员', name: 'chainmanager', count: 4 }
 ]
 export default {
   components: {
-    alliance, configure, nodeadmission, frontnodelicence, chainadmin, node, frontnode, filestroage,
-    operation, dataauth,mainnode,
+    alliance,
+    configure,
+    nodeadmission,
+    frontnodelicence,
+    chainadmin,
+    // node,
+    // frontnode,
+    // filestroage,
+    operation,
+    dataauth,
+    mainnode
   },
-  data() {
+  data () {
     return {
       tabs: [],
       active: 'alliance'
     }
   },
-  watch:{
-    $route(n) {
+  watch: {
+    $route (n) {
       this.initTab()
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       this.tabs = tabs
       this.initTab()
     },
-    initTab() {
+    initTab () {
       var query = this.$route.query
       var tab = query.tab || tabs[0].name
       this.active = tab
     },
-    changeTab(name) {
+    changeTab (name) {
       var query = this.$route.query
       this.$router.push({
         name: 'chain-audit',

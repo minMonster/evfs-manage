@@ -4,10 +4,10 @@
     <div class="clear chain-baseinfo">
       <Row>
         <Col span="12">
-          <div>链实例唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
+        <div>链实例唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
         </Col>
         <Col span="8">
-          <div>链实例创建时间：2020-1-5 12:00:00</div>
+        <div>链实例创建时间：2020-1-5 12:00:00</div>
         </Col>
       </Row>
     </div>
@@ -15,32 +15,32 @@
     <div class="encryption-wrapper padding bg-white" style="margin-bottom: 20px;">
       <Row>
         <Col span="16">
-          <div class="encryption-item">
-            <span>前置节点数据传输加密：</span>
-            <Tooltip
-              placement="top"
-              max-width="600"
-              transfer
-              content='选项说明：外部系统调用的前置节点和任何一个链的节点服务器间使用加密传输，从而进一步加强网络传输过程中的数据安全性。'>
-              <Icon type="ios-help-circle-outline" />
-            </Tooltip>
-            <RadioGroup v-model="encryption1" style="margin-left: 20px;">
-              <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
-            </RadioGroup>
-          </div>
-          <div class="encryption-item">
-            <span>节点间数据传输加密：</span>
-            <Tooltip
-              placement="top"
-              max-width="600"
-              transfer
-              content='选项说明：节点网络中的节点服务器之间使用加密传输，使得节点间的系统内数据交换安全性得到进一步加强。'>
-              <Icon type="ios-help-circle-outline" />
-            </Tooltip>
-            <RadioGroup style="margin-left: 20px;" v-model="encryption2">
-              <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
-            </RadioGroup>
-          </div>
+        <div class="encryption-item">
+          <span>前置节点数据传输加密：</span>
+          <Tooltip
+            placement="top"
+            max-width="600"
+            transfer
+            content='选项说明：外部系统调用的前置节点和任何一个链的节点服务器间使用加密传输，从而进一步加强网络传输过程中的数据安全性。'>
+            <Icon type="ios-help-circle-outline" />
+          </Tooltip>
+          <RadioGroup v-model="encryption1" style="margin-left: 20px;">
+            <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
+          </RadioGroup>
+        </div>
+        <div class="encryption-item">
+          <span>节点间数据传输加密：</span>
+          <Tooltip
+            placement="top"
+            max-width="600"
+            transfer
+            content='选项说明：节点网络中的节点服务器之间使用加密传输，使得节点间的系统内数据交换安全性得到进一步加强。'>
+            <Icon type="ios-help-circle-outline" />
+          </Tooltip>
+          <RadioGroup style="margin-left: 20px;" v-model="encryption2">
+            <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
+          </RadioGroup>
+        </div>
         </Col>
         <Col span="8">
         </Col>
@@ -65,13 +65,13 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       encryption1: '0',
       encryption2: '0'
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -81,7 +81,7 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     }
   }
@@ -93,6 +93,6 @@ export default {
     padding-top: 10px;
   }
   .encryption-wrapper {
-    
+
   }
 </style>

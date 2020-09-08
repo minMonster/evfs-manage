@@ -30,19 +30,19 @@ Vue.component('business-header', businessheader)
 export default {
   components: {
     'a-header': Header,
-    'side-menu': sidemenu,
+    'side-menu': sidemenu
   },
   watch: {
-    $route() {
+    $route () {
       var d = document.getElementsByClassName('admin-content')
-      if(d.length) {
+      if (d.length) {
         d = d[0]
         d.scrollTop = 0
       }
     }
   },
-  mounted() {
-    
+  mounted () {
+
   }
 }
 </script>

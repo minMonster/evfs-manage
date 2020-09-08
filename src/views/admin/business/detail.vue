@@ -6,26 +6,26 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>业务域名称：司法业务域</div>
+          <div>业务域名称：司法业务域</div>
           </Col>
           <Col :span="8">
-            <div>业务域唯一标识：00740f...ffbc3</div>
+          <div>业务域唯一标识：00740f...ffbc3</div>
           </Col>
           <Col :span="8">
-            <div>创建时间：2020-1-5 10:21:32</div>
-          </Col>
-        </Row>
-        <Row>
-          <Col :span="8">
-            <div>创建企业名称：从法科技</div>
-          </Col>
-          <Col :span="8">
-            <div>创建企业身份标识：00740f...ccbb1</div>
+          <div>创建时间：2020-1-5 10:21:32</div>
           </Col>
         </Row>
         <Row>
           <Col :span="8">
-            <div>备注：创建是描述业务域的作用。</div>
+          <div>创建企业名称：从法科技</div>
+          </Col>
+          <Col :span="8">
+          <div>创建企业身份标识：00740f...ccbb1</div>
+          </Col>
+        </Row>
+        <Row>
+          <Col :span="8">
+          <div>备注：创建是描述业务域的作用。</div>
           </Col>
         </Row>
       </div>
@@ -35,13 +35,13 @@
       <div>
         <Row style="color: #000;">
           <Col :span="8">
-            <div>允许信息监管：<a href="javascript:;">允许</a></div>
+          <div>允许信息监管：<a href="javascript:;">允许</a></div>
           </Col>
           <Col :span="8">
-            <div>允许文件删除：<a href="javascript:;">允许</a></div>
+          <div>允许文件删除：<a href="javascript:;">允许</a></div>
           </Col>
           <Col :span="8">
-            <div>允许任何人域内保存文件：<a href="javascript:;">允许</a></div>
+          <div>允许任何人域内保存文件：<a href="javascript:;">允许</a></div>
           </Col>
         </Row>
       </div>
@@ -52,49 +52,49 @@
         <div>
           <Row class="bg-white" style="margin-bottom: 10px; padding: 20px 0;">
             <Col :span="8">
-              <p><span>5.00 TB</span></p>
-              <div>占用存储容量</div>
+            <p><span>5.00 TB</span></p>
+            <div>占用存储容量</div>
             </Col>
             <Col :span="8">
-              <p><span>5</span></p>
-              <div>域内合约数量</div>
+            <p><span>5</span></p>
+            <div>域内合约数量</div>
             </Col>
             <Col :span="8">
-              <p><span>3</span></p>
-              <div>业务系统数量</div>
+            <p><span>3</span></p>
+            <div>业务系统数量</div>
             </Col>
           </Row>
           <Row class="bg-white" style="padding: 20px 0;">
             <Col :span="8">
-              <p><span>3</span></p>
-              <div>接入企业数量</div>
+            <p><span>3</span></p>
+            <div>接入企业数量</div>
             </Col>
             <Col :span="8">
-              <p><span>100</span></p>
-              <div>接入用户数量</div>
+            <p><span>100</span></p>
+            <div>接入用户数量</div>
             </Col>
           </Row>
         </div>
       </div>
     </div>
-    
+
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      
+
     }
   },
   watch: {},
   computed: {},
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     }
   }

@@ -7,14 +7,14 @@
           <div class="step-title">节点服务器初始化状态</div>
           <ul>
             <li v-for="(item, index) in steps" :key="index" :class="{active: curStep == item.name || (item.name == 'step4' && curStep == 'step4-joinchain')}">
-            <div class="main-step">{{item.text}}</div>
-            <div class="sub-step">
-              <ul v-if="curStep.indexOf('step4.') > -1 || curStep.indexOf('step6.') > -1">
-                <li v-for="(item,index) in item.new" :class="{active: curStep == item.name}" :key="index">
-                  <div>{{item.text}}</div>
-                </li>
-              </ul>
-            </div>
+              <div class="main-step">{{item.text}}</div>
+              <div class="sub-step">
+                <ul v-if="curStep.indexOf('step4.') > -1 || curStep.indexOf('step6.') > -1">
+                  <li v-for="(item,index) in item.new" :class="{active: curStep == item.name}" :key="index">
+                    <div>{{item.text}}</div>
+                  </li>
+                </ul>
+              </div>
             </li>
           </ul>
         </div>
@@ -66,16 +66,18 @@ const steps = [
   { text: '1.设置服务器名称', name: 'step1' },
   { text: '2.绑定首位服务器管理员', name: 'step2' },
   { text: '3.为服务器签署企业隶属关系', name: 'step3' },
-  { text: '4.创建新的链，或加入现有的链', name: 'step4', new: [
-    {text: '4.1.节点网络准入设置', name: 'step4.1'},
-    {text: '4.2.区块链联盟委员会信息设置', name: 'step4.2'},
-    {text: '4.3.链管理员设置', name: 'step4.3'},
-    {text: '4.4.行为审计配置', name: 'step4.4'},
-    {text: '4.5.链前置节点访问许可配置', name: 'step4.5'},
-  ],
-  join:[
-    {text: '加入现有的链', name: 'step4-joinchain'}
-  ]},
+  { text: '4.创建新的链，或加入现有的链',
+    name: 'step4',
+    new: [
+      { text: '4.1.节点网络准入设置', name: 'step4.1' },
+      { text: '4.2.区块链联盟委员会信息设置', name: 'step4.2' },
+      { text: '4.3.链管理员设置', name: 'step4.3' },
+      { text: '4.4.行为审计配置', name: 'step4.4' },
+      { text: '4.5.链前置节点访问许可配置', name: 'step4.5' }
+    ],
+    join: [
+      { text: '加入现有的链', name: 'step4-joinchain' }
+    ] }
   // { text: '5.链实例运行许可证绑定', name: 'step5' },
   // { text: '6.创建新的文件存储域，或加入现有的文件存储域', name: 'step6', new:[
   //   {text: '6.1.文件存储域基础信息设置', name: 'step6.1'},
@@ -158,8 +160,15 @@ const setHeader = {
 export default {
   components: {
     'setup-nav': setupNav,
-    'set-server': setServer, 'bind-manager': bindManager, 'bind-enterprise': bindEnterprise,
-    'new-chain': newChain, 'join-chain': joinChain,league,administrator, configure, permission,
+    'set-server': setServer,
+    'bind-manager': bindManager,
+    'bind-enterprise': bindEnterprise,
+    'new-chain': newChain,
+    'join-chain': joinChain,
+    league,
+    administrator,
+    configure,
+    permission,
     'bind-licence': bindLicence,
     'base-info': baseInfo,
     'rule': rule,
@@ -168,7 +177,7 @@ export default {
     licence: licence,
     'join-field': joinField
   },
-  data() {
+  data () {
     return {
       steps,
       curStep: 'step1',
@@ -179,20 +188,20 @@ export default {
   //   console.log(this.curStep)
   // },
   methods: {
-    navClick(name) {
+    navClick (name) {
       if (name === 'home') {
         this.$router.push({
           name: 'guide'
         })
-        return 
+        return
       }
       this.curStep = name
     },
-    next(name) {
+    next (name) {
       console.log('name', name)
       this.curStep = name
     },
-    guide() {
+    guide () {
       this.$router.push({
         name: 'guide'
       })

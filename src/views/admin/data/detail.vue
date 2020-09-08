@@ -6,21 +6,21 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>数据存管域名称：司法业务域</div>
+          <div>数据存管域名称：司法业务域</div>
           </Col>
           <Col :span="8">
-            <div>数据存管域唯一标识：00740f...ffbc3</div>
+          <div>数据存管域唯一标识：00740f...ffbc3</div>
           </Col>
           <Col :span="8">
-            <div>创建时间：2020-1-5 10:21:32</div>
+          <div>创建时间：2020-1-5 10:21:32</div>
           </Col>
         </Row>
         <Row>
           <Col :span="8">
-            <div>创建企业名称：从法科技</div>
+          <div>创建企业名称：从法科技</div>
           </Col>
           <Col :span="8">
-            <div>创建企业身份标识：00740f...ccbb1</div>
+          <div>创建企业身份标识：00740f...ccbb1</div>
           </Col>
         </Row>
         </Row>
@@ -33,30 +33,30 @@
         <div class="chain-content-item">
           <Row class="bg-white padding" style="margin-bottom: 10px;">
             <Col :span="8">
-              <p><span>3</span></p>
-              <div>域内主节点数量</div>
+            <p><span>3</span></p>
+            <div>域内主节点数量</div>
             </Col>
             <Col :span="8">
-              <p><span>3</span></p>
-              <div>在线主节点数量</div>
+            <p><span>3</span></p>
+            <div>在线主节点数量</div>
             </Col>
             <Col :span="8">
-              <p><span>0</span></p>
-              <div>离线主节点数量</div>
+            <p><span>0</span></p>
+            <div>离线主节点数量</div>
             </Col>
           </Row>
           <Row class="bg-white padding">
             <Col :span="8">
-              <p><span>1</span></p>
-              <div>域内资源节点数量</div>
+            <p><span>1</span></p>
+            <div>域内资源节点数量</div>
             </Col>
             <Col :span="8">
-              <p><span>0</span></p>
-              <div>在线资源节点数量</div>
+            <p><span>0</span></p>
+            <div>在线资源节点数量</div>
             </Col>
             <Col :span="8">
-              <p><span>1</span></p>
-              <div>离线资源主节点数量</div>
+            <p><span>1</span></p>
+            <div>离线资源主节点数量</div>
             </Col>
           </Row>
         </div>
@@ -70,8 +70,8 @@
       <div class="chain-content-item">
         <Row>
           <Col :span="24">
-            <p><span>2</span></p>
-            <div>业务域数量</div>
+          <p><span>2</span></p>
+          <div>业务域数量</div>
           </Col>
           <!-- <Col :span="8">
             <p><span>2</span></p>
@@ -85,13 +85,13 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>文件碎片化数量：<span>5</span></div>
+          <div>文件碎片化数量：<span>5</span></div>
           </Col>
           <Col :span="8">
-            <div>文件保存副本数量：<span>3</span></div>
+          <div>文件保存副本数量：<span>3</span></div>
           </Col>
           <Col :span="8">
-            <div>文件副本在不同site分散保存：<span>生效</span></div>
+          <div>文件副本在不同site分散保存：<span>生效</span></div>
           </Col>
         </Row>
       </div>
@@ -102,16 +102,16 @@
         <div class="chain-content-item">
           <Row>
             <Col :span="8">
-              <p><span>5.00 TB</span></p>
-              <div>最大存储容量</div>
+            <p><span>5.00 TB</span></p>
+            <div>最大存储容量</div>
             </Col>
             <Col :span="8">
-              <p><span>2.00 TB</span></p>
-              <div>可用存储容量</div>
+            <p><span>2.00 TB</span></p>
+            <div>可用存储容量</div>
             </Col>
             <Col :span="8">
-              <p><span>3.00 TB</span></p>
-              <div>已用存储容量</div>
+            <p><span>3.00 TB</span></p>
+            <div>已用存储容量</div>
             </Col>
           </Row>
         </div>
@@ -122,39 +122,39 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      
+
     }
   },
   watch: {},
   computed: {},
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
-         this.initList()
+    init () {
+      this.initList()
     },
-    initList(){
-        let params = {
-          storage_id:storage_id
-        }
-        //查询数据存管域详情
-        setTimeout(() => {
-           this.$http.poat('/cmw/pbqsd.do',params).then(res => {
-             console.log(res)
-             if(res.retCode == '1'){
-                this.$Message.success('查询成功')
-             }else{
-               if (res.retMsg) {
-               this.$Message.error(res.retMsg)
-              }
-             }
-           }).catch(err =>{
+    initList () {
+      let params = {
+        storage_id: storage_id
+      }
+      // 查询数据存管域详情
+      setTimeout(() => {
+        this.$http.poat('/cmw/pbqsd.do', params).then(res => {
+          console.log(res)
+          if (res.retCode == '1') {
+            this.$Message.success('查询成功')
+          } else {
+            if (res.retMsg) {
+              this.$Message.error(res.retMsg)
+            }
+          }
+        }).catch(err => {
 
-           })
-        },1000)
+        })
+      }, 1000)
     }
   }
 }
@@ -165,7 +165,7 @@ export default {
     color: #7D8B97;
     line-height: 2em;
     .section-title {
-      
+
     }
     .ivu-col {
       div {

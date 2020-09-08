@@ -6,21 +6,21 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>数据存管域名称：司法业务域</div>
+          <div>数据存管域名称：司法业务域</div>
           </Col>
           <Col :span="8">
-            <div>数据存管域唯一标识：00740f...ffbc3</div>
+          <div>数据存管域唯一标识：00740f...ffbc3</div>
           </Col>
           <Col :span="8">
-            <div>创建时间：2020-1-5 10:21:32</div>
+          <div>创建时间：2020-1-5 10:21:32</div>
           </Col>
         </Row>
         <Row>
           <Col :span="8">
-            <div>创建企业名称：从法科技</div>
+          <div>创建企业名称：从法科技</div>
           </Col>
           <Col :span="8">
-            <div>创建企业身份标识：00740f...ccbb1</div>
+          <div>创建企业身份标识：00740f...ccbb1</div>
           </Col>
         </Row>
         </Row>
@@ -31,13 +31,13 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>最大存储容量：5.00 TB</div>
+          <div>最大存储容量：5.00 TB</div>
           </Col>
           <Col :span="8">
-            <div>可用存储容量：2.00 TB</div>
+          <div>可用存储容量：2.00 TB</div>
           </Col>
           <Col :span="8">
-            <div>已用存储容量：3.00 TB</div>
+          <div>已用存储容量：3.00 TB</div>
           </Col>
         </Row>
       </div>
@@ -47,29 +47,29 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>联合构建企业成员数量：3</div>
+          <div>联合构建企业成员数量：3</div>
           </Col>
           <Col :span="8">
-            <div>域内主节点数量：3</div>
+          <div>域内主节点数量：3</div>
           </Col>
           <Col :span="8">
-            <div>在线主节点数量：3</div>
-          </Col>
-        </Row>
-        <Row>
-          <Col :span="8">
-            <div>离线主节点数量：0</div>
-          </Col>
-          <Col :span="8">
-            <div>域内资源节点数量：1</div>
-          </Col>
-          <Col :span="8">
-            <div>在线资源节点数量：0</div>
+          <div>在线主节点数量：3</div>
           </Col>
         </Row>
         <Row>
           <Col :span="8">
-            <div>离线资源主节点数量：1</div>
+          <div>离线主节点数量：0</div>
+          </Col>
+          <Col :span="8">
+          <div>域内资源节点数量：1</div>
+          </Col>
+          <Col :span="8">
+          <div>在线资源节点数量：0</div>
+          </Col>
+        </Row>
+        <Row>
+          <Col :span="8">
+          <div>离线资源主节点数量：1</div>
           </Col>
         </Row>
       </div>
@@ -82,10 +82,10 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>业务域数量：2</div>
+          <div>业务域数量：2</div>
           </Col>
           <Col :span="8">
-            <div>隶属企业数量：2</div>
+          <div>隶属企业数量：2</div>
           </Col>
         </Row>
       </div>
@@ -95,13 +95,13 @@
       <div>
         <Row>
           <Col :span="8">
-            <div>文件碎片化数量：5</div>
+          <div>文件碎片化数量：5</div>
           </Col>
           <Col :span="8">
-            <div>文件保存副本数量：3</div>
+          <div>文件保存副本数量：3</div>
           </Col>
           <Col :span="8">
-            <div>文件副本在不同site分散保存：生效</div>
+          <div>文件副本在不同site分散保存：生效</div>
           </Col>
         </Row>
       </div>
@@ -111,18 +111,18 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      
+
     }
   },
   watch: {},
   computed: {},
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     }
   }

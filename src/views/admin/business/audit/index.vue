@@ -6,10 +6,10 @@
       </h2>
       <div class="tab-wrapper" style="width: 70%;">
         <div class="tab-item" v-for="item in tabs" :key="item.name" :class="{active: active == item.name}"
-          @click="changeTab(item.name)"
+             @click="changeTab(item.name)"
         >
           <Badge :dot="item.count > 0">
-              <button>{{item.text}}</button>
+            <button>{{item.text}}</button>
           </Badge>
         </div>
       </div>
@@ -31,41 +31,41 @@ import file from './file'
 import contract from './contract'
 import manager from './manager'
 var tabs = [
-  {text: '业务系统准入', name: 'business-permission', count: 3},
-  { text: '文件操作规则', name: 'business-rule', count: 2},
-  { text: '域内文件治理', name: 'business-file'},
-  { text: '域内合约治理', name: 'business-contract', count: 22},
-  { text: '域管理员', name: 'business-manager', count: 23},
+  { text: '业务系统准入', name: 'business-permission', count: 3 },
+  { text: '文件操作规则', name: 'business-rule', count: 2 },
+  { text: '域内文件治理', name: 'business-file' },
+  { text: '域内合约治理', name: 'business-contract', count: 22 },
+  { text: '域管理员', name: 'business-manager', count: 23 }
 ]
 export default {
   components: {
     permission, rule, file, contract, manager
   },
-  data() {
+  data () {
     return {
       tabs: [],
       active: 'alliance'
     }
   },
-  watch:{
-    $route(n) {
+  watch: {
+    $route (n) {
       this.initTab()
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       this.tabs = tabs
       this.initTab()
     },
-    initTab() {
+    initTab () {
       var query = this.$route.query
       var tab = query.tab || tabs[0].name
       this.active = tab
     },
-    changeTab(name) {
+    changeTab (name) {
       var query = this.$route.query
       this.$router.push({
         name: 'business-audit',

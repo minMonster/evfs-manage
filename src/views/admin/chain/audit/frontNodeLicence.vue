@@ -12,7 +12,7 @@
           transfer
           content="选项说明：* 如果允许匿名调用访问，则任何前置节点无需任何授权，均可与链建立访问通道，向链上提交或访问链上数据，除了黑名单中的前置节点；* 如果禁止匿名调用访问，则只有白名单中的前置节点才可与链建立访问通道，向链上提交或访问链上数据。"
           <Icon type="ios-help-circle-outline" />
-        </Tooltip> 
+        </Tooltip>
         <RadioGroup style="margin: 0 20px;" v-model="switch1">
           <Radio label="1">允许</Radio>
           <Radio label="0">禁止</Radio>
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>-->
-   <div class="padding bg-white mb20">
+    <div class="padding bg-white mb20">
       <div style="margin-bottom: 20px;color: #273D52;">
         <span>
           前置节点调用访问
@@ -136,7 +136,7 @@
             </div>
           </Col>
         </Row>
-      </div> 
+      </div>
       <Table :columns="columns1" :data="data1"></Table>
     </div>
     <div class="page">
@@ -149,16 +149,16 @@
 
 <script>
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "隶属企业名称",
-        key: "name"
+        title: '隶属企业名称',
+        key: 'name'
       },
       {
-        title: "前置节点身份标识",
-        key: "address"
+        title: '前置节点身份标识',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -174,11 +174,11 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           return h('a', {
-              on:{
-              click() {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
@@ -186,24 +186,24 @@ export default {
         }
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var agree = h('a', {
             style: {
               'margin-right': '10px'
             }
-          },'同意')
+          }, '同意')
           var disagree = h('a', {
 
-          },'拒绝')
+          }, '拒绝')
           var opts = [agree, disagree]
           return h('div', {
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },[opts])
+          }, [opts])
         }
       }
     ]
@@ -215,7 +215,7 @@ export default {
         storagename: '从法存管域',
         time: '--',
         status: '添加审批中',
-        apply: '王蓉',
+        apply: '王蓉'
       },
       {
         name: '从法科技',
@@ -224,47 +224,47 @@ export default {
         storagename: '从法存管域',
         time: '2020-1-5 13:05:10',
         status: '删除审批中',
-        apply: '张力',
+        apply: '张力'
       }
     ]
     return {
-      acceptLimit: "1/3",
-      name: "",
-      address: "",
+      acceptLimit: '1/3',
+      name: '',
+      address: '',
       addModal: false,
       columns1,
       data1,
       // data2,
       total: 100,
       form: {
-        name: "",
-        address: ""
+        name: '',
+        address: ''
       },
-      switch1: "0"
-    };
+      switch1: '0'
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   watch: {},
   computed: {},
   methods: {
-    init() {},
-    ok() {},
-    //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-         })
+    init () {},
+    ok () {},
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
-    cancel() {},
-    pageChange(page) {
-      console.log(page);
+    cancel () {},
+    pageChange (page) {
+      console.log(page)
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

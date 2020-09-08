@@ -6,11 +6,11 @@
           <i :class="[item.icon,{active: mainActive == item.name}]"></i><span>{{item.text}}</span>
         </div>
         <div v-show="showSubmenu" class="sub-menu" :class="{active: activeIndex == index && menu[activeIndex] && menu[activeIndex].children}">
-          <div class="sub-menu-item" 
-            v-for="(subitem, i) in item.children" 
-            :key="subitem.name"
-            :class="{active: subActive == subitem.name}"
-            @click="subMenu(subitem, i)">
+          <div class="sub-menu-item"
+               v-for="(subitem, i) in item.children"
+               :key="subitem.name"
+               :class="{active: subActive == subitem.name}"
+               @click="subMenu(subitem, i)">
             <span>{{subitem.text}}</span>
           </div>
         </div>
@@ -21,57 +21,66 @@
 
 <script>
 const menu = [
-  { icon: 'icon-chain', text: '链',name: 'chain', children: [
-    {text: '链联盟委员会', name: 'chain-alliance'},
-    { text: '节点准入', name: 'chain-nodeadmission'},
-    { text: '前置节点准入', name: 'chain-frontnodelicence'},
-    { text: '运行证许可', name: 'chain-operation'},
-    { text: '主节点授权', name: 'mainnode' },
-    { text: '数据存管域授权', name: 'dataauth' },
-    { text: '链管理员', name: 'chainmanager' },
-    { text: '行为审计', name: 'chain-configure'},
-    { text: '待审核事项', name: 'chain-audit'},
-  ]},
-  { icon: 'icon-file',name: 'data', text: '数据存管域', children: [
+  { icon: 'icon-chain',
+    text: '链',
+    name: 'chain',
+    children: [
+      { text: '链联盟委员会', name: 'chain-alliance' },
+      { text: '节点准入', name: 'chain-nodeadmission' },
+      { text: '前置节点准入', name: 'chain-frontnodelicence' },
+      { text: '运行证许可', name: 'chain-operation' },
+      { text: '主节点授权', name: 'mainnode' },
+      { text: '数据存管域授权', name: 'dataauth' },
+      { text: '链管理员', name: 'chainmanager' },
+      { text: '行为审计', name: 'chain-configure' },
+      { text: '待审核事项', name: 'chain-audit' }
+    ] },
+  { icon: 'icon-file',
+    name: 'data',
+    text: '数据存管域',
+    children: [
     // { text: '域内固存规则', name: 'data-rule'},
-    { text: '节点准入', name: 'data-node'},
-    { text: '运行许可证', name: 'data-permission'},
-    { text: '业务域授权', name: 'data-business'},
-    { text: '域管理员', name: 'data-manager'},
-    { text: '行为审计', name: 'data-alliance'},
-    { text: '待审核事项', name: 'data-audit'},
-  ]},
-  { icon: 'icon-business', name: 'business', text: '业务域', children: [
-    {text: '业务系统准入', name: 'business-permission'},
-    { text: '数据操作规则', name: 'business-rule'},
-    { text: '域内数据治理', name: 'business-file'},
-    { text: '合约治理', name: 'business-contract'},
-    { text: '域管理员', name: 'business-manager'},
-    { text: '行为审计', name: 'business-configure'},
-    { text: '待审核事项', name: 'business-audit'},
-  ]},
-  { icon: 'icon-node',name: 'node', text: '节点服务器'}
+      { text: '节点准入', name: 'data-node' },
+      { text: '运行许可证', name: 'data-permission' },
+      { text: '业务域授权', name: 'data-business' },
+      { text: '域管理员', name: 'data-manager' },
+      { text: '行为审计', name: 'data-alliance' },
+      { text: '待审核事项', name: 'data-audit' }
+    ] },
+  { icon: 'icon-business',
+    name: 'business',
+    text: '业务域',
+    children: [
+      { text: '业务系统准入', name: 'business-permission' },
+      { text: '数据操作规则', name: 'business-rule' },
+      { text: '域内数据治理', name: 'business-file' },
+      { text: '合约治理', name: 'business-contract' },
+      { text: '域管理员', name: 'business-manager' },
+      { text: '行为审计', name: 'business-configure' },
+      { text: '待审核事项', name: 'business-audit' }
+    ] },
+  { icon: 'icon-node', name: 'node', text: '节点服务器' }
 ]
 export default {
-  data() {
+  data () {
     return {
       menu,
       mainActive: 'chain',
       subActive: '',
       activeIndex: '0',
-      showDataSubmenu: true,
+      showDataSubmenu: true
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
-    $route() {
+    $route () {
       this.initActive()
     }
   },
-  computed:{
-    showSubmenu() {
+  computed: {
+    showSubmenu () {
       let { mainActive, showDataSubmenu, showBusinessSubmenu } = this.$route.query
       if ((mainActive == 'data' && showDataSubmenu == '1') ||
         mainActive == 'chain' ||
@@ -84,10 +93,10 @@ export default {
     }
   },
   methods: {
-    init() {
+    init () {
       this.initActive()
     },
-    initActive() {
+    initActive () {
       var query = this.$route.query
       let mainActive = query.mainActive
       let subActive = query.subActive
@@ -106,7 +115,7 @@ export default {
         this.activeIndex = activeIndex
       }
     },
-    mainMenu(item,index) {
+    mainMenu (item, index) {
       if (this.mainActive == item.name) {
         if (!this.activeIndex) {
           this.activeIndex = index + ''
@@ -122,11 +131,11 @@ export default {
       }
       this.route(item.name)
     },
-    subMenu(item) {
+    subMenu (item) {
       this.subActive = item.name
       this.route(item.name)
     },
-    route(name) {
+    route (name) {
       let mainActive = this.mainActive
       let subActive = this.subActive
       let activeIndex = this.activeIndex
@@ -195,28 +204,28 @@ export default {
       .icon-chain {
         background-image: url(~@/assets/icon/chain.png);
         &.active {
-          // background-image: url(~@/assets/icon/chain-active.png) 
+          // background-image: url(~@/assets/icon/chain-active.png)
         }
       }
       .icon-file {
         background-image: url(~@/assets/icon/file.png);
         background-size: 20px;
         &.active {
-          // background-image: url(~@/assets/icon/file-active.png) 
+          // background-image: url(~@/assets/icon/file-active.png)
         }
       }
       .icon-business {
         background-image: url(~@/assets/icon/business.png);
         background-size: 20px;
         &.active {
-          // background-image: url(~@/assets/icon/business-active.png) 
+          // background-image: url(~@/assets/icon/business-active.png)
         }
       }
       .icon-node {
         background-image: url(~@/assets/icon/node.png);
         background-size: 20px;
         &.active {
-          // background-image: url(~@/assets/icon/node-active.png) 
+          // background-image: url(~@/assets/icon/node-active.png)
         }
       }
     }

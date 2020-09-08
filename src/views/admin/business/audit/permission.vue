@@ -42,16 +42,16 @@
 
 <script>
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "业务系统名称",
-        key: "name"
+        title: '业务系统名称',
+        key: 'name'
       },
       {
-        title: "业务域身份标识",
-        key: "address"
+        title: '业务域身份标识',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -69,20 +69,20 @@ export default {
       {
         width: 130,
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
-          return h('a',{
-            on:{
-              click() {
+          return h('a', {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
-          },'查看')
+          }, '查看')
         }
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var agree = h('a', {
             style: {
               marginRight: '8px'
@@ -91,72 +91,71 @@ export default {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
-                
               }
             }
-          },'同意')
-          var refuse =  h('a', {
+          }, '同意')
+          var refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },'拒绝')
-          return h('div',{
+          }, '拒绝')
+          return h('div', {
             'class': 'opt-btns'
-          },[
+          }, [
             agree, refuse
           ])
         }
       }
     ]
     var data1 = [
-      {name: '上海公证系统', address: '00740f...aaba8', applicant: '张力', time: '2020-1-5 10:45:25', statuslabel: '删除审核中', status: '2' },
-      {name: '四川公证系统', address: '00da0c...cfbe5', applicant: '张力', time: '--', statuslabel: '添加审核中', status: '1' },
-      {name: '四川公证系统', address: '00da0c...cfbe5',  applicant: '张力',time: '--', statuslabel: '添加审核中', status: '1' },
+      { name: '上海公证系统', address: '00740f...aaba8', applicant: '张力', time: '2020-1-5 10:45:25', statuslabel: '删除审核中', status: '2' },
+      { name: '四川公证系统', address: '00da0c...cfbe5', applicant: '张力', time: '--', statuslabel: '添加审核中', status: '1' },
+      { name: '四川公证系统', address: '00da0c...cfbe5', applicant: '张力', time: '--', statuslabel: '添加审核中', status: '1' }
     ]
     return {
-      acceptLimit: "1/3",
-      name: "",
-      address: "",
+      acceptLimit: '1/3',
+      name: '',
+      address: '',
       addModal: false,
       columns1,
       data1,
       total: 100,
       form: {
-        name: "",
-        address: ""
+        name: '',
+        address: ''
       },
-      switch1: "0"
-    };
+      switch1: '0'
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   watch: {},
   computed: {},
   methods: {
-    init() {},
-    //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-         })
+    init () {},
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
-    ok() {},
-    cancel() {},
-    pageChange(page) {
-      console.log(page);
+    ok () {},
+    cancel () {},
+    pageChange (page) {
+      console.log(page)
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

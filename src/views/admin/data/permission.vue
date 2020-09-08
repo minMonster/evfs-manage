@@ -7,16 +7,16 @@
         <div class="chain-content-item">
           <Row>
             <Col span="8">
-              <p>5.00<span>TB</span></p>
-              <div>文件存储总容量</div>
+            <p>5.00<span>TB</span></p>
+            <div>文件存储总容量</div>
             </Col>
             <Col span="8">
-              <p>1.22<span>TB</span></p>
-              <div>可用文件存储容量</div>
+            <p>1.22<span>TB</span></p>
+            <div>可用文件存储容量</div>
             </Col>
             <Col span="8">
-              <p>3.78 <span>TB</span></p>
-              <div>已用文件存储容量</div>
+            <p>3.78 <span>TB</span></p>
+            <div>已用文件存储容量</div>
             </Col>
           </Row>
         </div>
@@ -28,25 +28,25 @@
         <div class="chain-content-item">
           <Row>
             <Col span="8">
-              <p>50</p>
-              <div>节点运行许可总量</div>
+            <p>50</p>
+            <div>节点运行许可总量</div>
             </Col>
             <Col span="8">
-              <p>5</p>
-              <div>已发放节点许可数量</div>
+            <p>5</p>
+            <div>已发放节点许可数量</div>
             </Col>
             <Col span="8">
-              <p>45</p>
-              <div>未发放节点许可数量</div>
+            <p>45</p>
+            <div>未发放节点许可数量</div>
             </Col>
           </Row>
         </div>
       </div>
     </div>
-       <div class="padding bg-white" style="margin-bottom:20px;">
+    <div class="padding bg-white" style="margin-bottom:20px;">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">服务器许可证分布信息</span>
-         <!-- <Button type="primary" @click="addModal = true" class="fr">添加</Button>
+        <!-- <Button type="primary" @click="addModal = true" class="fr">添加</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -57,21 +57,21 @@
       </div>
       <Row>
         <Col span="5">
-          <div class="condition-item">
-            <span class="condition-label">隶属企业名称：</span>
-            <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">隶属企业名称：</span>
+          <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
+        </div>
         </Col>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">服务器身份标识：</span>
-            <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">服务器身份标识：</span>
+          <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-        <div class="bg-white padding" style="margin-bottom: 20px;">
+    <div class="bg-white padding" style="margin-bottom: 20px;">
       <div class="section-title"><span>域内容量许可操作</span></div>
       <div>
         <Input v-model="input1" style="display: inline-block; width: 200px;"/>
@@ -100,7 +100,7 @@
       </div>
     </div>
   </div>
-  
+
     <!-- <div class="bg-white padding">
       <div class="section-title"><span>域内节点运行许可操作</span></div>
       <div>
@@ -117,16 +117,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "隶属企业名称",
-        key: "name"
+        title: '隶属企业名称',
+        key: 'name'
       },
       {
-        title: "服务器身份标识",
-        key: "address"
+        title: '服务器身份标识',
+        key: 'address'
       },
       {
         title: '现有许可存储容量',
@@ -139,29 +139,30 @@ export default {
       {
         title: '申请状态',
         key: 'statuslabel'
-      },
+      }
     ]
-     var data1 = [
-      {name: '从法科技', address: '00630e...cabc3', nodetype:'10TB', databasename: '——', statuslabel: '——'},
-      {name: '从法科技', address: '00630e...cacc2', nodetype:'10TB', databasename: '10TB', statuslabel: '申请审核中'},
-      {name: '从法科技', address: '00630e...fafc1', nodetype:'2TB', databasename: '——', statuslabel: '——'},
-      {name: '泛融科技', address: '00630e...fafc7', nodetype:'5TB', databasename: '5TB', statuslabel: '申请审核中'},
-      //泛融科技
+    var data1 = [
+      { name: '从法科技', address: '00630e...cabc3', nodetype: '10TB', databasename: '——', statuslabel: '——' },
+      { name: '从法科技', address: '00630e...cacc2', nodetype: '10TB', databasename: '10TB', statuslabel: '申请审核中' },
+      { name: '从法科技', address: '00630e...fafc1', nodetype: '2TB', databasename: '——', statuslabel: '——' },
+      { name: '泛融科技', address: '00630e...fafc7', nodetype: '5TB', databasename: '5TB', statuslabel: '申请审核中' }
+      // 泛融科技
     ]
     return {
       input1: '10000',
       input2: '10',
       select1: 'MB',
       columns1,
-      data1,total:100,
-      form:{
-        name:'',
-        address:'',
-        status:''
+      data1,
+      total: 100,
+      form: {
+        name: '',
+        address: '',
+        status: ''
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -171,17 +172,17 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    search(){
+    search () {
 
     },
-    application(){
+    application () {
 
     },
-     pageChange(value) {
-      
+    pageChange (value) {
+
     }
   }
 }

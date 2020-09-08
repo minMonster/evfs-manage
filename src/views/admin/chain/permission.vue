@@ -2,30 +2,30 @@
   <div class="node-admission">
     <div class="chain-adminstrator-in">
       <h2 class="content-title clear">
-      链权限管理
-      <Button type="primary" style="float: right;">待审核事项</Button>
-    </h2>
-    <div class="clear chain-baseinfo">
-      <Row>
-        <Col span="8">
+        链权限管理
+        <Button type="primary" style="float: right;">待审核事项</Button>
+      </h2>
+      <div class="clear chain-baseinfo">
+        <Row>
+          <Col span="8">
           <div>链实例唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
-        </Col>
-        <Col>
+          </Col>
+          <Col>
           <div>链实例创建时间：2020-1-5 12:00:00</div>
-        </Col>
-      </Row>
-    </div>
-    <div class="split-line"></div>
+          </Col>
+        </Row>
+      </div>
+      <div class="split-line"></div>
       <div>
         <div style="margin-bottom: 20px;">
           <span style="color: rgba(95, 145, 177, 1);">链管理员决议审批规则：</span>
           <Tooltip
-              placement="top"
-              max-width="600"
-              transfer
-              content='选项说明:所有需要链管理员审批的事务，通过决议的签批规则。* “任意一个成员签批”：链管理员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3成员同时签批”：只有链管理员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3成员同时签批”：只有链管理员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有成员同时签批”： 只有链管理员列表中的所有成员签批同意，相应的决议方可通过。'>
-              <Icon type="ios-information-circle-outline" />
-            </Tooltip>
+            placement="top"
+            max-width="600"
+            transfer
+            content='选项说明:所有需要链管理员审批的事务，通过决议的签批规则。* “任意一个成员签批”：链管理员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3成员同时签批”：只有链管理员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3成员同时签批”：只有链管理员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有成员同时签批”： 只有链管理员列表中的所有成员签批同意，相应的决议方可通过。'>
+            <Icon type="ios-information-circle-outline" />
+          </Tooltip>
         </div>
         <div>
           <RadioGroup class="approval" v-model="acceptLimit">
@@ -46,33 +46,33 @@
         <div>
           <Row>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">管理员名称：</span>
-                <Input type="text" placeholder="管理员名称"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">管理员名称：</span>
+              <Input type="text" placeholder="管理员名称"></Input>
+            </div>
             </Col>
             <Col span="8">
-              <div class="condition-item">
-                <span class="condition-label">管理员身份标识：</span>
-                <Input type="text" placeholder="管理员身份标识"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">管理员身份标识：</span>
+              <Input type="text" placeholder="管理员身份标识"></Input>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">状态：</span>
-                <Select value="0">
-                  <Option value="0">全部</Option>
-                  <Option value="1">已添加</Option>
-                  <Option value="2">已删除</Option>
-                  <Option value="3">添加审核中</Option>
-                  <Option value="4">删除审核中</Option>
-                </Select>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">状态：</span>
+              <Select value="0">
+                <Option value="0">全部</Option>
+                <Option value="1">已添加</Option>
+                <Option value="2">已删除</Option>
+                <Option value="3">添加审核中</Option>
+                <Option value="4">删除审核中</Option>
+              </Select>
+            </div>
             </Col>
             <Col span="4">
-              <div class="condition-item">
-                <Button style="width: 80px;" type="primary">查询</Button>
-              </div>
+            <div class="condition-item">
+              <Button style="width: 80px;" type="primary">查询</Button>
+            </div>
             </Col>
           </Row>
         </div>
@@ -99,16 +99,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "管理员名称",
-        key: "name"
+        title: '管理员名称',
+        key: 'name'
       },
       {
-        title: "管理员身份标识公钥",
-        key: "address"
+        title: '管理员身份标识公钥',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -119,21 +119,21 @@ export default {
         key: 'status'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                that.data1.splice(index,1)
+                that.data1.splice(index, 1)
               }
             }
-          },'删除')
+          }, '删除')
         }
       }
     ]
     var data1 = [
-      
+
     ]
     return {
       acceptLimit: '0',
@@ -146,24 +146,24 @@ export default {
       total: 100
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     },
-    next() {
+    next () {
       this.confirm()
       // this.$emit('next', 'step4.3')
     },
-    confirm() {
+    confirm () {
       var acceptLimit = this.acceptLimit
       var data = this.data1
       var name = []
       var address = []
       if (data.length) {
-        data.forEach((item,index) => {
+        data.forEach((item, index) => {
           name.push(item.name)
           address.push(item.address)
         })
@@ -182,7 +182,7 @@ export default {
 
       })
     },
-    ok() {
+    ok () {
       var name = this.name.trim()
       var address = this.address.trim()
       if (!name) {
@@ -201,11 +201,11 @@ export default {
       this.name = ''
       this.address = ''
     },
-    cancel() {
+    cancel () {
       this.name = ''
       this.address = ''
     },
-    pageChange(num) {
+    pageChange (num) {
       this.pageno = num
     }
   }

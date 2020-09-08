@@ -10,16 +10,16 @@
           <Col :span="6">
             数据存管域节点准入审批
             <Icon type="ios-help-circle-outline" />-->
-            <!-- <Tooltip
+    <!-- <Tooltip
               placement="top"
               max-width="600"
               transfer
             >
               <Icon type="ios-help-circle-outline" />
             </Tooltip> -->
-         <!-- </Col> -->
-          <!-- 文件保存副本数量 -->
-         <!-- <Col :span="10">
+    <!-- </Col> -->
+    <!-- 文件保存副本数量 -->
+    <!-- <Col :span="10">
             <RadioGroup class="approval" v-model="myswitch" style="width: 50%;">
               <Row style="margin-right: 20px;">
                 <Col span="12">
@@ -42,7 +42,7 @@
     <div class="padding bg-white">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">准入节点服务器列表</span>
-         <Button type="primary" @click="confirmAdd" class="fr">添加</Button>
+        <Button type="primary" @click="confirmAdd" class="fr">添加</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -53,33 +53,33 @@
       </div>
       <Row>
         <Col span="5">
-          <div class="condition-item">
-            <span class="condition-label">隶属企业名称：</span>
-            <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">隶属企业名称：</span>
+          <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
+        </div>
         </Col>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">服务器身份标识：</span>
-            <Input type="text"  v-model="form.address" placeholder="节点服务器身份标识"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">服务器身份标识：</span>
+          <Input type="text"  v-model="form.address" placeholder="节点服务器身份标识"></Input>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <span class="condition-label">状态：</span>
-            <Select v-model="form.status" value="0">
-              <Option value="0">全部</Option>
-              <Option value="1">已添加</Option>
-              <Option value="2">已删除</Option>
-              <Option value="3">添加审核中</Option>
-              <Option value="4">删除审核中</Option>
-            </Select>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">状态：</span>
+          <Select v-model="form.status" value="0">
+            <Option value="0">全部</Option>
+            <Option value="1">已添加</Option>
+            <Option value="2">已删除</Option>
+            <Option value="3">添加审核中</Option>
+            <Option value="4">删除审核中</Option>
+          </Select>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -96,16 +96,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "隶属企业名称",
-        key: "name"
+        title: '隶属企业名称',
+        key: 'name'
       },
       {
-        title: "服务器身份标识",
-        key: "address"
+        title: '服务器身份标识',
+        key: 'address'
       },
       {
         title: '节点类型',
@@ -120,23 +120,23 @@ export default {
         key: 'statuslabel'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var row = p.row || {}
           var label = ''
           var status = row.status
           if (status == '1') {
             label = '--'
-          }else if (status == '2') {
+          } else if (status == '2') {
             label = '删除'
-          }else if (status == '3') {
+          } else if (status == '3') {
             label = '撤销'
           }
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                that.data1.splice(index,1)
+                that.data1.splice(index, 1)
               }
             }
           }, label)
@@ -144,25 +144,25 @@ export default {
       }
     ]
     var data1 = [
-      {name: '从法科技', address: '00630e...cabc3', nodetype:'主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '已添加', status: '2' },
-      {name: '从法科技', address: '00630e...cacc2', nodetype:'资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
-      {name: '从法科技', address: '00630e...fafc1', nodetype:'主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
-      {name: '泛融科技', address: '00630e...fafc7', nodetype:'资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '3' },
-      //泛融科技
+      { name: '从法科技', address: '00630e...cabc3', nodetype: '主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '已添加', status: '2' },
+      { name: '从法科技', address: '00630e...cacc2', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
+      { name: '从法科技', address: '00630e...fafc1', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
+      { name: '泛融科技', address: '00630e...fafc7', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '3' }
+      // 泛融科技
     ]
     return {
       myswitch: '1',
       columns1,
       data1,
       total: 100,
-      form:{
-        name:'',
-        address:'',
-        status:''
+      form: {
+        name: '',
+        address: '',
+        status: ''
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -172,31 +172,31 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    //查询
-    search(){
-      var that = this;
+    // 查询
+    search () {
+      var that = this
       var storageId = that.$router.params && that.$router.params.storageId
-      const url = `/cmw/pbqml.do/${storageId}`;
-      this.$http.post(url).then(res =>{
-         res = res.data
-         console.log(res)
-         if(res.retCode == '1'){
-               that.$Message.success('查询成功')
-          }else{
-             if(res.retMsg){
-               that.$Message.error(res.retMsg)
-             }
+      const url = `/cmw/pbqml.do/${storageId}`
+      this.$http.post(url).then(res => {
+        res = res.data
+        console.log(res)
+        if (res.retCode == '1') {
+          that.$Message.success('查询成功')
+        } else {
+          if (res.retMsg) {
+            that.$Message.error(res.retMsg)
           }
+        }
       }).catch(err => {})
     },
-    confirmAdd(){
-           this.$router.push('/data-nodeAddAdmin')
+    confirmAdd () {
+      this.$router.push('/data-nodeAddAdmin')
     },
-    pageChange(value) {
-      
+    pageChange (value) {
+
     }
   }
 }

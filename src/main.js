@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import App from '@/App.vue'
+import router from '@/router'
+import store from '@/store'
 import ViewUI from 'view-design';
 import VueClipboard from 'vue-clipboard2'
-import http from './http'
+import http from '@/http'
 import cookie from 'js-cookie'
 import JsonViewer from 'vue-json-viewer';
 

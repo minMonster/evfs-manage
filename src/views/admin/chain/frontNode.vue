@@ -18,21 +18,21 @@
         <div>
           <Row>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">隶属企业名称：</span>
-                <Input type="text" placeholder="隶属企业名称"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">隶属企业名称：</span>
+              <Input type="text" placeholder="隶属企业名称"></Input>
+            </div>
             </Col>
             <Col span="8">
-              <div class="condition-item">
-                <span class="condition-label">节点服务器身份标识：</span>
-                <Input type="text" placeholder="节点服务器身份标识"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">节点服务器身份标识：</span>
+              <Input type="text" placeholder="节点服务器身份标识"></Input>
+            </div>
             </Col>
             <Col span="4">
-              <div class="condition-item">
-                <Button style="width: 80px;" type="primary">查询</Button>
-              </div>
+            <div class="condition-item">
+              <Button style="width: 80px;" type="primary">查询</Button>
+            </div>
             </Col>
           </Row>
         </div>
@@ -59,122 +59,122 @@
 
 <script>
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "前置节点名称",
-        key: "name"
+        title: '前置节点名称',
+        key: 'name'
       },
       {
-        title: "前置节点身份标识公钥",
-        key: "address"
+        title: '前置节点身份标识公钥',
+        key: 'address'
       },
       {
-        title: "最新访问时间",
-        key: "status"
+        title: '最新访问时间',
+        key: 'status'
       },
       {
-        title: "操作",
-        width: "100",
-        render(h, p) {
+        title: '操作',
+        width: '100',
+        render (h, p) {
           return h(
-            "a",
+            'a',
             {
               on: {
-                click() {
-                  var index = p.index;
-                  that.data1.splice(index, 1);
+                click () {
+                  var index = p.index
+                  that.data1.splice(index, 1)
                 }
               }
             },
-            "删除"
-          );
+            '删除'
+          )
         }
       },
       {
-        title: "状态",
-        key: "optstatus"
+        title: '状态',
+        key: 'optstatus'
       }
-    ];
-    var data1 = [];
+    ]
+    var data1 = []
     return {
-      acceptLimit: "0",
+      acceptLimit: '0',
       columns1,
       data1,
       addModal: false,
-      name: "",
-      address: "",
+      name: '',
+      address: '',
       pageno: 1,
       total: 100
-    };
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   methods: {
-    init() {},
-    next() {
-      this.confirm();
+    init () {},
+    next () {
+      this.confirm()
       // this.$emit('next', 'step4.3')
     },
-    confirm() {
-      var acceptLimit = this.acceptLimit;
-      var data = this.data1;
-      var name = [];
-      var address = [];
+    confirm () {
+      var acceptLimit = this.acceptLimit
+      var data = this.data1
+      var name = []
+      var address = []
       if (data.length) {
         data.forEach((item, index) => {
-          name.push(item.name);
-          address.push(item.address);
-        });
+          name.push(item.name)
+          address.push(item.address)
+        })
       }
       var param = {
         name,
         address,
         acceptLimit
-      };
+      }
       this.$http
-        .post("/fbs/man/pbsai.do", param)
+        .post('/fbs/man/pbsai.do', param)
         .then(res => {
-          res = res.data;
-          if (res.retCode == "1") {
-            this.$emit("next", "step4.4");
+          res = res.data
+          if (res.retCode == '1') {
+            this.$emit('next', 'step4.4')
           }
         })
         .catch(err => {
           // this.$Message.error('')
         })
-        .then(() => {});
+        .then(() => {})
     },
-    ok() {
-      var name = this.name.trim();
-      var address = this.address.trim();
+    ok () {
+      var name = this.name.trim()
+      var address = this.address.trim()
       if (!name) {
-        this.$Message.error("请输入委员名称");
-        return;
+        this.$Message.error('请输入委员名称')
+        return
       }
       if (!address) {
-        this.$Message.error("请输入委员身份地址");
-        return;
+        this.$Message.error('请输入委员身份地址')
+        return
       }
       var data = {
         name,
         address
-      };
-      this.data1.push(data);
-      this.name = "";
-      this.address = "";
+      }
+      this.data1.push(data)
+      this.name = ''
+      this.address = ''
     },
-    cancel() {
-      this.name = "";
-      this.address = "";
+    cancel () {
+      this.name = ''
+      this.address = ''
     },
-    pageChange(num) {
-      this.pageno = num;
+    pageChange (num) {
+      this.pageno = num
     }
   }
-};
+}
 </script>
 
 <style lang="less">

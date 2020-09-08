@@ -9,16 +9,16 @@
         <RadioGroup class="approval" v-model="acceptLimit">
           <Row>
             <Col span="6">
-              <Radio label="0">任意一个成员签批</Radio>
+            <Radio label="0">任意一个成员签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="1/3">1/3成员同时签批</Radio>
+            <Radio label="1/3">1/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="2/3">2/3成员同时签批</Radio>
+            <Radio label="2/3">2/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="3/3">所有成员同时签批</Radio>
+            <Radio label="3/3">所有成员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -65,16 +65,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "委员名称",
-        key: "name"
+        title: '委员名称',
+        key: 'name'
       },
       {
-        title: "委员身份标识",
-        key: "address"
+        title: '委员身份标识',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -93,13 +93,13 @@ export default {
       {
         width: 130,
         title: '审核通过人',
-        render(h,p) {
-          return h('a',{},'查看')
+        render (h, p) {
+          return h('a', {}, '查看')
         }
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var agree = h('a', {
             style: {
               marginRight: '8px'
@@ -108,33 +108,32 @@ export default {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
-                
               }
             }
-          },'同意')
-          var refuse =  h('a', {
+          }, '同意')
+          var refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },'拒绝')
-          return h('div',{
+          }, '拒绝')
+          return h('div', {
             'class': 'opt-btns'
-          },[
+          }, [
             agree, refuse
           ])
         }
       }
     ]
     var data1 = [
-      { name: '金桥信息',address: '008b0f...effbc',applicant: '张力', time: '--', status: '添加审核中',type: '1' },
-      { name: '泛融科技',address: '008b0f...abbc3',applicant: '张力', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
+      { name: '金桥信息', address: '008b0f...effbc', applicant: '张力', time: '--', status: '添加审核中', type: '1' },
+      { name: '泛融科技', address: '008b0f...abbc3', applicant: '张力', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' }
     ]
     return {
       acceptLimit: '2/3',
@@ -150,7 +149,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -160,16 +159,16 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    pageChange(page) {
+    pageChange (page) {
       console.log(page)
     }
   }

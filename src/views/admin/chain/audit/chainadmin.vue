@@ -14,21 +14,21 @@
             content='选项说明:所有需要链管理委员审批的事务，通过决议的签批规则。* “任意一个联盟委员签批”：联盟委员会成员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3联盟委员同时签批”：只有联盟委员会成员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3联盟委员同时签批”：只有联盟委员会成员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有联盟委员同时签批”： 只有联盟委员会成员列表中的所有成员签批同意，相应的决议方可通过。'>
             <Icon type="ios-help-circle-outline" />
           </Tooltip>
-          
+
         </div>
         <RadioGroup class="approval" v-model="acceptLimit">
           <Row>
             <Col span="6">
-              <Radio label="0">任意一个联盟委员签批</Radio>
+            <Radio label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="1/3">1/3联盟委员同时签批</Radio>
+            <Radio label="1/3">1/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="2/3">2/3联盟委员同时签批</Radio>
+            <Radio label="2/3">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="3/3">所有联盟委员同时签批</Radio>
+            <Radio label="3/3">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -53,33 +53,33 @@
         <div>
           <Row>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">管理员名称：</span>
-                <Input type="text" v-model="form.name" placeholder="管理员名称"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">管理员名称：</span>
+              <Input type="text" v-model="form.name" placeholder="管理员名称"></Input>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">管理员身份标识：</span>
-                <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">管理员身份标识：</span>
+              <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">状态：</span>
-                <Select v-model="form.status">
-                  <Option value="0">全部</Option>
-                  <Option value="1">已添加</Option>
-                  <Option value="2">已删除</Option>
-                  <Option value="3">添加审核中</Option>
-                  <Option value="4">删除审核中</Option>
-                </Select>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">状态：</span>
+              <Select v-model="form.status">
+                <Option value="0">全部</Option>
+                <Option value="1">已添加</Option>
+                <Option value="2">已删除</Option>
+                <Option value="3">添加审核中</Option>
+                <Option value="4">删除审核中</Option>
+              </Select>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <Button style="width: 80px;" type="primary">查询</Button>
-              </div>
+            <div class="condition-item">
+              <Button style="width: 80px;" type="primary">查询</Button>
+            </div>
             </Col>
           </Row>
         </div>
@@ -106,16 +106,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "管理员名称",
-        key: "name"
+        title: '管理员名称',
+        key: 'name'
       },
       {
-        title: "管理员身份标志地址",
-        key: "address"
+        title: '管理员身份标志地址',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -132,11 +132,11 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           return h('a', {
-             on:{
-              click() {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
@@ -145,7 +145,7 @@ export default {
       },
       {
         title: '操作',
-        render(h,p) {
+        render (h, p) {
           var agree = h('a', {
             style: {
               'margin-right': '10px'
@@ -158,8 +158,8 @@ export default {
       }
     ]
     var data1 = [
-      { name: '张建国',address: '008b0f...effbc', time: '--', apply: '张力',status: '添加审批中',type: '1' },
-      { name: '李志伟',address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审批中', type: '1' },
+      { name: '张建国', address: '008b0f...effbc', time: '--', apply: '张力', status: '添加审批中', type: '1' },
+      { name: '李志伟', address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审批中', type: '1' }
     ]
     return {
       acceptLimit: '1/3',
@@ -175,7 +175,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -185,24 +185,24 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-     //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-         })
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    pageChange(page) {
+    pageChange (page) {
       console.log(page)
     }
   }

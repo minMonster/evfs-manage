@@ -108,59 +108,59 @@
 <script>
 import moment from 'moment'
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
-        {
-          title: "前置节点名称",
-          key: "name"
-        },
-        {
-          title: "前置节点身份标识地址",
-          key: "address"
-        },
-        {
-          title:'操作',
-          render(h,p) {
-            return h('a',{
-              on: {
-                click() {
-                  var index = p.index
-                  that.data1.splice(index,1)
-                }
+      {
+        title: '前置节点名称',
+        key: 'name'
+      },
+      {
+        title: '前置节点身份标识地址',
+        key: 'address'
+      },
+      {
+        title: '操作',
+        render (h, p) {
+          return h('a', {
+            on: {
+              click () {
+                var index = p.index
+                that.data1.splice(index, 1)
               }
-            }, '删除')
-          }
+            }
+          }, '删除')
         }
+      }
     ]
     var columns2 = [
-        {
-          title: "前置节点名称",
-          key: "name"
-        },
-        {
-          title: "前置节点身份标识地址",
-          key: "address"
-        },
-        {
-          title:'操作',
-          render(h,p) {
-            return h('a',{
-              on: {
-                click() {
-                  var index = p.index
-                  that.data2.splice(index,1)
-                }
+      {
+        title: '前置节点名称',
+        key: 'name'
+      },
+      {
+        title: '前置节点身份标识地址',
+        key: 'address'
+      },
+      {
+        title: '操作',
+        render (h, p) {
+          return h('a', {
+            on: {
+              click () {
+                var index = p.index
+                that.data2.splice(index, 1)
               }
-            }, '删除')
-          }
+            }
+          }, '删除')
         }
-      ]
+      }
+    ]
     var data1 = []
-        
+
     var data2 = []
     return {
-      anonymousAccess: "2",
+      anonymousAccess: '2',
       columns1,
       columns2,
       data1,
@@ -176,80 +176,80 @@ export default {
       title: '添加全链调用访问黑名单',
       placeholder1: '请输入前置节点名称',
       placeholder2: '请输入前置节点身份标识地址',
-      timer: null, //定时器
+      timer: null, // 定时器
       end: false, // 链创建是否结束
       startdate: '', // 链创建开始时间
       enddate: '', // 链创建结束时间
-      duration: '', //创建耗时
-    };
+      duration: '' // 创建耗时
+    }
   },
   watch: {
-    step(n,o) {
-      console.log(n,o)
+    step (n, o) {
+      console.log(n, o)
       let that = this
       if (n == 2) {
         this.creating()
       }
     },
-    type(n) {
+    type (n) {
       if (n == 1) {
         this.title = '添加全链调用访问黑名单'
-      } else if(n == 2) {
+      } else if (n == 2) {
         this.title = '添加全链调用访问白名单'
       }
       this.name = ''
       this.address = ''
     }
   },
-  destroyed() {
+  destroyed () {
     if (this.timer) {
       clearInterval(this.timer)
     }
   },
-  computed:{
-    formatDuration() {
+  computed: {
+    formatDuration () {
       var time = this.duration
       var h = Math.floor(time / (60 * 60))
-      var m = Math.floor(time % (60*60) / 60)
+      var m = Math.floor(time % (60 * 60) / 60)
       var s = time % 60
       if (h) {
         return h + '小时' + m + '分钟' + s + '秒'
-      }else if (m) {
+      } else if (m) {
         return m + '分钟' + s + '秒'
       } else {
         return s + '秒'
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       this.initStartDate()
     },
-    initStartDate() {
+    initStartDate () {
       var startdate = localStorage.getItem('startdate')
       var enddate = localStorage.getItem('enddate')
       if (startdate && enddate) {
         this.startdate = startdate
         this.enddate = enddate
         this.step = 3
-      } else if(startdate) {
+      } else if (startdate) {
         this.step = 2
         this.startdate = startdate
         this.timer = setInterval(() => {
           this.creating()
-        }, 1000);
+        }, 1000)
       }
     },
-    next(num) {
+    next (num) {
       this.step = num
       this.timer = setInterval(() => {
         this.creating()
-      }, 1000);
+      }, 1000)
     },
-    creating() {
+    creating () {
       var enddate = Date.now()
       var startdate = localStorage.getItem('startdate')
       console.log(startdate, enddate)
@@ -267,11 +267,11 @@ export default {
         }
       }).catch(err => {
         console.log(err)
-      }).then(()=>{
+      }).then(() => {
 
       })
     },
-    getId() {
+    getId () {
       let data = {
         key: 'evfs.manage.chain.id'
       }
@@ -289,7 +289,7 @@ export default {
 
       })
     },
-    copy() {
+    copy () {
       let txt = this.hash
       var that = this
       this.$copyText(txt).then(function (e) {
@@ -298,16 +298,16 @@ export default {
         that.$Message.error('复制失败')
       })
     },
-    create() {
+    create () {
       let whiteListName = []
       let whiteListAddress = []
       let blackListName = []
       let blackListAddress = []
-      this.data1.forEach((item,index) => {
+      this.data1.forEach((item, index) => {
         blackListName.push(item.name)
         blackListAddress.push(item.address)
       })
-      this.data2.forEach((item,index) => {
+      this.data2.forEach((item, index) => {
         whiteListName.push(item.name)
         whiteListAddress.push(item.address)
       })
@@ -330,18 +330,18 @@ export default {
 
       })
     },
-    bind() {
+    bind () {
       this.$emit('next', 'step5')
     },
-    addBlack() {
+    addBlack () {
       this.type = 1
       this.addModal = true
     },
-    addWhite() {
+    addWhite () {
       this.type = 2
       this.addModal = true
     },
-    ok() {
+    ok () {
       var type = this.type
       var name = this.name.trim()
       var address = this.address.trim()
@@ -361,12 +361,12 @@ export default {
       this.name = ''
       this.address = ''
     },
-    cancel() {
+    cancel () {
       this.name = ''
       this.address = ''
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

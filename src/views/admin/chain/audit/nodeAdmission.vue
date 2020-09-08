@@ -22,7 +22,7 @@
         content='选项说明：* 开启节点服务器网络准入审批，任何节点服务器都需要节点网络审批人审批通过后才能加入当前链实例的节点网络。* 关闭节点服务器网络准入审批，则凡是在节点网络准入企业名单中企业的节点服务器将会自动批准加入节点网络。'>
         <Icon type="ios-help-circle-outline" />
       </Tooltip>
-      <RadioGroup 
+      <RadioGroup
         style="margin: 0 20px;"
         v-model="switch1">
         <Radio label="1">开启</Radio>
@@ -107,7 +107,7 @@
             transfer
             content='功效说明：在“节点网络准入审批”选择“关闭”时，凡是隶属于节点网络准入企业名单中的节点服务器均可自动加入链的节点网络。'>
             <Icon type="ios-help-circle-outline" />
-          </Tooltip> 
+          </Tooltip>
           <button class="fr" @click="addModal = true"><Icon type="md-add-circle" />添加</button>
         </div>
         <div>
@@ -161,7 +161,7 @@
         </div>
       </Modal>
     </div> -->
-     <!--<div class="bg-white padding mb20">
+    <!--<div class="bg-white padding mb20">
       <div>
         <div class="league-mem">
           <div class="section-title"><span>准入节点服务器列表【黑名单】：</span></div>
@@ -171,7 +171,7 @@
             transfer
             content='功效说明：在“节点网络准入审批”选择“开启”时，准入节点服务器列表中的节点服务器才可以加入链的节点网络。'>
             <Icon type="ios-help-circle-outline" />
-          </Tooltip> 
+          </Tooltip>
           <button class="fr" @click="addModal = true"><Icon type="md-add-circle" />添加</button>
         </div>
         <div>
@@ -205,7 +205,7 @@
                 <Button style="width: 80px;" type="primary">查询</Button>
               </div>
             </Col>
-          </Row> 
+          </Row>
         </div>
         <Table :columns="columns3" :data="data3"></Table>
       </div>
@@ -220,16 +220,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "隶属企业名称",
-        key: "name"
+        title: '隶属企业名称',
+        key: 'name'
       },
       {
-        title: "服务器身份标识",
-        key: "address"
+        title: '服务器身份标识',
+        key: 'address'
       },
       {
         title: '节点类型',
@@ -253,11 +253,11 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           return h('a', {
-            on:{
-              click(){
+            on: {
+              click () {
                 that.adds(row)
               }
             }
@@ -265,24 +265,24 @@ export default {
         }
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var agree = h('a', {
             style: {
               'margin-right': '10px'
             }
-          },'同意')
+          }, '同意')
           var disagree = h('a', {
 
-          },'拒绝')
+          }, '拒绝')
           var opts = [agree, disagree]
           return h('div', {
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },[opts])
+          }, [opts])
         }
       }
     ]
@@ -294,7 +294,7 @@ export default {
         storagename: '从法存管域',
         time: '--',
         status: '添加审批中',
-        apply: '王蓉',
+        apply: '王蓉'
       },
       {
         name: '从法科技',
@@ -303,7 +303,7 @@ export default {
         storagename: '从法存管域',
         time: '2020-1-5 13:05:10',
         status: '删除审批中',
-        apply: '张力',
+        apply: '张力'
       }
     ]
     return {
@@ -311,7 +311,9 @@ export default {
       name: '',
       address: '',
       addModal: false,
-      columns1,data1,total: 100,
+      columns1,
+      data1,
+      total: 100,
       form: {
         name: '',
         address: ''
@@ -319,7 +321,7 @@ export default {
       switch1: '0'
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -329,24 +331,24 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-         })
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    pageChange(page) {
+    pageChange (page) {
       console.log(page)
     }
   }

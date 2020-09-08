@@ -25,20 +25,20 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       user: '0x8fada****d2ab3e'
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     },
-    route(name='admin') {
-      var {showBusinessSubmenu, showDataSubmenu} = this.$route.query
+    route (name = 'admin') {
+      var { showBusinessSubmenu, showDataSubmenu } = this.$route.query
       this.$router.push({
         path: '/chain?mainActive=chain&subActive=&activeIndex=0&showDataSubmenu=1'
       })

@@ -5,21 +5,21 @@
     </h2>
     <Row class="chain-header-content">
       <Col span="8">
-        <div>链实例唯一标识：{{id}}</div>
+      <div>链实例唯一标识：{{id}}</div>
       </Col>
       <Col span="8">
-        <div>链实例创建时间：{{createtime}}</div>
+      <div>链实例创建时间：{{createtime}}</div>
       </Col>
     </Row>
     <Row class="chain-header-content">
       <Col span="8">
-        <div>数据存管域名称：{{name}}</div>
+      <div>数据存管域名称：{{name}}</div>
       </Col>
       <Col span="8">
-        <div>数据存管域唯一标识：{{dataid}}</div>
+      <div>数据存管域唯一标识：{{dataid}}</div>
       </Col>
       <Col span="8">
-        <div>创建时间：{{datatime}}</div>
+      <div>创建时间：{{datatime}}</div>
       </Col>
     </Row>
   </div>
@@ -35,7 +35,7 @@ export default {
       type: [String, Boolean]
     }
   },
-  data() {
+  data () {
     return {
       id: '00740f...aaba8',
       name: '从法存管域',
@@ -45,7 +45,7 @@ export default {
     }
   },
   methods: {
-    route() {
+    route () {
       var name = this.$route.name
       var query = this.$route.query
       console.log(name)

@@ -5,10 +5,10 @@
     </h2>
     <Row class="chain-header-content">
       <Col span="8">
-        <div>链实例唯一标识：{{id}}</div>
+      <div>链实例唯一标识：{{id}}</div>
       </Col>
       <Col span="10">
-        <div>链实例创建时间：{{createtime}}</div>
+      <div>链实例创建时间：{{createtime}}</div>
       </Col>
     </Row>
   </div>
@@ -24,31 +24,31 @@ export default {
       type: [String, Boolean]
     }
   },
-  data() {
+  data () {
     return {
       id: '00740f...aaba8',
       createtime: '2020-1-5 12:00:00'
     }
   },
   methods: {
-    route() {
+    route () {
       let address = localStorage.getItem('money-address')
       var params = {
         address
       }
-      this.$http.post('/cmw/pbqpr.do',params).then(res =>{
-           res = res.data
-           if(res.resCode == '1'){
-              this.$Message.success('查询成功')
-           }else{
-              if(data.retMsg){
-                    that.$Message.warning(data.retMsg)
-               }
-           }
+      this.$http.post('/cmw/pbqpr.do', params).then(res => {
+        res = res.data
+        if (res.resCode == '1') {
+          this.$Message.success('查询成功')
+        } else {
+          if (data.retMsg) {
+            that.$Message.warning(data.retMsg)
+          }
+        }
       }).catch(err => {
 
       }).then(res => {
-        
+
       })
 
       var name = this.$route.name

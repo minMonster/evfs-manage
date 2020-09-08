@@ -8,10 +8,10 @@
       <div class="clear chain-baseinfo">
         <Row>
           <Col span="8">
-            <div>链实例唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
+          <div>链实例唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
           </Col>
           <Col>
-            <div>链实例创建时间：2020-1-5 12:00:00</div>
+          <div>链实例创建时间：2020-1-5 12:00:00</div>
           </Col>
         </Row>
       </div>
@@ -23,13 +23,13 @@
         <div class="info-item" style="margin-bottom: 30px;">
           <Row>
             <Col span="8">
-              文件存储最大许可容量：<span>50</span>
+            文件存储最大许可容量：<span>50</span>
             </Col>
             <Col span="8">
-              已发放文件存储许可容量：<span>45</span>
+            已发放文件存储许可容量：<span>45</span>
             </Col>
             <Col span="8">
-              未发文件存储许可容量：<span>10</span>
+            未发文件存储许可容量：<span>10</span>
             </Col>
           </Row>
         </div>
@@ -38,7 +38,7 @@
         <div style="margin-bottom: 10px;">
           <span style="color: rgba(95, 145, 177, 1);">存储容量许可分布信息：</span>
         </div>
-        
+
         <!-- <div class="adminstrator-mem clear">
           <span>链管理员列表：</span>
           <div class="fr">
@@ -48,21 +48,21 @@
         <div>
           <Row>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">文件存储域名称：</span>
-                <Input type="text" placeholder="文件存储域名称"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">文件存储域名称：</span>
+              <Input type="text" placeholder="文件存储域名称"></Input>
+            </div>
             </Col>
             <Col span="8">
-              <div class="condition-item">
-                <span class="condition-label">文件存储域唯一标识：</span>
-                <Input type="text" placeholder="文件存储域唯一标识"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">文件存储域唯一标识：</span>
+              <Input type="text" placeholder="文件存储域唯一标识"></Input>
+            </div>
             </Col>
             <Col span="4">
-              <div class="condition-item">
-                <Button style="width: 80px;" type="primary">查询</Button>
-              </div>
+            <div class="condition-item">
+              <Button style="width: 80px;" type="primary">查询</Button>
+            </div>
             </Col>
           </Row>
         </div>
@@ -89,108 +89,108 @@
 
 <script>
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "文件存储域名称",
-        key: "name"
+        title: '文件存储域名称',
+        key: 'name'
       },
       {
-        title: "文件存储域唯一标识",
-        key: "hash"
+        title: '文件存储域唯一标识',
+        key: 'hash'
       },
       {
-        title: "现有许可存储容量",
-        key: "storage"
+        title: '现有许可存储容量',
+        key: 'storage'
       },
       {
         title: '申请新增存储容量',
         key: 'new'
       },
       {
-        title: "申请状态",
-        key: "optstatus"
+        title: '申请状态',
+        key: 'optstatus'
       }
-    ];
-    var data1 = [];
+    ]
+    var data1 = []
     return {
-      acceptLimit: "0",
+      acceptLimit: '0',
       columns1,
       data1,
       addModal: false,
-      name: "",
-      address: "",
+      name: '',
+      address: '',
       pageno: 1,
       total: 100
-    };
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   methods: {
-    init() {},
-    next() {
-      this.confirm();
+    init () {},
+    next () {
+      this.confirm()
       // this.$emit('next', 'step4.3')
     },
-    confirm() {
-      var acceptLimit = this.acceptLimit;
-      var data = this.data1;
-      var name = [];
-      var address = [];
+    confirm () {
+      var acceptLimit = this.acceptLimit
+      var data = this.data1
+      var name = []
+      var address = []
       if (data.length) {
         data.forEach((item, index) => {
-          name.push(item.name);
-          address.push(item.address);
-        });
+          name.push(item.name)
+          address.push(item.address)
+        })
       }
       var param = {
         name,
         address,
         acceptLimit
-      };
+      }
       this.$http
-        .post("/fbs/man/pbsai.do", param)
+        .post('/fbs/man/pbsai.do', param)
         .then(res => {
-          res = res.data;
-          if (res.retCode == "1") {
-            this.$emit("next", "step4.4");
+          res = res.data
+          if (res.retCode == '1') {
+            this.$emit('next', 'step4.4')
           }
         })
         .catch(err => {
           // this.$Message.error('')
         })
-        .then(() => {});
+        .then(() => {})
     },
-    ok() {
-      var name = this.name.trim();
-      var address = this.address.trim();
+    ok () {
+      var name = this.name.trim()
+      var address = this.address.trim()
       if (!name) {
-        this.$Message.error("请输入委员名称");
-        return;
+        this.$Message.error('请输入委员名称')
+        return
       }
       if (!address) {
-        this.$Message.error("请输入委员身份地址");
-        return;
+        this.$Message.error('请输入委员身份地址')
+        return
       }
       var data = {
         name,
         address
-      };
-      this.data1.push(data);
-      this.name = "";
-      this.address = "";
+      }
+      this.data1.push(data)
+      this.name = ''
+      this.address = ''
     },
-    cancel() {
-      this.name = "";
-      this.address = "";
+    cancel () {
+      this.name = ''
+      this.address = ''
     },
-    pageChange(num) {
-      this.pageno = num;
+    pageChange (num) {
+      this.pageno = num
     }
   }
-};
+}
 </script>
 
 <style lang="less">

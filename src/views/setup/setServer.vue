@@ -16,20 +16,20 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       serverName: '',
       loading: false
     }
   },
   methods: {
-    next() {
+    next () {
       this.set()
     },
-    init() {
-      
+    init () {
+
     },
-    set() {
+    set () {
       var key = 'org.brewchain.account.name'
       var value = this.serverName.trim()
       if (!value) {
@@ -55,8 +55,8 @@ export default {
       })
     }
   },
-  created: function  () {
-    this.$http.post('/fbs/man/pbgpo.do', {'key':'org.brewchain.account.name'}).then(res => {
+  created: function () {
+    this.$http.post('/fbs/man/pbgpo.do', { 'key': 'org.brewchain.account.name' }).then(res => {
       res = res.data
       if (res.retCode == 1) {
         let pubKey = cwv.genPubkey()
@@ -64,13 +64,13 @@ export default {
           seed: '',
           pubKey
         }
-        this.$http.post('/fbs/man/pbgnc.do',data).then(resGnc => {
-        }).catch( err => {
+        this.$http.post('/fbs/man/pbgnc.do', data).then(resGnc => {
+        }).catch(err => {
           console.log(err)
         }).then(() => {
 
         })
-        this.serverName = res.value;
+        this.serverName = res.value
       }
     }).catch(err => {
 

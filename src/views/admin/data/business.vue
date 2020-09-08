@@ -1,7 +1,7 @@
 <template>
   <div class="data-business">
     <data-header title="数据存管域内业务域授权管理" :btn="true" />
-   <!-- <div class="padding bg-white" style="margin-bottom: 20px;">
+    <!-- <div class="padding bg-white" style="margin-bottom: 20px;">
       <div class="section-title">
         <span>业务域创建审批</span>
       </div>
@@ -10,16 +10,16 @@
           <Col :span="6">
             业务域创建审批：
             <Icon type="ios-help-circle-outline" />-->
-            <!-- <Tooltip
+    <!-- <Tooltip
               placement="top"
               max-width="600"
               transfer
             >
               <Icon type="ios-help-circle-outline" />
             </Tooltip> -->
-        <!--  </Col>-->
-          <!-- 文件保存副本数量 -->
-        <!--  <Col :span="10">
+    <!--  </Col>-->
+    <!-- 文件保存副本数量 -->
+    <!--  <Col :span="10">
             <RadioGroup class="approval" v-model="myswitch" style="width: 50%;">
               <Row style="margin-right: 20px;">
                 <Col span="12">
@@ -47,7 +47,7 @@
         transfer
         <Icon type="ios-help-circle-outline" />
       </Tooltip>
-      <RadioGroup 
+      <RadioGroup
         style="margin: 0 20px;"
         v-model="switch1">
         <Radio label="1">开启</Radio>
@@ -69,21 +69,21 @@
       </div>
       <Row>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">业务域名称：</span>
-            <Input type="text" v-model="form.name" placeholder="请填写"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">业务域名称：</span>
+          <Input type="text" v-model="form.name" placeholder="请填写"></Input>
+        </div>
         </Col>
         <Col span="8">
-          <div class="condition-item">
-            <span class="condition-label">业务域唯一标识：</span>
-            <Input type="text" v-model="form.address" placeholder="请填写"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">业务域唯一标识：</span>
+          <Input type="text" v-model="form.address" placeholder="请填写"></Input>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -95,7 +95,7 @@
         </div>
       </div>
     </div>
-   <!-- <div class="padding bg-white clear">
+    <!-- <div class="padding bg-white clear">
       <div style="margin-bottom: 10px;color: #273D52;" class="clear">
         <span style="color: #273D52;font-weight: 600;">创建许可企业列表</span>
         <Tooltip
@@ -151,16 +151,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "业务域名称",
-        key: "name"
+        title: '业务域名称',
+        key: 'name'
       },
       {
-        title: "业务域唯一标识",
-        key: "address"
+        title: '业务域唯一标识',
+        key: 'address'
       },
       {
         title: '创建时间',
@@ -172,48 +172,48 @@ export default {
       },
       {
         width: 120,
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var row = p.row || {}
           var status = row.status || ''
-          var opt = h('a',{
+          var opt = h('a', {
 
           })
-          var opt2 = h('a',{
-            on:{
-               click(){
+          var opt2 = h('a', {
+            on: {
+              click () {
                 var index = p.index
                 let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 that.$router.push({
-                   name:"business-detail",
-                   query:{
-                      showDataSubmenu: '1',
-                      showBusinessSubmenu,
-                      mainActive: 'business',
-                      activeIndex: '1',
-                      subActive: 'business-detail'
-                }
-              })
+                  name: 'business-detail',
+                  query: {
+                    showDataSubmenu: '1',
+                    showBusinessSubmenu,
+                    mainActive: 'business',
+                    activeIndex: '1',
+                    subActive: 'business-detail'
+                  }
+                })
               }
             }
-          },'详情')
+          }, '详情')
           var opts = [opt2]
-          return h('div', {},opts)
+          return h('div', {}, opts)
         }
       }
     ]
     var data1 = [
-      {name: '泛融存证业务', address: '00740f...aaba8', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
-      {name: '司法业务域', address: '00da0c...cfbe5', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' },
+      { name: '泛融存证业务', address: '00740f...aaba8', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
+      { name: '司法业务域', address: '00da0c...cfbe5', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' }
     ]
     var columns2 = [
       {
-        title: "企业名称",
-        key: "name"
+        title: '企业名称',
+        key: 'name'
       },
       {
-        title: "企业身份标识",
-        key: "address"
+        title: '企业身份标识',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -224,17 +224,17 @@ export default {
         key: 'statuslabel'
       },
       {
-        title:'操作',
+        title: '操作',
         width: 120,
-        render(h,p) {
+        render (h, p) {
           var row = p.row || {}
           var label = row.status == '1' ? '删除' : '撤销'
           label = row.status == '0' ? '--' : label
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                that.data1.splice(index,1)
+                that.data1.splice(index, 1)
               }
             }
           }, label)
@@ -242,9 +242,9 @@ export default {
       }
     ]
     var data2 = [
-      {name: '金桥信息', address: '00740f...feac3', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
-      {name: '泛融科技', address: '00740f...bdae4', time: '2020-1-5 10:15:31', statuslabel: '删除审核中', status: '1' },
-      {name: '从法科技', address: '00740f...ccbb1', time: '2020-1-5 10:05:51', statuslabel: '已添加', status: '2' },
+      { name: '金桥信息', address: '00740f...feac3', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
+      { name: '泛融科技', address: '00740f...bdae4', time: '2020-1-5 10:15:31', statuslabel: '删除审核中', status: '1' },
+      { name: '从法科技', address: '00740f...ccbb1', time: '2020-1-5 10:05:51', statuslabel: '已添加', status: '2' }
     ]
     return {
       acceptLimit: '1/3',
@@ -264,7 +264,7 @@ export default {
       switch1: '0'
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -274,20 +274,20 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    search(){},
-    addEstablish(){
-        this.$router.push('/data-busestablish')
+    search () {},
+    addEstablish () {
+      this.$router.push('/data-busestablish')
     },
-    pageChange(page) {
+    pageChange (page) {
       console.log(page)
     }
   }

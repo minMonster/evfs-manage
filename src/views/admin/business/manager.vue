@@ -16,16 +16,16 @@
         <RadioGroup class="approval" v-model="acceptLimit">
           <Row>
             <Col span="6">
-              <Radio label="0">任意一个成员签批</Radio>
+            <Radio label="0">任意一个成员签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="1/3">1/3成员同时签批</Radio>
+            <Radio label="1/3">1/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="2/3">2/3成员同时签批</Radio>
+            <Radio label="2/3">2/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="3/3">所有成员同时签批</Radio>
+            <Radio label="3/3">所有成员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -38,33 +38,33 @@
         <div>
           <Row>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">管理员姓名：</span>
-                <Input type="text" v-model="form.name" placeholder="管理员姓名"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">管理员姓名：</span>
+              <Input type="text" v-model="form.name" placeholder="管理员姓名"></Input>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">管理员身份标识：</span>
-                <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">管理员身份标识：</span>
+              <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">状态：</span>
-                <Select v-model="form.status">
-                  <Option value="0">全部</Option>
-                  <Option value="1">已添加</Option>
-                  <Option value="2">已删除</Option>
-                  <Option value="3">添加审核中</Option>
-                  <Option value="4">删除审核中</Option>
-                </Select>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">状态：</span>
+              <Select v-model="form.status">
+                <Option value="0">全部</Option>
+                <Option value="1">已添加</Option>
+                <Option value="2">已删除</Option>
+                <Option value="3">添加审核中</Option>
+                <Option value="4">删除审核中</Option>
+              </Select>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-              </div>
+            <div class="condition-item">
+              <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+            </div>
             </Col>
           </Row>
         </div>
@@ -91,16 +91,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "管理员姓名",
-        key: "name"
+        title: '管理员姓名',
+        key: 'name'
       },
       {
-        title: "管理员身份标志地址",
-        key: "address"
+        title: '管理员身份标志地址',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -111,9 +111,9 @@ export default {
         key: 'status'
       },
       {
-        title:'操作',
+        title: '操作',
         width: 100,
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           var label = ''
           if (row.status == '1') {
@@ -124,9 +124,9 @@ export default {
           }
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                that.data1.splice(index,1)
+                that.data1.splice(index, 1)
               }
             }
           }, label)
@@ -134,9 +134,9 @@ export default {
       }
     ]
     var data1 = [
-      { name: '郭志',address: '008b0f...effbc', time: '--', status: '添加审核中',type: '1' },
-      { name: '吴载舟',address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
-      { name: '张力',address: '008b0f...acfe5', time: '2020-1-5 19:41:11', status: '已添加', type: '2' },
+      { name: '郭志', address: '008b0f...effbc', time: '--', status: '添加审核中', type: '1' },
+      { name: '吴载舟', address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
+      { name: '张力', address: '008b0f...acfe5', time: '2020-1-5 19:41:11', status: '已添加', type: '2' }
     ]
     return {
       acceptLimit: '1/3',
@@ -149,11 +149,11 @@ export default {
       form: {
         name: '',
         address: '',
-        status:''
+        status: ''
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -163,18 +163,18 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    search(){},
-    pageChange(page) {
-      
+    search () {},
+    pageChange (page) {
+
     }
   }
 }

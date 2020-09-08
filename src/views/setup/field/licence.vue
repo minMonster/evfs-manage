@@ -54,13 +54,13 @@
 
 <script>
 var units = [
-  {value: '1', label: 'MB'},
-  {value: '2', label: 'GB'},
-  {value: '3', label: 'TB'},
-  {value: '4', label: 'PB'},
+  { value: '1', label: 'MB' },
+  { value: '2', label: 'GB' },
+  { value: '3', label: 'TB' },
+  { value: '4', label: 'PB' }
 ]
 export default {
-  data() {
+  data () {
     return {
       hash: 'dd',
       step: '3',
@@ -69,35 +69,35 @@ export default {
       units
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
-      
+    init () {
+
     },
-    next() {
+    next () {
       this.step = '2'
     },
-    copy() {
+    copy () {
       let hash = this.hash
       var that = this
       this.$copyText(hash).then(function (e) {
         that.$Message.success('复制成功')
-        }, function (e) {
+      }, function (e) {
         that.$Message.error('复制失败')
       })
     },
-    copy2() {
+    copy2 () {
       let hash = this.hash
       var that = this
       this.$copyText(hash).then(function (e) {
         that.$Message.success('复制成功')
-        }, function (e) {
+      }, function (e) {
         that.$Message.error('复制失败')
       })
     },
-    admin() {
+    admin () {
       this.$router.push({
         name: 'admin'
       })

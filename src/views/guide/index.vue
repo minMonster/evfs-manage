@@ -7,32 +7,32 @@
       <div class="guide-body">
         <Row>
           <Col :span="24" :lg="12">
-            <div class="guide-left">
-              <h3 class="guide-title">节点服务器安装向导</h3>
-              <div class="guide-steps">
-                <p>节点服务器安装流程主要分为如下几步：</p>
-                <ul>
-                  <li>1.服务器基础信息设置</li>
-                  <li>2.绑定首位服务器管理员</li>
-                  <li>3.为服务器签署企业隶属关系</li>
-                  <li>4.链信息设置</li>
-                  <!-- <li>1.设置服务器名称</li>
+          <div class="guide-left">
+            <h3 class="guide-title">节点服务器安装向导</h3>
+            <div class="guide-steps">
+              <p>节点服务器安装流程主要分为如下几步：</p>
+              <ul>
+                <li>1.服务器基础信息设置</li>
+                <li>2.绑定首位服务器管理员</li>
+                <li>3.为服务器签署企业隶属关系</li>
+                <li>4.链信息设置</li>
+                <!-- <li>1.设置服务器名称</li>
                   <li>2.绑定首位服务器管理员</li>
                   <li>3.为服务器签署企业隶属关系</li>
                   <li>4.创建新的链，或加入现有的链</li>
                   <li>5.链实例运行许可证绑定</li>
                   <li>6.创建新的文件存储域，或加入现有的文件存储域</li> -->
-                </ul>
-                <div class="init-btn" @click="setup">
-                  <i></i><span>开始安装</span>
-                </div>
+              </ul>
+              <div class="init-btn" @click="setup">
+                <i></i><span>开始安装</span>
               </div>
             </div>
+          </div>
           </Col>
           <Col :span="24" :lg="12">
-            <div class="body-right">
+          <div class="body-right">
 
-            </div>
+          </div>
           </Col>
         </Row>
       </div>
@@ -42,8 +42,8 @@
 
 <script>
 export default {
-  components: { 
-    
+  components: {
+
   },
   data: function () {
     return {
@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    setup() {
+    setup () {
       this.$router.push({
         name: 'setup'
       })

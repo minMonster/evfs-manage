@@ -17,9 +17,9 @@
             >
               <Icon type="ios-help-circle-outline" />
             </Tooltip> -->
-         <!-- </Col>-->
-          <!-- 文件保存副本数量 -->
-           <!-- <Col :span="10">
+    <!-- </Col>-->
+    <!-- 文件保存副本数量 -->
+    <!-- <Col :span="10">
             <RadioGroup class="approval" v-model="myswitch" style="width: 50%;">
               <Row style="margin-right: 20px;">
                 <Col span="12">
@@ -55,7 +55,7 @@
         transfer
         <Icon type="ios-help-circle-outline" />
       </Tooltip>
-      <RadioGroup 
+      <RadioGroup
         style="margin: 0 20px;"
         v-model="switch1">
         <Radio label="1">开启</Radio>
@@ -102,7 +102,7 @@
         </div>
       </div>
     </div>
-   <!-- <div class="padding bg-white clear">
+    <!-- <div class="padding bg-white clear">
       <div style="margin-bottom: 20px;color: #273D52;" class="clear">
         <span style="color: #273D52;font-weight: 600; display: block;margin-bottom: 30px;">创建许可企业列表</span>
         <!-- <Tooltip
@@ -111,9 +111,9 @@
           transfer
           <Icon type="ios-help-circle-outline" />
         </Tooltip> -->
-        <!-- <Button type="primary" style="float: right;">添加</Button> -->
-     <!-- </div>-->
-      <!-- <Row>
+    <!-- <Button type="primary" style="float: right;">添加</Button> -->
+    <!-- </div>-->
+    <!-- <Row>
         <Col span="6">
           <div class="condition-item">
             <span class="condition-label">企业名称：</span>
@@ -144,7 +144,7 @@
           </div>
         </Col>
       </Row> -->
-      <!-- <div>
+    <!-- <div>
         <Table :columns="columns2" :data="data2"></Table>
       </div>
       <div class="page">
@@ -152,22 +152,22 @@
           <Page :total="total" @on-change="pageChange"/>
         </div>
       </div> -->
-    </div>
+  </div>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "业务域名称",
-        key: "name"
+        title: '业务域名称',
+        key: 'name'
       },
       {
-        title: "业务域唯一标识",
-        key: "address"
+        title: '业务域唯一标识',
+        key: 'address'
       },
       {
         title: '创建时间',
@@ -183,20 +183,20 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
-          return h('a',{
-            on:{
-              click() {
+          return h('a', {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
-          },'查看')
+          }, '查看')
         }
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var agree = h('a', {
             style: {
               marginRight: '8px'
@@ -205,33 +205,32 @@ export default {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
-                
               }
             }
-          },'同意')
-          var refuse =  h('a', {
+          }, '同意')
+          var refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
-              click() {
+              click () {
                 var index = p.index
               }
             }
-          },'拒绝')
-          return h('div',{
+          }, '拒绝')
+          return h('div', {
             'class': 'opt-btns'
-          },[
+          }, [
             agree, refuse
           ])
         }
       }
     ]
     var data1 = [
-      {name: '泛融存证业务', address: '00740f...aaba8',applicant: '张力', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
-      {name: '司法业务域', address: '00da0c...cfbe5', applicant: '张力',time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' },
+      { name: '泛融存证业务', address: '00740f...aaba8', applicant: '张力', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
+      { name: '司法业务域', address: '00da0c...cfbe5', applicant: '张力', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' }
     ]
     return {
       acceptLimit: '1/3',
@@ -249,7 +248,7 @@ export default {
       switch1: '0'
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -259,24 +258,24 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-         })
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    pageChange(page) {
+    pageChange (page) {
       console.log(page)
     }
   }

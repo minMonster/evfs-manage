@@ -9,7 +9,7 @@
         transfer
         <Icon type="ios-help-circle-outline" />
       </Tooltip>
-      <RadioGroup 
+      <RadioGroup
         style="margin: 0 20px;"
         v-model="switch1">
         <Radio label="1">允许</Radio>
@@ -20,7 +20,7 @@
     <div class="padding bg-white">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">主节点服务器列表</span>
-         <Button type="primary"  @click="confirmAdd" class="fr">添加</Button>
+        <Button type="primary"  @click="confirmAdd" class="fr">添加</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -28,37 +28,37 @@
           content='功效说明：在“主节点网络准入审批”选择“开启”时，主节点服务器列表中的节点服务器才可以加入链的节点网络。'>
           <Icon type="ios-help-circle-outline" />
         </Tooltip>
-        
+
       </div>
       <Row>
         <Col span="5">
-          <div class="condition-item">
-            <span class="condition-label">隶属企业名称：</span>
-            <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">隶属企业名称：</span>
+          <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
+        </div>
         </Col>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">服务器身份标识：</span>
-            <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">服务器身份标识：</span>
+          <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <span class="condition-label">状态：</span>
-            <Select v-model="form.status" value="0">
-              <Option value="0">全部</Option>
-              <Option value="1">已添加</Option>
-              <Option value="2">已删除</Option>
-              <Option value="3">添加审核中</Option>
-              <Option value="4">删除审核中</Option>
-            </Select>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">状态：</span>
+          <Select v-model="form.status" value="0">
+            <Option value="0">全部</Option>
+            <Option value="1">已添加</Option>
+            <Option value="2">已删除</Option>
+            <Option value="3">添加审核中</Option>
+            <Option value="4">删除审核中</Option>
+          </Select>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -75,21 +75,21 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "隶属企业名称",
-        key: "name"
+        title: '隶属企业名称',
+        key: 'name'
       },
       {
-        title: "服务器身份标识",
-        key: "address"
+        title: '服务器身份标识',
+        key: 'address'
       },
       {
         title: '节点类型',
         key: 'nodetype',
-        width: 120,
+        width: 120
       },
       {
         title: '数据存管域名称',
@@ -104,16 +104,16 @@ export default {
         key: 'statuslabel'
       },
       {
-        title:'操作',
+        title: '操作',
         width: 120,
-        render(h,p) {
+        render (h, p) {
           var row = p.row || {}
           var label = row.status == '2' ? '收回授权' : '撤销'
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                that.data1.splice(index,1)
+                that.data1.splice(index, 1)
               }
             }
           }, label)
@@ -121,9 +121,9 @@ export default {
       }
     ]
     var data1 = [
-      {name: '从法科技', address: '00630e...cabc3', nodetype:'主节点', databasename: '从法存管域', time: '2020-1-5 9:15:20', statuslabel: '已授权', status: '2' },
-      {name: '从法科技', address: '00740f...abcde', nodetype:'主节点', databasename: '从法存管域', time: '--', statuslabel: '申请审核中', status: '1' },
-      {name: '从法科技', address: '00740f...fbeda', nodetype:'主节点', databasename: '从法存管域', time: '2020-1-5 13:12:40', statuslabel: '收回授权审核中', status: '1' },
+      { name: '从法科技', address: '00630e...cabc3', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-5 9:15:20', statuslabel: '已授权', status: '2' },
+      { name: '从法科技', address: '00740f...abcde', nodetype: '主节点', databasename: '从法存管域', time: '--', statuslabel: '申请审核中', status: '1' },
+      { name: '从法科技', address: '00740f...fbeda', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-5 13:12:40', statuslabel: '收回授权审核中', status: '1' }
     ]
     return {
       acceptLimit: '1/3',
@@ -136,12 +136,12 @@ export default {
       form: {
         name: '',
         address: '',
-        status:''
+        status: ''
       },
       switch1: '0'
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -151,38 +151,38 @@ export default {
 
   },
   methods: {
-    init() {
-        this.initList()
+    init () {
+      this.initList()
     },
-    initList(){
-         setTimeout(() => {
-           this.$http.post('/cmw/pbqmn.do').then(res =>{
-             console.log(res)
-             if(res.retCode == '1'){
-               this.$Message.success('查询成功')
-             }else{
-               if (res.retMsg) {
-                this.$Message.error(res.retMsg)
-               }
-             }
-           }).catch(err => {
+    initList () {
+      setTimeout(() => {
+        this.$http.post('/cmw/pbqmn.do').then(res => {
+          console.log(res)
+          if (res.retCode == '1') {
+            this.$Message.success('查询成功')
+          } else {
+            if (res.retMsg) {
+              this.$Message.error(res.retMsg)
+            }
+          }
+        }).catch(err => {
 
-           })
-         },100)
+        })
+      }, 100)
     },
-    ok() {
-
-    },
-    cancel() {
+    ok () {
 
     },
-    search(){
+    cancel () {
 
     },
-    confirmAdd(){
-           this.$router.push('/chain-nodeManage')
+    search () {
+
     },
-    pageChange(page) {
+    confirmAdd () {
+      this.$router.push('/chain-nodeManage')
+    },
+    pageChange (page) {
       console.log(page)
     }
   }

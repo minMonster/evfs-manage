@@ -10,13 +10,13 @@
       <div class="info-item">
         <Row>
           <Col span="8">
-            节点运行许可最大数量：<span>50</span>
+          节点运行许可最大数量：<span>50</span>
           </Col>
           <Col span="8">
-            已发放节点许可数量：<span>50</span>
+          已发放节点许可数量：<span>50</span>
           </Col>
           <Col span="8">
-            未发放节点许可数量：<span>50</span>
+          未发放节点许可数量：<span>50</span>
           </Col>
         </Row>
       </div>
@@ -39,13 +39,13 @@
       <div class="info-item">
         <Row>
           <Col span="8">
-            文件存储最大许可容量：<span>100TB</span>
+          文件存储最大许可容量：<span>100TB</span>
           </Col>
           <Col span="8">
-            已发放文件存储许可容量：<span>50TB</span>
+          已发放文件存储许可容量：<span>50TB</span>
           </Col>
           <Col span="8">
-            未发文件存储许可容量：<span>50TB</span>
+          未发文件存储许可容量：<span>50TB</span>
           </Col>
         </Row>
       </div>
@@ -66,24 +66,24 @@
 
 <script>
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "数据存管域名称",
-        key: "name"
+        title: '数据存管域名称',
+        key: 'name'
       },
       {
-        title: "数据存管域唯一标识",
-        key: "address"
+        title: '数据存管域唯一标识',
+        key: 'address'
       },
       {
-        title: "节点运行许可数量",
-        key: "numbers"
+        title: '节点运行许可数量',
+        key: 'numbers'
       },
       {
-        title: "现有许可存储容量",
-        key: "capacity"
+        title: '现有许可存储容量',
+        key: 'capacity'
       },
       {
         title: '申请新增存储容量',
@@ -99,11 +99,11 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           return h('a', {
-              on:{
-              click() {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
@@ -112,7 +112,7 @@ export default {
       },
       {
         title: '操作',
-        render(h,p) {
+        render (h, p) {
           var agree = h('a', {
             style: {
               'margin-right': '10px'
@@ -123,12 +123,12 @@ export default {
           return h('div', {}, opts)
         }
       }
-    ];
+    ]
     var data1 = [
       {
         name: '蜂巢链存证域',
         address: '00740f...aeea2',
-        numbers:"00740f...aeea2",
+        numbers: '00740f...aeea2',
         capacity: '0.00 TB',
         applycapacity: '5.00 TB',
         status: '申请审核中',
@@ -137,16 +137,16 @@ export default {
     ]
     var columns2 = [
       {
-        title: "数据存管域名称",
-        key: "name"
+        title: '数据存管域名称',
+        key: 'name'
       },
       {
-        title: "数据存管域唯一标识",
-        key: "address"
+        title: '数据存管域唯一标识',
+        key: 'address'
       },
       {
-        title: "现有许可证数量",
-        key: "num"
+        title: '现有许可证数量',
+        key: 'num'
       },
       {
         title: '申请新增许可证数量',
@@ -162,11 +162,11 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           return h('a', {
-            on:{
-              click() {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
@@ -175,7 +175,7 @@ export default {
       },
       {
         title: '操作',
-        render(h,p) {
+        render (h, p) {
           var agree = h('a', {
             style: {
               'margin-right': '10px'
@@ -186,7 +186,7 @@ export default {
           return h('div', {}, opts)
         }
       }
-    ];
+    ]
     var data2 = [
       {
         name: '蜂巢链存证域',
@@ -198,9 +198,9 @@ export default {
       }
     ]
     return {
-      acceptLimit: "1/3",
-      name: "",
-      address: "",
+      acceptLimit: '1/3',
+      name: '',
+      address: '',
       addModal: false,
       columns1,
       columns2,
@@ -208,34 +208,34 @@ export default {
       data2,
       total: 100,
       form: {
-        name: "",
-        address: ""
+        name: '',
+        address: ''
       },
-      switch1: "0"
-    };
+      switch1: '0'
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   watch: {},
   computed: {},
   methods: {
-    init() {},
-    ok() {},
-     //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+'',
-             oktext:"关闭"
-         })
+    init () {},
+    ok () {},
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + '',
+        oktext: '关闭'
+      })
     },
-    cancel() {},
-    pageChange(page) {
-      console.log(page);
+    cancel () {},
+    pageChange (page) {
+      console.log(page)
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

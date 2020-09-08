@@ -4,7 +4,7 @@
     <div>
       <div class="bg-white padding" style="margin-bottom: 20px;">
         <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
-             <input type="hidden" id="signResult">
+          <input type="hidden" id="signResult">
           <span>联盟委员决议审批规则：</span>
           <Tooltip
             placement="top"
@@ -18,16 +18,16 @@
         <RadioGroup class="approval" v-model="acceptLimit" @on-change="accrptFun">
           <Row>
             <Col span="6">
-              <Radio label="0">任意一个联盟委员签批</Radio>
+            <Radio label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="1/3">1/3联盟委员同时签批</Radio>
+            <Radio label="1/3">1/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="2/3">2/3联盟委员同时签批</Radio>
+            <Radio label="2/3">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-              <Radio label="3/3">所有联盟委员同时签批</Radio>
+            <Radio label="3/3">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -40,40 +40,40 @@
         <div>
           <Row>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">委员名称：</span>
-                <Input type="text" v-model="form.name" placeholder="委员名称"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">委员名称：</span>
+              <Input type="text" v-model="form.name" placeholder="委员名称"></Input>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">委员身份标识：</span>
-                <Input type="text" v-model="form.address" placeholder="委员身份标识"></Input>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">委员身份标识：</span>
+              <Input type="text" v-model="form.address" placeholder="委员身份标识"></Input>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <span class="condition-label">状态：</span>
-                <Select v-model="form.status">
-                  <Option value="0">全部</Option>
-                  <Option value="1">已添加</Option>
-                  <Option value="2">已删除</Option>
-                  <Option value="3">添加审核中</Option>
-                  <Option value="4">删除审核中</Option>
-                </Select>
-              </div>
+            <div class="condition-item">
+              <span class="condition-label">状态：</span>
+              <Select v-model="form.status">
+                <Option value="0">全部</Option>
+                <Option value="1">已添加</Option>
+                <Option value="2">已删除</Option>
+                <Option value="3">添加审核中</Option>
+                <Option value="4">删除审核中</Option>
+              </Select>
+            </div>
             </Col>
             <Col span="6">
-              <div class="condition-item">
-                <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-              </div>
+            <div class="condition-item">
+              <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+            </div>
             </Col>
           </Row>
         </div>
-          <div  v-show="popup">
-               <div id="qrcode"></div>
-               <div class="over"></div>
-          </div>
+        <div  v-show="popup">
+          <div id="qrcode"></div>
+          <div class="over"></div>
+        </div>
         <Table :columns="columns1" :data="data1"></Table>
         <div class="page">
           <div class="page-inner">
@@ -90,28 +90,28 @@
           <div><Input placeholder="请输入委员名称" v-model="name" /></div>
           <div><Input placeholder="请输入委员身份标志地址" v-model="address" /></div>
         </div>
-         <div slot="footer">
+        <div slot="footer">
           <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >添加</Button>
           <Button style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
-      </div>
+        </div>
       </Modal>
     </div>
   </div>
 </template>
 
 <script>
-import QRCode from 'qrcodejs2';
+import QRCode from 'qrcodejs2'
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "委员名称",
-        key: "name"
+        title: '委员名称',
+        key: 'name'
       },
       {
-        title: "委员身份标志地址",
-        key: "address"
+        title: '委员身份标志地址',
+        key: 'address'
       },
       {
         title: '添加时间',
@@ -122,15 +122,15 @@ export default {
         key: 'status'
       },
       {
-        title:'操作',
+        title: '操作',
         width: 100,
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           console.log(row)
           // var label = row.type == '2' ? '删除' : '撤销'
           return h('a', {
             on: {
-              click() {
+              click () {
                 // var index = p.index
                 // that.data1.splice(index,1)
                 that.del(row)
@@ -141,9 +141,9 @@ export default {
       }
     ]
     var data1 = [
-      { name: '金桥信息',address: '00630eslj9876sljflk...fafc1', time: '2020-1-1 12:00:00', status: '添加审核中' },
-      { name: '泛融信息',address: '00630eslj9876sljflk...afea5', time: '2020-1-1 12:00:00', status: '删除审核中' },
-      { name: '从法科技',address: '00630eslj9876sljflk...fafc1', time: '2020-1-1 12:00:00', status: '已添加', type: '1' },
+      { name: '金桥信息', address: '00630eslj9876sljflk...fafc1', time: '2020-1-1 12:00:00', status: '添加审核中' },
+      { name: '泛融信息', address: '00630eslj9876sljflk...afea5', time: '2020-1-1 12:00:00', status: '删除审核中' },
+      { name: '从法科技', address: '00630eslj9876sljflk...fafc1', time: '2020-1-1 12:00:00', status: '已添加', type: '1' }
     ]
     return {
       popup: 0,
@@ -153,16 +153,16 @@ export default {
       addModal: false,
       columns1,
       data1,
-      addLoading:false,
+      addLoading: false,
       total: 100,
       form: {
         name: '',
         address: '',
-        status:''
+        status: ''
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -172,126 +172,123 @@ export default {
 
   },
   methods: {
-    init() {
-        var that = this;
-        let params ={
+    init () {
+      var that = this
+      let params = {
 
-        }
-        this.$http.post('/cmw/pbqml.do',params).then(res => {
-             var data = res.data
-             if(data.resCode == '1'){
-                 that.$Message.success('查询成功')
-             }else{
-               if(data.retMsg){
-                    that.$Message.warning(data.retMsg)
-               }
-             }
-        }).catch(err => {
-
-        }).then(res => {
-
-        })
-        
-    },
-    //添加功能
-    ok() {
-       let name = this.name.trim()
-       let address = this.address.trim(t)
-       if (!name) {
-        this.$Message.error('请输入管理员名称')
-          return
-        }
-        if (!address) {
-          this.$Message.error('请输入管理员身份标识密钥')
-          return
-        }
-        this.add()
-    },
-    add(){ 
-          let address = this.address.trim()
-          let name= this.name.trim()
-          this.addLoading = true
-          var data = {
-            address,name
+      }
+      this.$http.post('/cmw/pbqml.do', params).then(res => {
+        var data = res.data
+        if (data.resCode == '1') {
+          that.$Message.success('查询成功')
+        } else {
+          if (data.retMsg) {
+            that.$Message.warning(data.retMsg)
           }
-            this.$http.post('',data).then(res=> {
-                res = res.data
-                
-            }).catch(err => {
+        }
+      }).catch(err => {
 
-            }).then(res => {
-                  this.popup = 1
-                  this.creatQrCode()
-                  this.cancel()
-            })
+      }).then(res => {
+
+      })
     },
-    cancel() {
-            this.name = ''
-            this.address = ''
-            this.addModal = false
-            this.addLoading = false
+    // 添加功能
+    ok () {
+      let name = this.name.trim()
+      let address = this.address.trim(t)
+      if (!name) {
+        this.$Message.error('请输入管理员名称')
+        return
+      }
+      if (!address) {
+        this.$Message.error('请输入管理员身份标识密钥')
+        return
+      }
+      this.add()
     },
-    //删除管理页面
-    del(obj){
-        var that = this
-        this.popup=1,
+    add () {
+      let address = this.address.trim()
+      let name = this.name.trim()
+      this.addLoading = true
+      var data = {
+        address, name
+      }
+      this.$http.post('', data).then(res => {
+        res = res.data
+      }).catch(err => {
+
+      }).then(res => {
+        this.popup = 1
         this.creatQrCode()
-        // setTimeout(() => {
-        //         // var index = p.index
-        //         // that.data1.splice(index,1)
-        // },100)
+        this.cancel()
+      })
     },
-    //修改
-    modify(){
-      this.popup=1,
+    cancel () {
+      this.name = ''
+      this.address = ''
+      this.addModal = false
+      this.addLoading = false
+    },
+    // 删除管理页面
+    del (obj) {
+      var that = this
+      this.popup = 1,
       this.creatQrCode()
-      
+      // setTimeout(() => {
+      //         // var index = p.index
+      //         // that.data1.splice(index,1)
+      // },100)
     },
-    accrptFun(){
+    // 修改
+    modify () {
+      this.popup = 1,
+      this.creatQrCode()
+    },
+    accrptFun () {
 
     },
     // 查询
-    search(){
+    search () {
       var that = this
       let data = {
-            address:this.form.address,
-            status:this.form.status
+        address: this.form.address,
+        status: this.form.status
+      }
+      this.$http.post('/cmw/pbqml.do', data).then(res => {
+        res = res.data
+        console.log(res)
+        if (res.retCode == '1') {
+          this.$Message.success('查询成功')
+        } else {
+          if (res.retMsg) {
+            this.$Message.error(res.retMsg)
           }
-        this.$http.post('/cmw/pbqml.do',data).then(res => {
-            res = res.data
-            console.log(res)
-            if(res.retCode == '1'){
-                   this.$Message.success('查询成功')
-            }else{
-              if(res.retMsg){
-                   this.$Message.error(res.retMsg)
-              }
-            }
-        }).catch(err =>{
-        })
+        }
+      }).catch(err => {
+      })
     },
-    //分页
-    pageChange(page) {
+    // 分页
+    pageChange (page) {
       console.log(page)
     },
-    //生成二维码
-    creatQrCode() {
-        let linkData = {
-            // url:"http://47.116.17.247:9000/api/clt/pblin.do",
-            // func:"Login",
-            // data:{
-            // }
-        };
-        var qrcode = new QRCode('qrcode', {
-            text: JSON.stringify(linkData), // 需要转换为二维码的内容
-            width: 260,
-            height: 260,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: 3,//容错率，L/M/H
-        })
-        console.log(qrcode)
-    },
+    // 生成二维码
+    creatQrCode () {
+      let linkData = {
+        // url:"http://47.116.17.247:9000/api/clt/pblin.do",
+        // func:"Login",
+        // data:{
+        // }
+      }
+      var qrcode = new QRCode('qrcode', {
+        text: JSON.stringify(linkData), // 需要转换为二维码的内容
+        width: 260,
+        height: 260,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: 3// 容错率，L/M/H
+      })
+      console.log(qrcode)
+    }
   }
 }
 </script>

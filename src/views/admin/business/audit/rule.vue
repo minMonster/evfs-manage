@@ -70,26 +70,26 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     return {
       switch1: '0',
       switch2: '0',
       switch3: '0',
-      total: 90,
+      total: 90
     }
   },
   watch: {},
   computed: {},
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     },
-    pageChange(val) {
-      
+    pageChange (val) {
+
     }
   }
 }

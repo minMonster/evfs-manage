@@ -15,7 +15,7 @@ export default {
     }
   },
   methods: {
-    nav() {
+    nav () {
       let name = this.$props.step
       this.$emit('on-click', name)
     }

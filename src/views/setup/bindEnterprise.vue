@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       key: 'org.brewchain.account.org.pubkey',
       success: false,
@@ -38,34 +38,34 @@ export default {
       timer: null
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
       this.initServerName()
       this.initPubkey()
     },
-    initPubkey() {
+    initPubkey () {
       let pubKey = cwv.genPubkey()
       let data = {
         seed: '',
         pubKey
       }
-      this.$http.post('/fbs/man/pbgpo.do', {'key':'local.coinbase.pubkey'}).then(res => {
+      this.$http.post('/fbs/man/pbgpo.do', { 'key': 'local.coinbase.pubkey' }).then(res => {
         res = res.data
         this.pubKey = res.value
-      }).catch( err => {
+      }).catch(err => {
         console.log(err)
       }).then(() => {
 
       })
     },
-    initServerName() {
+    initServerName () {
       var serverName = this.$cookie.get('serverName')
       this.serverName = serverName
     },
-    bind() {
+    bind () {
       var timestamp = Date.now()
       var str = this.key + this.pubKey + timestamp
       sign(str)
@@ -87,9 +87,9 @@ export default {
           this.closeTimer()
           // this.$toast('签名失败')
         }
-      }, 100);
+      }, 100)
     },
-    _bind() {
+    _bind () {
       let timestamp = Date.now()
       let key = this.key
       let value = this.pubKey
@@ -110,7 +110,7 @@ export default {
         console.log(arguments)
       })
     },
-    copyPubKey() {
+    copyPubKey () {
       let pubKey = this.pubKey
       var that = this
       this.$copyText(pubKey).then(function (e) {
@@ -121,19 +121,19 @@ export default {
         that.$Message.error('复制失败')
       })
     },
-    next() {
+    next () {
       this.$emit('next', 'step4')
     },
-    join() {
+    join () {
       this.$emit('next', 'step4-joinchain')
     },
-    create() {
+    create () {
       this.$emit('next', 'step4.1')
     },
-    destroyed() {
+    destroyed () {
       this.closeTimer()
     },
-    closeTimer() {
+    closeTimer () {
       if (this.timer) {
         clearInterval(this.timer)
         var signResult = document.getElementById('signResult')

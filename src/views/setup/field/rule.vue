@@ -41,20 +41,20 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       debris: 5,
       copy: 3
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
-      
+    init () {
+
     },
-    next() {
+    next () {
       this.$emit('next', 'step6.3')
     }
   }

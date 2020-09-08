@@ -17,7 +17,7 @@
           <Page :total="total" @on-change="pageChange" />
         </div>
       </div>
-       <Modal
+      <Modal
         v-model="addModal"
         title="连接数据存管域"
         @on-ok="ok"
@@ -28,7 +28,7 @@
         <div slot="footer">
           <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >连接</Button>
           <Button  style="width:80px;" class='clearBtn' @click="cancel" >取消</Button>
-      </div>
+        </div>
       </Modal>
     </div>
 
@@ -37,25 +37,25 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "数据存管域名称",
-        key: "name",
-        width: 140,
+        title: '数据存管域名称',
+        key: 'name',
+        width: 140
       },
       {
-        title: "数据存管域唯一标识",
-        key: "id"
+        title: '数据存管域唯一标识',
+        key: 'id'
       },
       {
-        title: "创建时间",
-        key: "time"
+        title: '创建时间',
+        key: 'time'
       },
       {
-        title: "最大许可存储容量",
-        key: "maxstorage"
+        title: '最大许可存储容量',
+        key: 'maxstorage'
       },
       {
         title: '状态',
@@ -63,21 +63,21 @@ export default {
         width: 120
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var index = p.index
           var row = p.row || {}
           var type = row.type
           var opt1 = h('a', {
             on: {
-              click() {
+              click () {
                 // that.data1.splice(index,1)
               }
             }
           }, '断开连接')
           var opt2 = h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
                 let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 that.$router.push({
@@ -95,48 +95,47 @@ export default {
           }, '详情')
           var opt3 = h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                
               }
             }
           }, '删除')
           var opts = [opt1]
           switch (type) {
-            case '1':
-              opts.push(opt2)
-              break;
-            case '2':
-              opts.push(opt2)
-              opts.push(opt3)
-              break;
-            default:
-              break;
+          case '1':
+            opts.push(opt2)
+            break
+          case '2':
+            opts.push(opt2)
+            opts.push(opt3)
+            break
+          default:
+            break
           }
-          return h('div',{
+          return h('div', {
             'class': 'opt-btns'
-          },opts)
+          }, opts)
         }
-        
+
       }
-    ];
+    ]
     var data1 = [
-      { name: '泛融存管域', id: '00740f...bdca2', time: '2020-1-5 15:34:57', maxstorage: '5.0TB',status: '删除审核中', type: '0'},
-      { name: '从法存管域', id: '00740f...facb7', time: '2020-1-5 10:21:32', maxstorage: '5.0TB',status: '运行', type: '1'},
-      { name: '金融共享域', id: '00740f...ccbb3', time: '2020-1-5 12:34:04', maxstorage: '5.0TB',status: '停运', type: '2'},
-    ];
+      { name: '泛融存管域', id: '00740f...bdca2', time: '2020-1-5 15:34:57', maxstorage: '5.0TB', status: '删除审核中', type: '0' },
+      { name: '从法存管域', id: '00740f...facb7', time: '2020-1-5 10:21:32', maxstorage: '5.0TB', status: '运行', type: '1' },
+      { name: '金融共享域', id: '00740f...ccbb3', time: '2020-1-5 12:34:04', maxstorage: '5.0TB', status: '停运', type: '2' }
+    ]
     return {
-      columns1, 
+      columns1,
       data1,
       total: 103,
-      addLoading:false,
+      addLoading: false,
       addModal: false,
-      name:'',
-      address:''
+      name: '',
+      address: ''
 
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -146,67 +145,67 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    destoryed(){
-         this.closeTimer()
+    destoryed () {
+      this.closeTimer()
     },
-    closeTimer() {
+    closeTimer () {
       if (this.timer) {
         clearInterval(this.timer)
         var signResult = document.getElementById('signResult')
         signResult = ''
       }
     },
-    confirmAdd(){
+    confirmAdd () {
 
     },
-    ok() {
-          var timestamp = Date.now()
-          let signStr = this.timestamp + ''
-          sign(signStr)
-          this.timer = setInterval(() => {
-              var signResult = document.getElementById('signResult')
-              var signature = signResult.value
-              if (signature && !signature.match(/^(doing)|(fail)|(refuse)$/)) {
-                this.closeTimer()
-                console.log(signature)
-                this._add()
-              }
-              if (signature == 'fail') {
-                console.log('签名失败')
-                this.closeTimer()
-                // this.$toast('签名失败')
-              }
-              if (signature == 'refuse') {
-                console.log('拒绝签名')
-                this.closeTimer()
-                // this.$toast('签名失败')
-              }
-          },100)
-          let name = this.name.trim()
-          this.addLoading = true
-          var data = {
-            name
-          }
-          this.$http.post('',data).then(res => {
-            res = res.data
-          }).catch(() => {
+    ok () {
+      var timestamp = Date.now()
+      let signStr = this.timestamp + ''
+      sign(signStr)
+      this.timer = setInterval(() => {
+        var signResult = document.getElementById('signResult')
+        var signature = signResult.value
+        if (signature && !signature.match(/^(doing)|(fail)|(refuse)$/)) {
+          this.closeTimer()
+          console.log(signature)
+          this._add()
+        }
+        if (signature == 'fail') {
+          console.log('签名失败')
+          this.closeTimer()
+          // this.$toast('签名失败')
+        }
+        if (signature == 'refuse') {
+          console.log('拒绝签名')
+          this.closeTimer()
+          // this.$toast('签名失败')
+        }
+      }, 100)
+      let name = this.name.trim()
+      this.addLoading = true
+      var data = {
+        name
+      }
+      this.$http.post('', data).then(res => {
+        res = res.data
+      }).catch(() => {
 
-          }).then(res => {
-            this.cancel()
-          })
+      }).then(res => {
+        this.cancel()
+      })
     },
-    cancel() {
-            this.name = ''
-            this.address = ''
-            this.addModal = false
-            this.addLoading = false
+    cancel () {
+      this.name = ''
+      this.address = ''
+      this.addModal = false
+      this.addLoading = false
     },
-    pageChange(value) {
-      
-    } 
+    pageChange (value) {
+
+    }
   }
 }
 </script>

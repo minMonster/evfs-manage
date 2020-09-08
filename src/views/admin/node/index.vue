@@ -5,10 +5,10 @@
       </h2>
       <Row class="chain-header-content">
         <Col span="8">
-          <div>企业名称：从法科技</div>
+        <div>企业名称：从法科技</div>
         </Col>
         <Col span="10">
-          <div>企业身份标识：00740f...ccbb1</div>
+        <div>企业身份标识：00740f...ccbb1</div>
         </Col>
       </Row>
     </div>
@@ -24,19 +24,19 @@
             <Page :total="total" @on-change="pageChange"/>
           </div>
         </div>
-         <Modal
-        v-model="addModal"
-        title="连接节点服务器"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <div class="add-modal-body">
-          <div><p Style="margin-bottom:10px;">节点服务器连接地址：</p><Input placeholder="请输入管理员名称" v-model="nodeAddress" /></div>
-        </div>
-         <div slot="footer">
+        <Modal
+          v-model="addModal"
+          title="连接节点服务器"
+          @on-ok="ok"
+          @on-cancel="cancel">
+          <div class="add-modal-body">
+            <div><p Style="margin-bottom:10px;">节点服务器连接地址：</p><Input placeholder="请输入管理员名称" v-model="nodeAddress" /></div>
+          </div>
+          <div slot="footer">
             <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >连接</Button>
             <Button style="width:80px;" type="primary" class='clearBtn' @click="cancel" >取消</Button>
-         </div>
-      </Modal>
+          </div>
+        </Modal>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
@@ -69,7 +69,7 @@ export default {
       },
       {
         title: '操作',
-        render(h,p) {
+        render (h, p) {
           let row = p.row || {}
           let status = row.status || ''
           var opt1 = h('a', {
@@ -77,7 +77,7 @@ export default {
               'margin-right': '10px'
             },
             on: {
-              click() {
+              click () {
                 var query = that.$route.query
                 that.$router.push({
                   name: 'nodedetail',
@@ -90,32 +90,32 @@ export default {
                 })
               }
             }
-          },'详情')
+          }, '详情')
           var opt2 = h('a', {
 
-          },'断开链接')
+          }, '断开链接')
           var opts = [opt1, opt2]
           return h('div', {}, opts)
         }
       }
     ]
     var data1 = [
-      {hash: '00630e...cabc3', type: '主节点', chainid: '00740f...aaba8', storagename: '从法存管域', storageid: '00740f...facb7', status: '3'},
-      {hash: '00630e...cacc2', type: '资源节点', chainid: '00740f...aaba8', storagename: '从法存管域', storageid: '00740f...facb7', status: '4'},
-      {hash: '00630e...fafc1', type: '主节点', chainid: '00740f...aaba8', storagename: '--', storageid: '--', status: '2'},
-      {hash: '00630e...bbac5', type: '--', chainid: '--', storagename: '--', storageid: '--', status: '1'},
+      { hash: '00630e...cabc3', type: '主节点', chainid: '00740f...aaba8', storagename: '从法存管域', storageid: '00740f...facb7', status: '3' },
+      { hash: '00630e...cacc2', type: '资源节点', chainid: '00740f...aaba8', storagename: '从法存管域', storageid: '00740f...facb7', status: '4' },
+      { hash: '00630e...fafc1', type: '主节点', chainid: '00740f...aaba8', storagename: '--', storageid: '--', status: '2' },
+      { hash: '00630e...bbac5', type: '--', chainid: '--', storagename: '--', storageid: '--', status: '1' }
     ]
     return {
       title: '节点服务器管理',
       columns1,
       data1,
       total: 78,
-      addModal:false,
-      addLoading:false,
-      nodeAddress:""
+      addModal: false,
+      addLoading: false,
+      nodeAddress: ''
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -125,16 +125,16 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-     ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    pageChange(val) {
+    pageChange (val) {
 
     }
   }

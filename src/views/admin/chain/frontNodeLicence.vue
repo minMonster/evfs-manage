@@ -23,7 +23,7 @@
           <b>前置节点调用访问：</b>
           <!-- <b>【白名单】</b>： -->
         </span>
-          <Button type="primary" @click="confirmAdd" class="fr">添加</Button>
+        <Button type="primary" @click="confirmAdd" class="fr">添加</Button>
         <Tooltip
           placement="top"
           max-width="600"
@@ -35,33 +35,33 @@
       </div>
       <Row>
         <Col span="5">
-          <div class="condition-item">
-            <span class="condition-label">隶属企业名称：</span>
-            <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">隶属企业名称：</span>
+          <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
+        </div>
         </Col>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">前置节点身份标识：</span>
-            <Input type="text" v-model="form.address" placeholder="前置节点身份标识"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">前置节点身份标识：</span>
+          <Input type="text" v-model="form.address" placeholder="前置节点身份标识"></Input>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <span class="condition-label">状态：</span>
-            <Select v-model="form.status" >
-              <Option value="0">全部</Option>
-              <Option value="1">已添加</Option>
-              <Option value="2">已删除</Option>
-              <Option value="3">添加审核中</Option>
-              <Option value="4">删除审核中</Option>
-            </Select>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">状态：</span>
+          <Select v-model="form.status" >
+            <Option value="0">全部</Option>
+            <Option value="1">已添加</Option>
+            <Option value="2">已删除</Option>
+            <Option value="3">添加审核中</Option>
+            <Option value="4">删除审核中</Option>
+          </Select>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -72,10 +72,10 @@
           <Page :total="total" @on-change="pageChange" />
         </div>
       </div>
-        <div v-show="popup">
-               <div id="qrcode"></div>
-               <div class="over"></div>
-            </div>
+      <div v-show="popup">
+        <div id="qrcode"></div>
+        <div class="over"></div>
+      </div>
     </div>
     <!-- <div>
       <div style="margin-bottom: 10px;color: #273D52;">
@@ -138,16 +138,16 @@
 <script>
 import QRCode from 'qrcodejs2'
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "隶属企业名称",
-        key: "name"
+        title: '隶属企业名称',
+        key: 'name'
       },
       {
-        title: "服务器身份标识",
-        key: "address"
+        title: '服务器身份标识',
+        key: 'address'
       },
       {
         title: '节点类型',
@@ -162,13 +162,13 @@ export default {
         key: 'statuslabel'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var row = p.row || {}
           // var label = row.status == '2' ? '删除' : '撤销'
           return h('a', {
             on: {
-              click() {
+              click () {
                 // var index = p.index
                 // that.data1.splice(index,1)
                 that.del(row)
@@ -179,85 +179,85 @@ export default {
       }
     ]
     var data1 = [
-      {name: '从法科技', address: '00740f...aaba8', nodetype:'主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '授权审核中', status: '1' },
-      {name: '从法科技', address: '00da0c...cfbe5', nodetype:'资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '1' },
-      {name: '从法科技', address: '00740f...dadaf', nodetype:'主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '1' },
+      { name: '从法科技', address: '00740f...aaba8', nodetype: '主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '授权审核中', status: '1' },
+      { name: '从法科技', address: '00da0c...cfbe5', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '1' },
+      { name: '从法科技', address: '00740f...dadaf', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '1' }
     ]
     return {
-      acceptLimit: "1/3",
-      name: "",
-      address: "",
+      acceptLimit: '1/3',
+      name: '',
+      address: '',
       addModal: false,
       columns1,
       data1,
       total: 100,
       form: {
-        name: "",
-        address: "",
-        status:''
+        name: '',
+        address: '',
+        status: ''
       },
-      switch1: "0",
-      popup:0
-    };
+      switch1: '0',
+      popup: 0
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   watch: {},
   computed: {},
   methods: {
-    init() {
-      var that = this;
-      this.$http.post('/cmw/pbqcl.do').then(res =>{
+    init () {
+      var that = this
+      this.$http.post('/cmw/pbqcl.do').then(res => {
         console.log(res)
-        if(res.retCode == '1'){
-            that.$Message.success('查询成功')
-        }else{
-            that.$Message.error(res.retMsg)
+        if (res.retCode == '1') {
+          that.$Message.success('查询成功')
+        } else {
+          that.$Message.error(res.retMsg)
         }
       }).catch(err => {
         console.log(err)
       })
     },
-    //添加列表
-    confirmAdd(){
-        this.$router.push('/chain-frontNodeAdd')
+    // 添加列表
+    confirmAdd () {
+      this.$router.push('/chain-frontNodeAdd')
     },
-    ok() {},
-    //删除信息
-    del(obj){
-        var that = this
-        this.popup=1,
-        this.creatQrCode()
+    ok () {},
+    // 删除信息
+    del (obj) {
+      var that = this
+      this.popup = 1,
+      this.creatQrCode()
     },
-    cancel() {},
-    search(){
-       
+    cancel () {},
+    search () {
+
     },
-    //分页
-    pageChange(page) {
-      console.log(page);
+    // 分页
+    pageChange (page) {
+      console.log(page)
     },
-    //生成二维码
-     creatQrCode() {
-            let linkData = {
-                // url:"http://47.116.17.247:9000/api/clt/pblin.do",
-                // func:"Login",
-                // data:{
-                // }
-            };
-            var qrcode = new QRCode('qrcode', {
-                text: JSON.stringify(linkData), // 需要转换为二维码的内容
-                width: 260,
-                height: 260,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: 3,//容错率，L/M/H
-            })
-            console.log(qrcode)
-        },
+    // 生成二维码
+    creatQrCode () {
+      let linkData = {
+        // url:"http://47.116.17.247:9000/api/clt/pblin.do",
+        // func:"Login",
+        // data:{
+        // }
+      }
+      var qrcode = new QRCode('qrcode', {
+        text: JSON.stringify(linkData), // 需要转换为二维码的内容
+        width: 260,
+        height: 260,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: 3// 容错率，L/M/H
+      })
+      console.log(qrcode)
+    }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

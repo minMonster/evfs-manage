@@ -58,20 +58,20 @@
 
 <script>
 export default {
-  data() {
-    var that = this;
+  data () {
+    var that = this
     var columns1 = [
       {
-        title: "数据存管域名称",
-        key: "name"
+        title: '数据存管域名称',
+        key: 'name'
       },
       {
-        title: "数据存管域唯一标识",
-        key: "address"
+        title: '数据存管域唯一标识',
+        key: 'address'
       },
       {
-        title: "创建时间",
-        key: "time"
+        title: '创建时间',
+        key: 'time'
       },
       {
         title: '状态',
@@ -83,11 +83,11 @@ export default {
       },
       {
         title: '审核通过人',
-        render(h,p) {
+        render (h, p) {
           var row = p.row
           return h('a', {
-            on:{
-               click() {
+            on: {
+              click () {
                 that.adds(row)
               }
             }
@@ -96,7 +96,7 @@ export default {
       },
       {
         title: '操作',
-        render(h,p) {
+        render (h, p) {
           var agree = h('a', {
             style: {
               'margin-right': '10px'
@@ -107,7 +107,7 @@ export default {
           return h('div', {}, opts)
         }
       }
-    ];
+    ]
     var data1 = [
       {
         name: '泛融存管域',
@@ -119,40 +119,40 @@ export default {
     ]
     return {
       switch1: 'on',
-      name: "",
-      address: "",
+      name: '',
+      address: '',
       addModal: false,
       columns1,
       data1,
       total: 100,
       form: {
-        name: "",
-        address: ""
-      },
-    };
+        name: '',
+        address: ''
+      }
+    }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   watch: {},
   computed: {},
   methods: {
-    init() {},
-    //查看
-    adds(obj){
-          this.$Modal.confirm({
-             title: '已审核人列表',
-             content:'name：'+obj.name +'<br> address：'+obj.address+' <br>time：'+obj.time+'',
-             oktext:"关闭"
-         })
+    init () {},
+    // 查看
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
-    ok() {},
-    cancel() {},
-    pageChange(page) {
-      console.log(page);
+    ok () {},
+    cancel () {},
+    pageChange (page) {
+      console.log(page)
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

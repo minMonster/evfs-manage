@@ -7,12 +7,12 @@
         <div style="margin-bottom: 20px;">
           <span>联盟委员决议审批规则：</span>
           <Tooltip
-              placement="top"
-              max-width="600"
-              transfer
-              content='选项说明:所有需要联盟委员审批的事务，通过决议的签批规则。* “任意一个联盟委员签批”：联盟委员会成员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3联盟委员同时签批”：只有联盟委员会成员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3联盟委员同时签批”：只有联盟委员会成员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有联盟委员同时签批”： 只有联盟委员会成员列表中的所有成员签批同意，相应的决议方可通过。'>
-              <Icon type="ios-information-circle-outline" />
-            </Tooltip>
+            placement="top"
+            max-width="600"
+            transfer
+            content='选项说明:所有需要联盟委员审批的事务，通过决议的签批规则。* “任意一个联盟委员签批”：联盟委员会成员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3联盟委员同时签批”：只有联盟委员会成员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3联盟委员同时签批”：只有联盟委员会成员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有联盟委员同时签批”： 只有联盟委员会成员列表中的所有成员签批同意，相应的决议方可通过。'>
+            <Icon type="ios-information-circle-outline" />
+          </Tooltip>
         </div>
         <div>
           <RadioGroup class="approval" v-model="acceptLimit">
@@ -43,39 +43,39 @@
         <div><Input placeholder="请输入委员名称" v-model="name" /></div>
         <div><Input placeholder="请输入委员身份标志地址" v-model="address" /></div>
       </div>
-  </Modal>
+    </Modal>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "委员名称",
-        key: "name"
+        title: '委员名称',
+        key: 'name'
       },
       {
-        title: "委员身份标志地址",
-        key: "address"
+        title: '委员身份标志地址',
+        key: 'address'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           return h('a', {
             on: {
-              click() {
+              click () {
                 var index = p.index
-                that.data1.splice(index,1)
+                that.data1.splice(index, 1)
               }
             }
-          },'删除')
+          }, '删除')
         }
       }
     ]
     var data1 = [
-      
+
     ]
     return {
       acceptLimit: '0',
@@ -86,24 +86,24 @@ export default {
       address: ''
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    init() {
+    init () {
 
     },
-    next() {
+    next () {
       this.confirm()
       // this.$emit('next', 'step4.3')
     },
-    confirm() {
+    confirm () {
       var acceptLimit = this.acceptLimit
       var data = this.data1
       var name = []
       var address = []
       if (data.length) {
-        data.forEach((item,index) => {
+        data.forEach((item, index) => {
           name.push(item.name)
           address.push(item.address)
         })
@@ -122,7 +122,7 @@ export default {
 
       })
     },
-    ok() {
+    ok () {
       var name = this.name.trim()
       var address = this.address.trim()
       if (!name) {
@@ -141,7 +141,7 @@ export default {
       this.name = ''
       this.address = ''
     },
-    cancel() {
+    cancel () {
       this.name = ''
       this.address = ''
     }

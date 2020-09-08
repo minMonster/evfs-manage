@@ -61,32 +61,32 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       step: '1',
       serverName: '',
-      pubKey: '',// 服务器身份标识
-      entPubkey: '', //企业身份标识
-      orgName: '', //企业名称
-      existsUrl: '',// 访问地址
+      pubKey: '', // 服务器身份标识
+      entPubkey: '', // 企业身份标识
+      orgName: '', // 企业名称
+      existsUrl: ''// 访问地址
     }
   },
   watch: {
-    step(n,o) {
-      console.log(n,o)
+    step (n, o) {
+      console.log(n, o)
       let that = this
       if (n == 2) {
         setTimeout(() => {
           that.step = '3'
-        }, 3000);
+        }, 3000)
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   methods: {
-    apply() {
+    apply () {
       let orgName = this.orgName
       let existsUrl = this.existsUrl
       if (!existsUrl) {
@@ -111,7 +111,7 @@ export default {
 
       })
     },
-    getServerInfo() {
+    getServerInfo () {
       // 读取服务器身份标识
       // key = org.brewchain.account.coinbase.pubkey
       // 读取企业身份标识
@@ -120,21 +120,21 @@ export default {
       this.getEntbkey()
       this.initPubkey()
     },
-    init() {
+    init () {
       this.initServerName()
     },
-    initServerName() {
+    initServerName () {
       var serverName = this.$cookie.get('serverName')
       this.serverName = serverName
     },
-    getEntbkey() {
+    getEntbkey () {
       let data = {
         key: 'org.brewchain.account.org.pubkey'
       }
-      this.$http.post('/fbs/man/pbgpo.do',data).then(res => {
+      this.$http.post('/fbs/man/pbgpo.do', data).then(res => {
         res = res.data
         if (res.retCode == '1') {
-          this.entPubkey =  res.value
+          this.entPubkey = res.value
         }
       }).catch(err => {
         console.log(err)
@@ -142,23 +142,23 @@ export default {
         console.log('complete')
       ])
     },
-    initPubkey() {
+    initPubkey () {
       let pubKey = cwv.genPubkey()
       let data = {
         seed: '',
         pubKey
       }
-      this.$http.post('/fbs/man/pbgnc.do',data).then(res => {
+      this.$http.post('/fbs/man/pbgnc.do', data).then(res => {
         res = res.data
         this.pubKey = res.pubKey || ''
-      }).catch( err => {
+      }).catch(err => {
         console.log(err)
       }).then(() => {
 
       })
     },
-    create() {
-      let needApprove = this.approval == 'on' ? true : false
+    create () {
+      let needApprove = this.approval == 'on'
       var orgName = this.orgName
       let data = {
         orgName: '',
@@ -168,7 +168,7 @@ export default {
         this.$Message.error('请输入企业名称')
         return
       }
-      this.$http.post('/fbs/man/pbscn.do', data).then(res=> {
+      this.$http.post('/fbs/man/pbscn.do', data).then(res => {
         res = res.data
         if (res.retCode == '1') {
           this.next()

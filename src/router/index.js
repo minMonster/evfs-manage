@@ -5,7 +5,7 @@ const Guide = () => import('../views/guide')
 const Setup = () => import('../views/setup')
 const Admin = () => import('../views/admin')
 const ChainInfo = () => import('../views/admin/chain/chaininfo')
-const Alliance = () => import('@/views/admin/chain/alliance') //链联盟委员会管理
+const Alliance = () => import('@/views/admin/chain/alliance') // 链联盟委员会管理
 const Configure = () => import('@/views/admin/chain/configure') // 行为审计
 const NodeAdmission = () => import('@/views/admin/chain/nodeAdmission') // 节点准入许可
 const NodeManage = () => import('@/views/admin/chain/nodeManage')
@@ -17,9 +17,9 @@ const chainNode = () => import('@/views/admin/chain/node') // 链内节点
 const chainFrontNode = () => import('@/views/admin/chain/frontNode') // 接入前置节点
 const chainFileStroage = () => import('@/views/admin/chain/fileStorage') // 文件存储
 const audit = () => import('@/views/admin/chain/audit') // 链审核
-const mainnode = ()=> import('@/views/admin/chain/mainnode') 
-const dataauth = ()=> import('@/views/admin/chain/dataauth') 
-const chainmanager = () => import('@/views/admin/chain/chainmanager') 
+const mainnode = () => import('@/views/admin/chain/mainnode')
+const dataauth = () => import('@/views/admin/chain/dataauth')
+const chainmanager = () => import('@/views/admin/chain/chainmanager')
 const chdetial = () => import('@/views/admin/chain/chdetial')
 const nextChdetial = () => import('@/views/admin/chain/nextChdetial')
 
@@ -53,7 +53,6 @@ const Node = () => import('../views/admin/node')
 const nodedetail = () => import('@/views/admin/node/detail')
 
 const Err404 = () => import('../views/err/404')
-
 
 // let originalPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -142,12 +141,12 @@ const routes = [
       {
         path: 'chain-chdetial',
         name: 'chain-chdetial',
-        component:chdetial
+        component: chdetial
       },
       {
         path: 'chain-nextChdetial',
         name: 'chain-nextChdetial',
-        component:nextChdetial
+        component: nextChdetial
       },
       {
         path: 'dataauth',
@@ -201,9 +200,9 @@ const routes = [
         component: databusiness
       },
       {
-      path:'data-busestablish',
-      name:'data-busestablish',
-      component:busestablish
+        path: 'data-busestablish',
+        name: 'data-busestablish',
+        component: busestablish
       },
       {
         path: 'data-manager',
@@ -216,9 +215,9 @@ const routes = [
         component: datanode
       },
       {
-        path:'data-nodeAddAdmin',
-        name:'data-nodeAddAdmin',
-        component:nodeAddAdmin
+        path: 'data-nodeAddAdmin',
+        name: 'data-nodeAddAdmin',
+        component: nodeAddAdmin
       },
       {
         path: 'data-audit',
@@ -272,15 +271,15 @@ const routes = [
         component: businessaudit
       },
       {
-        path:'business-addpermission',
-        name:'business-addpermission',
-        component:addpermission
+        path: 'business-addpermission',
+        name: 'business-addpermission',
+        component: addpermission
       },
       // node
       {
         path: 'node',
         name: 'node',
-        component: Node,
+        component: Node
       },
       {
         path: 'nodedetail',

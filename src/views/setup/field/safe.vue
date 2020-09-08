@@ -66,70 +66,70 @@
 
 <script>
 export default {
-  data() {
+  data () {
     var columns1 = [
-        {
-          title: "前置节点名称",
-          key: "name"
-        },
-        {
-          title: "前置节点身份标识公钥",
-          key: "prikey"
-        },
-        {
-          title:'操作',
-          render(h,p) {
-            return h('a', '删除')
-          }
+      {
+        title: '前置节点名称',
+        key: 'name'
+      },
+      {
+        title: '前置节点身份标识公钥',
+        key: 'prikey'
+      },
+      {
+        title: '操作',
+        render (h, p) {
+          return h('a', '删除')
         }
+      }
     ]
     var columns2 = [
-        {
-          title: "前置节点名称",
-          key: "name"
-        },
-        {
-          title: "前置节点身份标识公钥",
-          key: "prikey"
-        },
-        {
-          title:'操作',
-          render(h,p) {
-            return h('a', '删除')
-          }
+      {
+        title: '前置节点名称',
+        key: 'name'
+      },
+      {
+        title: '前置节点身份标识公钥',
+        key: 'prikey'
+      },
+      {
+        title: '操作',
+        render (h, p) {
+          return h('a', '删除')
         }
-      ]
+      }
+    ]
     var data1 = [
-        {name: '银行营业系统', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…'}
-      ]
+      { name: '银行营业系统', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
+    ]
     var data2 = [
-        {name: '银行营业系统', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…'}
-      ]
+      { name: '银行营业系统', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
+    ]
     return {
-      permission: "2",
+      permission: '2',
       columns1,
       columns2,
       data1,
       data2,
       step: '1'
-    };
+    }
   },
   watch: {
-    step(n,o) {
-      console.log(n,o)
+    step (n, o) {
+      console.log(n, o)
       let that = this
       if (n == 2) {
         setTimeout(() => {
           that.step = '3'
-        }, 3000);
+        }, 3000)
       }
     }
   },
   methods: {
-    next() {
+    next () {
       this.$emit('next', 'step6.5')
     },
-    copyPubKey() {
+    copyPubKey () {
       let pubKey = this.pubKey
       var that = this
       this.$copyText(pubKey).then(function (e) {
@@ -140,11 +140,11 @@ export default {
         that.$Message.error('复制失败')
       })
     },
-    bind() {
+    bind () {
       this.$emit('next', 'step5')
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

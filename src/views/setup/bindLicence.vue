@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       step: '1',
       licence1: '',
@@ -45,21 +45,21 @@ export default {
     }
   },
   methods: {
-    bind() {
+    bind () {
       this.step = '2'
     },
-    create() {
+    create () {
       this.$emit('next', 'step6.1')
     },
-    copy() {
+    copy () {
       let hash = this.hash
       var that = this
       this.$copyText(hash).then(function (e) {
         that.$Message.success('复制成功')
-        }, function (e) {
+      }, function (e) {
         that.$Message.error('复制失败')
       })
-    },
+    }
   }
 }
 </script>

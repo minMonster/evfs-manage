@@ -10,7 +10,7 @@
         content='选项说明：* 开启节点服务器网络准入审批，任何节点服务器都需要节点网络审批人审批通过后才能加入当前链实例的节点网络。* 关闭节点服务器网络准入审批，则凡是在节点网络准入企业名单中企业的节点服务器将会自动批准加入节点网络。'>
         <Icon type="ios-help-circle-outline" />
       </Tooltip>
-      <RadioGroup 
+      <RadioGroup
         style="margin: 0 20px;"
         v-model="switch1">
         <Radio label="1">开启</Radio>
@@ -21,8 +21,8 @@
     <div class="padding bg-white">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">准入节点服务器列表</span>
-          <Button type="primary" @click="confirmAdd" class="fr">添加</Button>
-            <!-- <router-link to="/chain-nodeManage"><button type="primary">标签跳转</button></router-link> -->
+        <Button type="primary" @click="confirmAdd" class="fr">添加</Button>
+        <!-- <router-link to="/chain-nodeManage"><button type="primary">标签跳转</button></router-link> -->
         <Tooltip
           placement="top"
           max-width="600"
@@ -33,33 +33,33 @@
       </div>
       <Row>
         <Col span="5">
-          <div class="condition-item">
-            <span class="condition-label">隶属企业名称：</span>
-            <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">隶属企业名称：</span>
+          <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
+        </div>
         </Col>
         <Col span="7">
-          <div class="condition-item">
-            <span class="condition-label">服务器身份标识：</span>
-            <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">服务器身份标识：</span>
+          <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <span class="condition-label">状态：</span>
-            <Select  v-model="form.status">
-              <Option value="0">全部</Option>
-              <Option value="1">已添加</Option>
-              <Option value="2">已删除</Option>
-              <Option value="3">添加审核中</Option>
-              <Option value="4">删除审核中</Option>
-            </Select>
-          </div>
+        <div class="condition-item">
+          <span class="condition-label">状态：</span>
+          <Select  v-model="form.status">
+            <Option value="0">全部</Option>
+            <Option value="1">已添加</Option>
+            <Option value="2">已删除</Option>
+            <Option value="3">添加审核中</Option>
+            <Option value="4">删除审核中</Option>
+          </Select>
+        </div>
         </Col>
         <Col span="6">
-          <div class="condition-item">
-            <Button style="width: 80px;" @click="search" type="primary">查询</Button>
-          </div>
+        <div class="condition-item">
+          <Button style="width: 80px;" @click="search" type="primary">查询</Button>
+        </div>
         </Col>
       </Row>
       <div>
@@ -70,12 +70,12 @@
           <Page :total="total" @on-change="pageChange"/>
         </div>
       </div>
-        <div  v-show="popup">
-               <div id="qrcode"></div>
-               <div class="over"></div>
-        </div>
+      <div  v-show="popup">
+        <div id="qrcode"></div>
+        <div class="over"></div>
+      </div>
     </div>
-          <!-- <Modal
+    <!-- <Modal
         v-model="addModal"
         title="添加联盟委员会成员"
         @on-ok="ok"
@@ -207,18 +207,18 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2';
+import QRCode from 'qrcodejs2'
 export default {
-  data() {
+  data () {
     var that = this
     var columns1 = [
       {
-        title: "隶属企业名称",
-        key: "name"
+        title: '隶属企业名称',
+        key: 'name'
       },
       {
-        title: "服务器身份标识",
-        key: "address"
+        title: '服务器身份标识',
+        key: 'address'
       },
       {
         title: '节点类型',
@@ -237,13 +237,13 @@ export default {
         key: 'statuslabel'
       },
       {
-        title:'操作',
-        render(h,p) {
+        title: '操作',
+        render (h, p) {
           var row = p.row || {}
           // var label = row.status == '2' ? '删除' : '撤销'
           return h('a', {
             on: {
-              click() {
+              click () {
                 // var index = p.index
                 // that.data1.splice(index,1)]
                 that.del(row)
@@ -254,9 +254,9 @@ export default {
       }
     ]
     var data1 = [
-      {name: '从法科技', address: '00630e...fafc1', nodetype:'主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '授权审核中', status: '1' },
-      {name: '从法科技', address: '00630e...cacc2', nodetype:'资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '1' },
-      {name: '从法科技', address: '00630e...cabc3', nodetype:'主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '1' },
+      { name: '从法科技', address: '00630e...fafc1', nodetype: '主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '授权审核中', status: '1' },
+      { name: '从法科技', address: '00630e...cacc2', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '1' },
+      { name: '从法科技', address: '00630e...cabc3', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '1' }
     ]
     return {
       acceptLimit: '1/3',
@@ -269,13 +269,13 @@ export default {
       form: {
         name: '',
         address: '',
-        status:''
+        status: ''
       },
       switch1: '0',
-      popup: 0,
+      popup: 0
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
   watch: {
@@ -285,64 +285,64 @@ export default {
 
   },
   methods: {
-    init() {
+    init () {
 
     },
-    //删除管理页面
-    del(obj){
-        var that = this
-        this.popup=1,
-        this.creatQrCode()
+    // 删除管理页面
+    del (obj) {
+      var that = this
+      this.popup = 1,
+      this.creatQrCode()
     },
-    confirmAdd(){
-           this.$router.push('/chain-nodeManage')
+    confirmAdd () {
+      this.$router.push('/chain-nodeManage')
     },
-    ok() {
+    ok () {
 
     },
-    cancel() {
+    cancel () {
 
     },
-    //查询
-    search(){
-        var self = this;
-        // var params = {
-        //     storage_id
-        // }
-        this.$http.post('/cmw/pbqan.do').then(res =>{
-          console.log(res)
-          if(res.retCode == '1'){
-               self.$Message.success('查询成功')
-          }else{
-             if(res.retMsg){
-               self.$Message.error(res.retMsg)
-             }
+    // 查询
+    search () {
+      var self = this
+      // var params = {
+      //     storage_id
+      // }
+      this.$http.post('/cmw/pbqan.do').then(res => {
+        console.log(res)
+        if (res.retCode == '1') {
+          self.$Message.success('查询成功')
+        } else {
+          if (res.retMsg) {
+            self.$Message.error(res.retMsg)
           }
-        }).catch(err => {
+        }
+      }).catch(err => {
 
-        })
+      })
     },
-    pageChange(page) {
+    pageChange (page) {
       console.log(page)
     },
-    //生成二维码
-     creatQrCode() {
-            let linkData = {
-                // url:"http://47.116.17.247:9000/api/clt/pblin.do",
-                // func:"Login",
-                // data:{
-                // }
-            };
-            var qrcode = new QRCode('qrcode', {
-                text: JSON.stringify(linkData), // 需要转换为二维码的内容
-                width: 260,
-                height: 260,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: 3,//容错率，L/M/H
-            })
-            console.log(qrcode)
-        },
+    // 生成二维码
+    creatQrCode () {
+      let linkData = {
+        // url:"http://47.116.17.247:9000/api/clt/pblin.do",
+        // func:"Login",
+        // data:{
+        // }
+      }
+      var qrcode = new QRCode('qrcode', {
+        text: JSON.stringify(linkData), // 需要转换为二维码的内容
+        width: 260,
+        height: 260,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: 3// 容错率，L/M/H
+      })
+      console.log(qrcode)
+    }
   }
 }
 </script>
