@@ -200,7 +200,7 @@ export default {
           return h('div', {
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, [opts])
@@ -285,7 +285,7 @@ export default {
     border: 1px solid #6094ff;
     padding: 0 8px;
     border-radius: 12px;
-    box-shadow: 0;
+    box-shadow: none;
     outline: none;
     cursor: pointer;
   }

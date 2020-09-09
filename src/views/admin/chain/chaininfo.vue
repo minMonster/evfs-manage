@@ -1,6 +1,6 @@
 <template>
   <div class="chain-info">
-    <chain-header title="链实例详情" />
+    <chain-header title="链实例详情"/>
     <div class="clear">
       <div class="chain-info-right clear">
         <div class="chain-content">
@@ -12,9 +12,9 @@
               <div>联盟委员数量</div>
               </Col>
               <!-- <Col span="12">
-                <p>2</p>
-                <div>加盟企业成员数量</div>
-              </Col> -->
+                              <p>2</p>
+                              <div>加盟企业成员数量</div>
+                            </Col> -->
             </Row>
           </div>
         </div>
@@ -199,16 +199,18 @@ export default {
       bizNum: '',
       runBizNum: '',
       outBizNum: '',
-      accountNum: '',				// 主节点
-      usedAccountNum: '',		// 在线主节点
+      accountNum: '', // 主节点
+      usedAccountNum: '', // 在线主节点
       resourceNum: '',
-      usedResourceNum: '',			// 在线资源节点
-		  syncNum: '',							// 只读节点
-      usedSyncNum: ''					// 在线只读节点
+      usedResourceNum: '', // 在线资源节点
+      syncNum: '', // 只读节点
+      usedSyncNum: ''// 在线只读节点
     }
   },
   mounted () {
     this.init()
+  },
+  created () {
   },
   watch: {},
   computed: {},
@@ -223,7 +225,7 @@ export default {
       setTimeout(() => {
         this.$http.post('/cmw/pbqct.do').then(res => {
           console.log(res)
-          if (res.retCode == '1') {
+          if (res.retCode === '1') {
             self.chianCommitteeGroupNum = res.data.chianCommitteeGroupNum
             self.clientNum = res.data.clientNum
             self.clientCompanyNum = res.data.clientCompanyNum
@@ -234,13 +236,13 @@ export default {
             self.runBizNum = res.data.runBizNum
             self.outBizNum = res.data.outBizNum
             self.accountNum = res.data.accountNum
-            self.usedAccountNum = res.data.usedAccountNum		// 在线主节点
+            self.usedAccountNum = res.data.usedAccountNum // 在线主节点
             self.resourceNum = res.data.resourceNum
-            self.usedResourceNum = res.data.usedResourceNum		// 在线资源节点
-		          self.syncNum = res.data.syncNum		// 只读节点
-		        	self.usedSyncNum = res.data.usedSyncNum
+            self.usedResourceNum = res.data.usedResourceNum // 在线资源节点
+            self.syncNum = res.data.syncNum // 只读节点
+            self.usedSyncNum = res.data.usedSyncNum
           }
-        }).catch(err => {
+        }).catch(() => {
 
         })
       }, 100)

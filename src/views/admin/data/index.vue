@@ -65,7 +65,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var index = p.index
+          // var index = p.index
           var row = p.row || {}
           var type = row.type
           var opt1 = h('a', {
@@ -78,10 +78,11 @@ export default {
           var opt2 = h('a', {
             on: {
               click () {
-                var index = p.index
-                let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                // var index = p.index
+                // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                let { showBusinessSubmenu } = that.$route.query
                 that.$router.push({
-                  name: 'data-detail',
+                  path: 'data/detail',
                   query: {
                     showDataSubmenu: '1',
                     showBusinessSubmenu,
@@ -96,7 +97,7 @@ export default {
           var opt3 = h('a', {
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '删除')
@@ -154,17 +155,17 @@ export default {
     closeTimer () {
       if (this.timer) {
         clearInterval(this.timer)
-        var signResult = document.getElementById('signResult')
-        signResult = ''
+        // var signResult = document.getElementById('signResult')
+        // signResult = ''
       }
     },
     confirmAdd () {
 
     },
     ok () {
-      var timestamp = Date.now()
-      let signStr = this.timestamp + ''
-      sign(signStr)
+      // var timestamp = Date.now()
+      // let signStr = this.timestamp + ''
+      // sign(signStr)
       this.timer = setInterval(() => {
         var signResult = document.getElementById('signResult')
         var signature = signResult.value
@@ -173,12 +174,12 @@ export default {
           console.log(signature)
           this._add()
         }
-        if (signature == 'fail') {
+        if (signature === 'fail') {
           console.log('签名失败')
           this.closeTimer()
           // this.$toast('签名失败')
         }
-        if (signature == 'refuse') {
+        if (signature === 'refuse') {
           console.log('拒绝签名')
           this.closeTimer()
           // this.$toast('签名失败')

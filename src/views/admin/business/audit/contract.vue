@@ -101,7 +101,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '同意')
@@ -111,7 +111,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '拒绝')
@@ -170,7 +170,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '同意')
@@ -180,7 +180,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '拒绝')
@@ -203,7 +203,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '同意')
@@ -213,7 +213,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '拒绝')
@@ -282,7 +282,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '同意')
@@ -292,7 +292,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '拒绝')

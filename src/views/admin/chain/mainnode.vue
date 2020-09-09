@@ -34,7 +34,7 @@
         <Col span="5">
         <div class="condition-item">
           <span class="condition-label">隶属企业名称：</span>
-          <Input type="text" v-model="form.name" placeholder="隶属企业名称"></Input>
+          <Input type="text" v-model="form.name" placeholder="隶属企业名称" />
         </div>
         </Col>
         <Col span="7">
@@ -108,7 +108,7 @@ export default {
         width: 120,
         render (h, p) {
           var row = p.row || {}
-          var label = row.status == '2' ? '收回授权' : '撤销'
+          var label = row.status === '2' ? '收回授权' : '撤销'
           return h('a', {
             on: {
               click () {
@@ -158,7 +158,7 @@ export default {
       setTimeout(() => {
         this.$http.post('/cmw/pbqmn.do').then(res => {
           console.log(res)
-          if (res.retCode == '1') {
+          if (res.retCode === '1') {
             this.$Message.success('查询成功')
           } else {
             if (res.retMsg) {
@@ -166,7 +166,7 @@ export default {
             }
           }
         }).catch(err => {
-
+          console.log(err)
         })
       }, 100)
     },
@@ -207,7 +207,7 @@ export default {
       border: 1px solid #6094FF;
       padding: 0 8px;
       border-radius: 12px;
-      box-shadow: 0;
+      box-shadow: none;
       outline: none;
       cursor: pointer;
     }

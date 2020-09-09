@@ -10,7 +10,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/fbs': {
-        target: 'http://47.116.17.247:9000/fbs',
+        target: 'http://124.71.130.140:18093',
         ws: true,
         pathRewrite: {
           // 路径重写

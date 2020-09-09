@@ -18,6 +18,7 @@ const service = axios.create({
 service.interceptors.request.use((config) => {
   let address = window.localStorage.getItem('money-address')
   let publickey = window.localStorage.getItem('money-publickey')
+  config.headers['Content-Type'] = 'application/json;charset=UTF-8'
   // 添加headers
   if (address) { config.headers['address'] = address }
   config.params = {

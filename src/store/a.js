@@ -4,7 +4,7 @@ export default {
     name: 'aaa'
   },
   mutations: {
-    change: function (state,payload) {
+    change: function (state, payload) {
       state.name = payload
     }
   }

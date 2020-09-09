@@ -108,7 +108,7 @@
 <script>
 export default {
   data () {
-    var that = this
+    // var that = this
     // var columns1 = [
     //   {
     //     title: "用户姓名",

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import ViewUI from 'view-design'
 const DebugView = () => import('../views/setup/debug')
 const Guide = () => import('../views/guide')
 const Setup = () => import('../views/setup')
@@ -53,6 +54,7 @@ const Node = () => import('../views/admin/node')
 const nodedetail = () => import('@/views/admin/node/detail')
 
 const Err404 = () => import('../views/err/404')
+const Login = () => import('@/views/login')
 
 // let originalPush = VueRouter.prototype.push
 // VueRouter.prototype.push = function push(location) {
@@ -62,6 +64,11 @@ const Err404 = () => import('../views/err/404')
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
   {
     path: '/debug',
     name: 'debug',
@@ -302,9 +309,18 @@ const routes = [
 
 const router = new VueRouter({
   routes,
+  mode: 'history',
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
   }
+})
+router.beforeEach((to, from, next) => {
+  ViewUI.LoadingBar.start()
+  next()
+})
+
+router.afterEach(route => {
+  ViewUI.LoadingBar.finish()
 })
 
 export default router
