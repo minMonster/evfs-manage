@@ -102,23 +102,23 @@ export default {
     },
     serachBtn () {
       this.popup = 1
-      var self = this
+      // var self = this
       if (!name) {
         this.$Message.error('请输入节点服务器名称')
         return
       }
-      if (!address) {
-        this.$Message.error('请输入节点服务器身份标识')
-        return
-      }
-      if (!addressAddr) {
-        this.$Message.error('请输入隶属企业名称')
-        return
-      }
-      if (!nameAddr) {
-        this.$Message.error('请输入隶属企业身份标识')
-        return
-      }
+      // if (!address) {
+      //   this.$Message.error('请输入节点服务器身份标识')
+      //   return
+      // }
+      // if (!addressAddr) {
+      //   this.$Message.error('请输入隶属企业名称')
+      //   return
+      // }
+      // if (!nameAddr) {
+      //   this.$Message.error('请输入隶属企业身份标识')
+      //   return
+      // }
       let params = {
         name: this.form.name,
         address: this.form.address,
@@ -128,12 +128,12 @@ export default {
       this.$http.post('', params).then(res => {
         console.log(res)
         res = res.data
-        if (res.retCode == '1') {
+        if (res.retCode === '1') {
           this.$router.push('/chain-nodeadmission')
         } else {
 
         }
-      }).catch(err => {
+      }).catch(() => {
 
       })
     },

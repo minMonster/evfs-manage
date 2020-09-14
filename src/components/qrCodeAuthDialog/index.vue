@@ -8,6 +8,7 @@
       :loading="loading"
       footer-hide
     >
+      <!--            <p>{{qrCodeUrl}}</p>-->
       <vue-qr-code v-if="qrCodeUrl" class="qrCodeAuthDialog-picture" id="picture" :margin="2"
                    :value="qrCodeUrl"></vue-qr-code>
     </Modal>

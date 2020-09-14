@@ -174,16 +174,17 @@ export default {
         width: 120,
         title: '操作',
         render (h, p) {
-          var row = p.row || {}
-          var status = row.status || ''
-          var opt = h('a', {
-
-          })
+          // var row = p.row || {}
+          // var status = row.status || ''
+          // var opt = h('a', {
+          //
+          // })
           var opt2 = h('a', {
             on: {
               click () {
-                var index = p.index
-                let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                // var index = p.index
+                // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                let { showBusinessSubmenu } = that.$route.query
                 that.$router.push({
                   name: 'business-detail',
                   query: {
@@ -228,8 +229,8 @@ export default {
         width: 120,
         render (h, p) {
           var row = p.row || {}
-          var label = row.status == '1' ? '删除' : '撤销'
-          label = row.status == '0' ? '--' : label
+          var label = row.status === '1' ? '删除' : '撤销'
+          label = row.status === '0' ? '--' : label
           return h('a', {
             on: {
               click () {
@@ -312,7 +313,7 @@ export default {
       border: 1px solid #6094FF;
       padding: 0 8px;
       border-radius: 12px;
-      box-shadow: 0;
+      box-shadow: none;
       outline: none;
       cursor: pointer;
     }

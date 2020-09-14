@@ -96,7 +96,6 @@
 <script>
 export default {
   data () {
-    var that = this
     var columns1 = [
       {
         title: '文件名称',
@@ -116,10 +115,10 @@ export default {
           var row = p.row || {}
           var label = '--'
           var status = row.status
-          if (status == '1') {
+          if (status === '1') {
             label = '冻结'
           }
-          if (status == '2') {
+          if (status === '2') {
             label = '解冻'
           }
           if (status > 2) {
@@ -128,8 +127,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
-                if (status == '2') {
+                if (status === '2') {
 
                 }
               }
@@ -159,10 +157,10 @@ export default {
           var row = p.row || {}
           var label = '--'
           var status = row.status
-          if (status == '1') {
+          if (status === '1') {
             label = '冻结'
           }
-          if (status == '2') {
+          if (status === '2') {
             label = '解冻'
           }
           if (status > 2) {
@@ -171,8 +169,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
-                if (status == '2') {
+                if (status === '2') {
 
                 }
               }

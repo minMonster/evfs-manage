@@ -111,7 +111,7 @@ export default {
 
     serachBtn () {
       this.popup = 1
-      var self = this
+      // var self = this
       let params = {
         name: this.form.name,
         address: this.form.address,
@@ -121,12 +121,12 @@ export default {
       this.$http.post('', params).then(res => {
         console.log(res)
         res = res.data
-        if (res.retCode == '1') {
+        if (res.retCode === '1') {
           this.$router.push('/chain-nodeadmission')
         } else {
 
         }
-      }).catch(err => {
+      }).catch(() => {
 
       })
     },
@@ -135,7 +135,7 @@ export default {
     },
     // 二维码
     creatQrCode () {
-      const _this = this
+      // const _this = this
       let linkData = {
         //     url:this.apiUrl +"/clt/pblin.do",
         //     func:"Login",

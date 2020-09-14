@@ -101,7 +101,7 @@
     </div>
   </div>
 
-    <!-- <div class="bg-white padding">
+  <!-- <div class="bg-white padding">
       <div class="section-title"><span>域内节点运行许可操作</span></div>
       <div>
         <Input v-model="input2" style="display: inline-block; width: 200px;"/>
@@ -112,13 +112,12 @@
         </div>
       </div>
     </div> -->
-  </div>
+
 </template>
 
 <script>
 export default {
   data () {
-    var that = this
     var columns1 = [
       {
         title: '隶属企业名称',

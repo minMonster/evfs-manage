@@ -1,6 +1,5 @@
 <template>
   <div class="alliance">
-    <chain-header title="链联盟委员会管理" :btn="true"/>
     <div>
       <div class="bg-white padding" style="margin-bottom: 20px;">
         <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
@@ -15,19 +14,19 @@
           </Tooltip>
           <Button type="primary" @click="modify" style="float: right;">修改</Button>
         </div>
-        <RadioGroup class="approval" v-model="acceptLimit" @on-change="accrptFun">
+        <RadioGroup :loading="listLoading" class="approval" v-model="rule" @on-change="accrptFun">
           <Row>
             <Col span="6">
             <Radio label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="1/3">1/3联盟委员同时签批</Radio>
+            <Radio label="100">1/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="2/3">2/3联盟委员同时签批</Radio>
+            <Radio label="200">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="3/3">所有联盟委员同时签批</Radio>
+            <Radio label="300">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -39,30 +38,30 @@
         </div>
         <div>
           <Row>
-            <Col span="6">
-            <div class="condition-item">
-              <span class="condition-label">委员名称：</span>
-              <Input type="text" v-model="form.name" placeholder="委员名称"></Input>
-            </div>
-            </Col>
+            <!--            <Col span="6">-->
+            <!--            <div class="condition-item">-->
+            <!--              <span class="condition-label">委员名称：</span>-->
+            <!--              <Input type="text" v-model="form.name" placeholder="委员名称"></Input>-->
+            <!--            </div>-->
+            <!--            </Col>-->
             <Col span="6">
             <div class="condition-item">
               <span class="condition-label">委员身份标识：</span>
               <Input type="text" v-model="form.address" placeholder="委员身份标识"></Input>
             </div>
             </Col>
-            <Col span="6">
-            <div class="condition-item">
-              <span class="condition-label">状态：</span>
-              <Select v-model="form.status">
-                <Option value="0">全部</Option>
-                <Option value="1">已添加</Option>
-                <Option value="2">已删除</Option>
-                <Option value="3">添加审核中</Option>
-                <Option value="4">删除审核中</Option>
-              </Select>
-            </div>
-            </Col>
+            <!--            <Col span="6">-->
+            <!--            <div class="condition-item">-->
+            <!--              <span class="condition-label">状态：</span>-->
+            <!--              <Select v-model="form.status">-->
+            <!--                <Option value="0">全部</Option>-->
+            <!--                <Option value="1">已添加</Option>-->
+            <!--                <Option value="2">已删除</Option>-->
+            <!--                <Option value="3">添加审核中</Option>-->
+            <!--                <Option value="4">删除审核中</Option>-->
+            <!--              </Select>-->
+            <!--            </div>-->
+            <!--            </Col>-->
             <Col span="6">
             <div class="condition-item">
               <Button style="width: 80px;" @click="search" type="primary">查询</Button>
@@ -70,14 +69,15 @@
             </Col>
           </Row>
         </div>
-        <div  v-show="popup">
-          <div id="qrcode"></div>
-          <div class="over"></div>
-        </div>
-        <Table :columns="columns1" :data="data1"></Table>
-        <div class="page">
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
+        <div class="page" style="position: relative">
           <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page
+              show-sizer
+              :total="page.total"
+              :current="page.current"
+              @on-change="pageChange"
+              @on-page-size-change="sizeChange"/>
           </div>
         </div>
       </div>
@@ -100,61 +100,70 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
+import * as api from './api'
+import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
         title: '委员名称',
-        key: 'name'
+        key: 'member_name'
       },
       {
         title: '委员身份标志地址',
-        key: 'address'
+        key: 'member_address'
       },
       {
         title: '添加时间',
-        key: 'time'
+        key: 'join_time'
       },
-      {
-        title: '状态',
-        key: 'status'
-      },
+      // {
+      //   title: '状态',
+      //   key: 'status'
+      // },
       {
         title: '操作',
         width: 100,
         render (h, p) {
-          var row = p.row
-          console.log(row)
+          // var row = p.row
           // var label = row.type == '2' ? '删除' : '撤销'
           return h('a', {
             on: {
               click () {
                 // var index = p.index
                 // that.data1.splice(index,1)
-                that.del(row)
+                that.del(p.row)
               }
             }
           }, '删除')
         }
       }
     ]
-    var data1 = [
-      { name: '金桥信息', address: '00630eslj9876sljflk...fafc1', time: '2020-1-1 12:00:00', status: '添加审核中' },
-      { name: '泛融信息', address: '00630eslj9876sljflk...afea5', time: '2020-1-1 12:00:00', status: '删除审核中' },
-      { name: '从法科技', address: '00630eslj9876sljflk...fafc1', time: '2020-1-1 12:00:00', status: '已添加', type: '1' }
-    ]
+
     return {
-      popup: 0,
-      acceptLimit: '1/3',
+      rule: null,
       name: '',
+      listLoading: false,
       address: '',
       addModal: false,
-      columns1,
-      data1,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
       addLoading: false,
-      total: 100,
+      page: {
+        total: 0,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: '',
@@ -166,62 +175,96 @@ export default {
     this.init()
   },
   watch: {
-
   },
   computed: {
-
   },
   methods: {
-    init () {
-      var that = this
-      let params = {
-
-      }
-      this.$http.post('/cmw/pbqml.do', params).then(res => {
-        var data = res.data
-        if (data.resCode == '1') {
-          that.$Message.success('查询成功')
-        } else {
-          if (data.retMsg) {
-            that.$Message.warning(data.retMsg)
-          }
-        }
-      }).catch(err => {
-
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    async init () {
+      this.listLoading = true
+      let dataId = await api.pbqgi({
+        rule: 'chaincommittee'
       }).then(res => {
-
+        return res.dataId
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+      api.pbqml({
+        'groupId': '1', // 组织类型 枚举 "1": 联盟委员会,"2": 链管理员,"3": 数据存管域,"4": 业务域
+        'address': sessionStorage.getItem('fbs_address'), // 登陆人的地址
+        'dataId': dataId | '1' // /fbs/cmw/pbqgi.do 查询出来的结果 dataId 的值
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+        this.rule = res.rule
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
       })
     },
     // 添加功能
     ok () {
-      let name = this.name.trim()
-      let address = this.address.trim(t)
-      if (!name) {
-        this.$Message.error('请输入管理员名称')
-        return
-      }
+      // let name = this.name.trim()
+      let address = this.address.trim()
+      // if (!name) {
+      //   this.$Message.error('请输入管理员名称')
+      //   return
+      // }
       if (!address) {
         this.$Message.error('请输入管理员身份标识密钥')
         return
       }
       this.add()
     },
-    add () {
-      let address = this.address.trim()
-      let name = this.name.trim()
-      this.addLoading = true
-      var data = {
-        address, name
+    async add () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'member': this.address.trim(), // 变更账户钱包地址
+        'op': 1, // 1增加；2移除
+        'opType': 1 // 1委员会变更操作；2链管理员变更操作
       }
-      this.$http.post('', data).then(res => {
-        res = res.data
-      }).catch(err => {
-
+      let data = await cApi.pbgen({
+        'method': 'CommitteeRuleApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
       }).then(res => {
-        this.popup = 1
-        this.creatQrCode()
-        this.cancel()
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
       })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     cancel () {
       this.name = ''
@@ -230,64 +273,113 @@ export default {
       this.addLoading = false
     },
     // 删除管理页面
-    del (obj) {
-      var that = this
-      this.popup = 1,
-      this.creatQrCode()
-      // setTimeout(() => {
-      //         // var index = p.index
-      //         // that.data1.splice(index,1)
-      // },100)
+    async del (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        member: row.member_address,
+        op: 2,
+        opType: 1
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     // 修改
-    modify () {
-      this.popup = 1,
-      this.creatQrCode()
+    async modify () {
+      console.log('modify')
+      if (!this.rule) {
+        this.$Message.warning('请选择联盟委员决议审批规则')
+        return
+      }
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        rule: this.rule
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeRuleApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     accrptFun () {
 
     },
     // 查询
     search () {
-      var that = this
-      let data = {
-        address: this.form.address,
-        status: this.form.status
-      }
-      this.$http.post('/cmw/pbqml.do', data).then(res => {
-        res = res.data
-        console.log(res)
-        if (res.retCode == '1') {
-          this.$Message.success('查询成功')
-        } else {
-          if (res.retMsg) {
-            this.$Message.error(res.retMsg)
-          }
-        }
-      }).catch(err => {
-      })
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
     },
     // 分页
     pageChange (page) {
-      console.log(page)
-    },
-    // 生成二维码
-    creatQrCode () {
-      let linkData = {
-        // url:"http://47.116.17.247:9000/api/clt/pblin.do",
-        // func:"Login",
-        // data:{
-        // }
-      }
-      var qrcode = new QRCode('qrcode', {
-        text: JSON.stringify(linkData), // 需要转换为二维码的内容
-        width: 260,
-        height: 260,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: 3// 容错率，L/M/H
-      })
-      console.log(qrcode)
+      this.page.current = page
+      this.getList()
     }
   }
 }
@@ -333,7 +425,7 @@ export default {
       // border: 1px solid #6094FF;
       // padding: 0 8px;
       // border-radius: 12px;
-      // box-shadow: 0;
+      // box-shadow: none;
       // outline: none;
       // cursor: pointer;
     }

@@ -8,13 +8,14 @@ module.exports = {
     }
   },
   devServer: {
+    overlay: false,
     proxy: {
       '/fbs': {
         target: 'http://124.71.130.140:18093',
         ws: true,
         pathRewrite: {
           // 路径重写
-          '^/fbs': '' // 这个意思就是以fbs开头的，定向到哪里, 如果你的后边还有路径的话， 会自动拼接上
+          // '^/fbs': '' // 这个意思就是以fbs开头的，定向到哪里, 如果你的后边还有路径的话， 会自动拼接上
         }
       }
     }

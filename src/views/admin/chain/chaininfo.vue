@@ -23,11 +23,11 @@
           <div class="chain-content-item">
             <Row>
               <Col span="12">
-              <p>{{clientNum}}</p>
+              <p>{{node.clientNum}}</p>
               <div>接入前置节点数量</div>
               </Col>
               <Col span="12">
-              <p>{{clientCompanyNum}}</p>
+              <p>{{node.clientCompanyNum}}</p>
               <div>前置隶属企业数量</div>
               </Col>
             </Row>
@@ -40,15 +40,15 @@
           <div class="chain-content-item">
             <Row>
               <Col span="8">
-              <p>{{storageNum}}</p>
+              <p>{{storage.storageNum}}</p>
               <div>数据存管域数量</div>
               </Col>
               <Col span="8">
-              <p>{{runStorageNum}}</p>
+              <p>{{storage.runStorageNum}}</p>
               <div>运行数据存管域数量</div>
               </Col>
               <Col span="8">
-              <p>{{outStorageNum}}</p>
+              <p>{{storage.outStorageNum}}</p>
               <div>停运数据存管域数量</div>
               </Col>
             </Row>
@@ -59,15 +59,15 @@
           <div class="chain-content-item">
             <Row>
               <Col span="8">
-              <p>{{bizNum}}</p>
+              <p>{{biz.bizNum}}</p>
               <div>业务域数量</div>
               </Col>
               <Col span="8">
-              <p>{{runBizNum}}</p>
+              <p>{{biz.runBizNum}}</p>
               <div>运行业务域数量</div>
               </Col>
               <Col span="8">
-              <p>{{outBizNum}}</p>
+              <p>{{biz.outBizNum}}</p>
               <div>停运业务域数量</div>
               </Col>
             </Row>
@@ -78,19 +78,19 @@
           <div class="chain-content-item">
             <Row>
               <Col span="6">
-              <p>{{accountNum}}</p>
+              <p>{{node.accountNum}}</p>
               <div>主节点服务器数量</div>
               </Col>
               <Col span="6">
-              <p>{{usedAccountNum}}</p>
+              <p>{{node.usedAccountNum}}</p>
               <div>在线主节点服务器数量</div>
               </Col>
               <Col span="6">
-              <p>0</p>
+              <p>{{node.outAccountNum}}</p>
               <div>离线主节点服务器数量</div>
               </Col>
               <Col span="6">
-              <p>10</p>
+              <p>{{node.accountCompanyNum}}</p>
               <div>主节点隶属企业数量</div>
               </Col>
             </Row>
@@ -101,19 +101,19 @@
           <div class="chain-content-item">
             <Row>
               <Col span="6">
-              <p>{{resourceNum}}</p>
+              <p>{{node.resourceNum}}</p>
               <div>资源节点服务器数量</div>
               </Col>
               <Col span="6">
-              <p>{{usedResourceNum}}</p>
+              <p>{{node.usedResourceNum}}</p>
               <div>在线资源节点服务器数量</div>
               </Col>
               <Col span="6">
-              <p>1</p>
+              <p>{{node.outResourceNum}}</p>
               <div>离线资源节点服务器数量</div>
               </Col>
               <Col span="6">
-              <p>10</p>
+              <p>{{node.resourceCompanyNum}}</p>
               <div>资源节点隶属企业数量</div>
               </Col>
             </Row>
@@ -124,11 +124,11 @@
           <div class="chain-content-item">
             <Row>
               <Col span="12">
-              <p>10</p>
+              <p>{{node.usedSystemNum}}</p>
               <div>接入业务系统数量</div>
               </Col>
               <Col span="12">
-              <p>50</p>
+              <p>{{node.systemCompanyNum}}</p>
               <div>业务系统隶属企业数量</div>
               </Col>
             </Row>
@@ -139,15 +139,15 @@
           <div class="chain-content-item">
             <Row>
               <Col span="8">
-              <p>100</p>
+              <p>{{node.nodeLicenseNum}}</p>
               <div>节点运行许可总数量</div>
               </Col>
               <Col span="8">
-              <p>50</p>
+              <p>{{node.usedLicenseNum}}</p>
               <div>已发放节点许可数量</div>
               </Col>
               <Col span="8">
-              <p>50</p>
+              <p>{{node.outLicenseNum}}</p>
               <div>未发放节点许可数量</div>
               </Col>
             </Row>
@@ -159,21 +159,21 @@
             <Row>
               <Col span="8">
               <p>
-                50.00
+                {{node.capacityLicense}}
                 <span>TB</span>
               </p>
               <div>文件存储许可总容量</div>
               </Col>
               <Col span="8">
               <p>
-                5.00
+                {{node.usedCapacityLicense}}
                 <span>TB</span>
               </p>
               <div>已发放文件存储许可容量</div>
               </Col>
               <Col span="8">
               <p>
-                45.00
+                {{node.outCapacityLicense}}
                 <span>TB</span>
               </p>
               <div>未发文件存储许可容量</div>
@@ -187,65 +187,77 @@
 </template>
 
 <script>
+import * as api from './api.js'
+
 export default {
   data () {
     return {
-      chianCommitteeGroupNum: '',
-      clientNum: '',
-      clientCompanyNum: '',
-      storageNum: '',
-      runStorageNum: '',
-      outStorageNum: '',
-      bizNum: '',
-      runBizNum: '',
-      outBizNum: '',
-      accountNum: '', // 主节点
-      usedAccountNum: '', // 在线主节点
-      resourceNum: '',
-      usedResourceNum: '', // 在线资源节点
-      syncNum: '', // 只读节点
-      usedSyncNum: ''// 在线只读节点
+      chianCommitteeGroupNum: '--', // 联盟委员会数量
+      storage: {
+        storageId: '--', // 数据存管域id
+        storageNum: '--', // 数据存管域总数量
+        runStorageNum: '--', // 可用数据存管域数量
+        outStorageNum: '--'// 停用数据存管域数量
+      },
+      biz: {
+        bizNum: '--', // 业务域数量
+        runBizNum: '--', // 运行业务域数量
+        outBizNum: '--'// 停运业务域数量
+      },
+      node: {
+        accountNum: '--', // 主节点服务器数量
+        usedAccountNum: '--', // 在线主节点服务器数量
+        outAccountNum: '--', // 离线主节点服务器数量
+        resourceNum: '--', // 资源节点服务器数量
+        usedResourceNum: '--', // 在线资源节点服务器数量
+        outResourceNum: '--', // 离线资源节点服务器数量
+        usedSyncNum: '--', // 在线只读节点
+        clientNum: '--', // 接入前置节点数量
+        clientCompanyNum: '--', // 前置隶属企业数量
+        usedSystemNum: '--', // 接入业务系统数量
+        systemCompanyNum: '--', // 业务系统隶属企业数量
+        accountCompanyNum: '--', // 主节点隶属企业数量
+        resourceCompanyNum: '--', // 资源节点隶属企业数量
+        nodeLicenseNum: '--', // 节点运行许可总数量
+        usedLicenseNum: '--', // 已发放节点许可数量
+        outLicenseNum: '--', // 未发放节点许可数量
+        capacityLicense: '--', // 存储许可总容量
+        usedCapacityLicense: '--', // 已发放存储许可容量
+        outCapacityLicense: '--' // 未发存储许可容量
+      }
     }
   },
   mounted () {
-    this.init()
   },
   created () {
+    this.init()
   },
   watch: {},
   computed: {},
   methods: {
     init () {
-      this.initList()
-    },
-    // 链统计
-    initList () {
-      this.loading = true
-      var self = this
-      setTimeout(() => {
-        this.$http.post('/cmw/pbqct.do').then(res => {
-          console.log(res)
-          if (res.retCode === '1') {
-            self.chianCommitteeGroupNum = res.data.chianCommitteeGroupNum
-            self.clientNum = res.data.clientNum
-            self.clientCompanyNum = res.data.clientCompanyNum
-            self.storageNum = res.data.storageNum
-            self.runStorageNum = res.data.runStorageNum
-            self.outStorageNum = res.data.outStorageNum
-            self.bizNum = res.data.bizNum
-            self.runBizNum = res.data.runBizNum
-            self.outBizNum = res.data.outBizNum
-            self.accountNum = res.data.accountNum
-            self.usedAccountNum = res.data.usedAccountNum // 在线主节点
-            self.resourceNum = res.data.resourceNum
-            self.usedResourceNum = res.data.usedResourceNum // 在线资源节点
-            self.syncNum = res.data.syncNum // 只读节点
-            self.usedSyncNum = res.data.usedSyncNum
+      api.pbqct().then(res => {
+        sessionStorage.setItem('fbs_storageId', res.storage.storageId)
+        if (res.storage) {
+          this.storage = {
+            ...this.storage,
+            ...res.storage
           }
-        }).catch(() => {
-
-        })
-      }, 100)
+        }
+        if (res.biz) {
+          this.biz = {
+            ...this.biz,
+            ...res.biz
+          }
+        }
+        if (res.node) {
+          this.node = {
+            ...this.node,
+            ...res.node
+          }
+        }
+      })
+      // this.initList()
     }
   }
 }

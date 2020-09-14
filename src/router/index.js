@@ -67,16 +67,25 @@ const routes = [
   {
     path: '/login',
     name: 'login',
+    meta: {
+      needPermission: true
+    },
     component: Login
   },
   {
     path: '/debug',
     name: 'debug',
+    meta: {
+      needPermission: true
+    },
     component: DebugView
   },
   {
     path: '/guide',
     name: 'guide',
+    meta: {
+      needPermission: true
+    },
     component: Guide
   },
   {
@@ -298,11 +307,17 @@ const routes = [
   {
     path: '/setup',
     name: 'setup',
+    meta: {
+      needPermission: true
+    },
     component: Setup
   },
   {
     path: '*',
     name: 'notfound',
+    meta: {
+      needPermission: true
+    },
     component: Err404
   }
 ]
@@ -316,6 +331,13 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   ViewUI.LoadingBar.start()
+  let fbs_address = sessionStorage.getItem('fbs_address')
+  if (!fbs_address && !to.meta.needPermission) {
+    next({ path: 'login',
+      query: {
+        redirect: encodeURIComponent(window.location.pathname + window.location.search)
+      } })
+  }
   next()
 })
 

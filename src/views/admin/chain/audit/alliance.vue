@@ -112,7 +112,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '同意')
@@ -122,7 +122,7 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                // var index = p.index
               }
             }
           }, '拒绝')
@@ -215,7 +215,7 @@ export default {
       border: 1px solid #6094FF;
       padding: 0 8px;
       border-radius: 12px;
-      box-shadow: 0;
+      box-shadow: none;
       outline: none;
       cursor: pointer;
     }

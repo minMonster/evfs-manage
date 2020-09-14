@@ -72,7 +72,7 @@ export default {
         title: '操作',
         width: 180,
         render (h, p) {
-          var index = p.index
+          // var index = p.index
           var row = p.row || {}
           var type = row.type
           var opt1 = h('a', {
@@ -88,8 +88,9 @@ export default {
           var opt2 = h('a', {
             on: {
               click () {
-                var index = p.index
-                let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                // var index = p.index
+                // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
+                let { showDataSubmenu } = that.$route.query
                 that.$router.push({
                   name: 'business-detail',
                   query: {
@@ -166,14 +167,14 @@ export default {
       setTimeout(() => {
         this.$http.post('/cmw/pbqbl.do').then(res => {
           console.log(res)
-          if (res.retCode == '1') {
+          if (res.retCode === '1') {
             this.$Message.success('查询成功')
           } else {
             if (res.retMsg) {
               this.$Message.error(res.retMsg)
             }
           }
-        }).catch(err => {
+        }).catch(() => {
 
         })
       })

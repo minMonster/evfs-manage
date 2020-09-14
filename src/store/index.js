@@ -8,7 +8,7 @@ export default new Vuex.Store({
     path: '' // 文件路径
   },
   mutations: {
-    changePath(state,path) {
+    changePath (state, path) {
       state.path = path
     }
   },

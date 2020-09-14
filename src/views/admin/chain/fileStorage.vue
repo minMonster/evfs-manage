@@ -90,7 +90,6 @@
 <script>
 export default {
   data () {
-    var that = this
     var columns1 = [
       {
         title: '文件存储域名称',
@@ -154,11 +153,11 @@ export default {
         .post('/fbs/man/pbsai.do', param)
         .then(res => {
           res = res.data
-          if (res.retCode == '1') {
+          if (res.retCode === '1') {
             this.$emit('next', 'step4.4')
           }
         })
-        .catch(err => {
+        .catch(() => {
           // this.$Message.error('')
         })
         .then(() => {})
@@ -237,7 +236,7 @@ export default {
   height: 26px;
   padding: 0 10px;
   outline: none;
-  box-shadow: 0;
+  box-shadow: none;
   cursor: pointer;
   text-align: center;
   color: #6094ff;

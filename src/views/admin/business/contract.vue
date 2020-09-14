@@ -82,7 +82,6 @@
 import QRCode from 'qrcodejs2'
 export default {
   data () {
-    var that = this
     var columns1 = [
       {
         title: '合约名称',
@@ -106,10 +105,10 @@ export default {
           var row = p.row || {}
           var label = '--'
           var status = row.status
-          if (status == '1') {
+          if (status === '1') {
             label = '冻结'
           }
-          if (status == '2') {
+          if (status === '2') {
             label = '解冻'
           }
           if (status > 2) {
@@ -118,8 +117,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
-                if (status == '2') {
+                if (status === '2') {
 
                 }
               }
@@ -174,14 +172,14 @@ export default {
       setTimeout(() => {
         this.$http.post('/cmw/pbqbc.do', params).then(res => {
           console.log(res)
-          if (res.retCode == '1') {
+          if (res.retCode === '1') {
             this.$Message.success('查询成功')
           } else {
             if (res.retMsg) {
               this.$Message.error(res.retMsg)
             }
           }
-        }).catch(err => {
+        }).catch(() => {
 
         })
       }, 100)

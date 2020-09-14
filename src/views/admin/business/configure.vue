@@ -123,7 +123,6 @@
 <script>
 export default {
   data () {
-    var that = this
     return {
       encryption1: '0',
       encryption2: '0',

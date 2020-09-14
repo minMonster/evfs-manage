@@ -186,15 +186,14 @@ export default {
   watch: {
     step (n, o) {
       console.log(n, o)
-      let that = this
-      if (n == 2) {
+      if (n === 2) {
         this.creating()
       }
     },
     type (n) {
-      if (n == 1) {
+      if (n === 1) {
         this.title = '添加全链调用访问黑名单'
-      } else if (n == 2) {
+      } else if (n === 2) {
         this.title = '添加全链调用访问白名单'
       }
       this.name = ''
@@ -257,7 +256,7 @@ export default {
       this.duration = Math.floor((enddate - startdate) / 1000)
       this.$http.post('/fbs/man/pbrun.do').then(res => {
         res = res.data
-        if (res.retCode == 1) {
+        if (res.retCode === 1) {
           clearInterval(this.timer)
           var enddate = moment().format('YYYY-MM-DD HH:mm:ss')
           localStorage.setItem('enddate', enddate)
@@ -278,7 +277,7 @@ export default {
       this.$http.post('/fbs/man/pbgpo.do', data).then(res => {
         res = res.data
         console.log(res)
-        if (res.data == 1) {
+        if (res.data === 1) {
 
         } else {
 
@@ -311,20 +310,20 @@ export default {
         whiteListName.push(item.name)
         whiteListAddress.push(item.address)
       })
-      var anonymousAccess = this.anonymousAccess == '1'
+      var anonymousAccess = this.anonymousAccess === '1'
       var data = {
         anonymousAccess, whiteListName, whiteListAddress, blackListName, blackListAddress
       }
       this.$http.post('/fbs/man/pbsnw.do', data).then(res => {
         res = res.data
-        if (res.retCode == 1) {
+        if (res.retCode === 1) {
           var startdate = moment().format('YYYY-MM-DD HH:mm:ss')
           localStorage.setItem('startdate', startdate)
           this.startdate = startdate
           this.duration = 0
           this.next('2')
         }
-      }).catch(err => {
+      }).catch(() => {
 
       }).then(() => {
 
@@ -352,9 +351,9 @@ export default {
       var data = {
         name, address
       }
-      if (type == 1) {
+      if (type === 1) {
         this.data1.push(data)
-      } else if (type == 2) {
+      } else if (type === 2) {
         this.data2.push(data)
       }
       this.addModal = false
@@ -423,7 +422,7 @@ export default {
     height: 26px;
     padding: 0 10px;
     outline: none;
-    box-shadow: 0;
+    box-shadow: none;
     cursor: pointer;
     text-align: center;
     color: #6094FF;
@@ -453,7 +452,7 @@ export default {
   line-height: 20px;
   font-size:12px;
   outline: none;
-  box-shadow: 0;
+  box-shadow: none;
   color:rgba(158,158,158,1);
 }
 </style>

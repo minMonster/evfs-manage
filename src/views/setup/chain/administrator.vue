@@ -173,7 +173,7 @@ export default {
     height: 26px;
     padding: 0 10px;
     outline: none;
-    box-shadow: 0;
+    box-shadow: none;
     cursor: pointer;
     text-align: center;
     color: #6094FF;

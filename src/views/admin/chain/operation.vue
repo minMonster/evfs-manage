@@ -162,10 +162,8 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
 export default {
   data () {
-    var that = this
     var columns1 = [
       {
         title: '数据存管域名称',
@@ -266,22 +264,6 @@ export default {
     },
     // 二维码
     creatQrCode () {
-      let linkData = {
-        // url:this.apiUrl + "/clt/pbsst.do",
-        // func:"margIn",
-        // data:{
-        //     "tempPubKey":this.pubstem,  //公钥
-        //     "encmsg":''
-        // }
-      }
-      var qrcode = new QRCode('qrcode', {
-        text: JSON.stringify(linkData), // 需要转换为二维码的内容
-        width: 260,
-        height: 260,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H// 容错率，L/M/H
-      })
     }
   }
 }
@@ -340,7 +322,7 @@ export default {
     border: 1px solid #6094ff;
     padding: 0 8px;
     border-radius: 12px;
-    box-shadow: 0;
+    box-shadow: none;
     outline: none;
     cursor: pointer;
   }

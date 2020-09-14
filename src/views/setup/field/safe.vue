@@ -193,7 +193,7 @@ export default {
     height: 26px;
     padding: 0 10px;
     outline: none;
-    box-shadow: 0;
+    box-shadow: none;
     cursor: pointer;
     text-align: center;
     color: #6094FF;
@@ -223,7 +223,7 @@ export default {
   line-height: 20px;
   font-size:12px;
   outline: none;
-  box-shadow: 0;
+  box-shadow: none;
   color:rgba(158,158,158,1);
 }
 </style>

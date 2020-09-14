@@ -47,11 +47,11 @@ export default {
       this.initPubkey()
     },
     initPubkey () {
-      let pubKey = cwv.genPubkey()
-      let data = {
-        seed: '',
-        pubKey
-      }
+      // let pubKey = cwv.genPubkey()
+      // let data = {
+      //   seed: '',
+      //   pubKey
+      // }
       this.$http.post('/fbs/man/pbgpo.do', { 'key': 'local.coinbase.pubkey' }).then(res => {
         res = res.data
         this.pubKey = res.value
@@ -66,9 +66,9 @@ export default {
       this.serverName = serverName
     },
     bind () {
-      var timestamp = Date.now()
-      var str = this.key + this.pubKey + timestamp
-      sign(str)
+      // var timestamp = Date.now()
+      // var str = this.key + this.pubKey + timestamp
+      // sign(str)
       this.timer = setInterval(() => {
         var signResult = document.getElementById('signResult')
         var signature = signResult.value
@@ -77,12 +77,12 @@ export default {
           console.log(signature)
           this._bind()
         }
-        if (signature == 'fail') {
+        if (signature === 'fail') {
           console.log('签名失败')
           this.closeTimer()
           // this.$toast('签名失败')
         }
-        if (signature == 'refuse') {
+        if (signature === 'refuse') {
           console.log('拒绝签名')
           this.closeTimer()
           // this.$toast('签名失败')
@@ -101,10 +101,10 @@ export default {
       this.$http.post('/fbs/man/pbsps.do', data).then(res => {
         res = res.data
         console.log(res)
-        if (res.retCode == '1') {
+        if (res.retCode === '1') {
           this.success = true
         }
-      }).catch(err => {
+      }).catch(() => {
 
       }).then(() => {
         console.log(arguments)
@@ -136,8 +136,8 @@ export default {
     closeTimer () {
       if (this.timer) {
         clearInterval(this.timer)
-        var signResult = document.getElementById('signResult')
-        signResult = ''
+        // var signResult = document.getElementById('signResult')
+        // signResult = ''
       }
     }
   }
@@ -177,7 +177,7 @@ export default {
           line-height: 20px;
           font-size:12px;
           outline: none;
-          box-shadow: 0;
+          box-shadow: none;
           color:rgba(158,158,158,1);
         }
       }

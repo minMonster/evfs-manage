@@ -79,7 +79,7 @@ export default {
       line-height: 20px;
       font-size:12px;
       outline: none;
-      box-shadow: 0;
+      box-shadow: none;
       color: #9E9E9E;
     }
   }

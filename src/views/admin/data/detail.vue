@@ -137,6 +137,7 @@ export default {
       this.initList()
     },
     initList () {
+      let storage_id = ''
       let params = {
         storage_id: storage_id
       }
@@ -144,14 +145,14 @@ export default {
       setTimeout(() => {
         this.$http.poat('/cmw/pbqsd.do', params).then(res => {
           console.log(res)
-          if (res.retCode == '1') {
+          if (res.retCode === '1') {
             this.$Message.success('查询成功')
           } else {
             if (res.retMsg) {
               this.$Message.error(res.retMsg)
             }
           }
-        }).catch(err => {
+        }).catch(() => {
 
         })
       }, 1000)
