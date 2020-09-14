@@ -63,11 +63,16 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns" :data="list"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange"/>
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -204,6 +209,7 @@
 
 <script>
 import * as api from './api'
+import * as cApi from '@/http/api'
 
 export default {
   data () {
@@ -224,16 +230,16 @@ export default {
       },
       {
         title: '数据存管域名称',
-        key: 'databasename'
+        key: 'main_storage_storage_name'
       },
       {
         title: '添加时间',
         key: 'join_time'
       },
-      {
-        title: '状态',
-        key: 'online_status'
-      },
+      // {
+      //   title: '状态',
+      //   key: 'online_status'
+      // },
       {
         title: '操作',
         render (h, p) {
@@ -253,18 +259,11 @@ export default {
     ]
     return {
       name: '',
+      listLoading: false,
       address: '',
       addModal: false,
       columns,
-      oldList: [
-        // {
-        //   'member_id': 1,
-        //   'member_address': '1',
-        //   'main_committeegroup_group_id': '1',
-        //   'join_time': 1598345923000,
-        //   'member_name': '名称'
-        // }
-      ],
+      oldList: [],
       list: [
         // {
         //   'chainnode_id': '1', // 节点id——节点身份标识
@@ -283,7 +282,7 @@ export default {
         // }
       ],
       page: {
-        total: 0,
+        total: 1,
         current: 1,
         size: 10
       },
@@ -302,14 +301,90 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
     init () {
-      api.pbbqan({ storage_id: sessionStorage.getItem('fbs_storageId') }).then(res => {
-        console.log(res)
-        this.list = res.rows
+      let params = {}
+      let storage_id = sessionStorage.getItem('fbs_storageId')
+      if (storage_id) {
+        params = { storage_id }
+      }
+      this.listLoading = true
+      api.pbqan(params).then(res => {
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+        this.listLoading = false
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        this.listLoading = false
       })
     },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
+    pageChange (page) {
+      this.page.current = page
+      this.getList()
+    },
     // 删除管理页面
-    del () {
+    async del (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'orgAddress': '', // 节点归属组织地址
+        'orgName': '', // 节点归属组织名称
+        'nodeAddr': '', // 节点地址
+        'nodeInfo': { // 节点信息
+          'name': '司法部', // 节点名称
+          'cpu': '2', // CPU数量
+          'memory': '64G', // 内存大小
+          'disk': '1000G', // 磁盘大小
+          'bandwidth': '1000M' // 带宽大小
+        },
+        'amount': 100, // 许可证容量
+        'nodeType': 0, // 1主节点;2节点网络准入;3前置节点
+        'op': 1 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'ChainNodeApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     confirmAdd () {
       this.$router.push('/chain-nodeManage')
@@ -320,8 +395,6 @@ export default {
     },
     // 查询
     search () {
-    },
-    pageChange (page) {
     }
   }
 }

@@ -46,18 +46,18 @@
           <Input type="text" v-model="form.address" placeholder="前置节点身份标识"></Input>
         </div>
         </Col>
-        <Col span="6">
-        <div class="condition-item">
-          <span class="condition-label">状态：</span>
-          <Select v-model="form.status" >
-            <Option value="0">全部</Option>
-            <Option value="1">已添加</Option>
-            <Option value="2">已删除</Option>
-            <Option value="3">添加审核中</Option>
-            <Option value="4">删除审核中</Option>
-          </Select>
-        </div>
-        </Col>
+        <!--        <Col span="6">-->
+        <!--        <div class="condition-item">-->
+        <!--          <span class="condition-label">状态：</span>-->
+        <!--          <Select v-model="form.status" >-->
+        <!--            <Option value="0">全部</Option>-->
+        <!--            <Option value="1">已添加</Option>-->
+        <!--            <Option value="2">已删除</Option>-->
+        <!--            <Option value="3">添加审核中</Option>-->
+        <!--            <Option value="4">删除审核中</Option>-->
+        <!--          </Select>-->
+        <!--        </div>-->
+        <!--        </Col>-->
         <Col span="6">
         <div class="condition-item">
           <Button style="width: 80px;" @click="search" type="primary">查询</Button>
@@ -65,11 +65,16 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
       <div v-show="popup">
@@ -136,30 +141,34 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
+      // {
+      //   'clientnode_id': '1', // 前置节点身份标识
+      //   'main_system_system_id': '1',
+      //   'chainnode_name': '前置节点名称',
+      //   'main_system_system_name': '组织名称',
+      //   'main_company_company_id': '1', // 隶属企业名称id
+      //   'main_company_company_name': '企业名称', // 隶属企业名称
+      //   'node_server_id': 'nodeserver1',
+      //   'node_license_amount': 0,
+      //   'join_time': 1599704154000
+      // },
       {
         title: '隶属企业名称',
-        key: 'name'
+        key: 'main_company_company_name'
       },
       {
-        title: '服务器身份标识',
-        key: 'address'
-      },
-      {
-        title: '节点类型',
-        key: 'nodetype'
+        title: '前置节点身份标识',
+        key: 'clientnode_id'
       },
       {
         title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'statuslabel'
+        key: 'join_time'
       },
       {
         title: '操作',
@@ -178,26 +187,39 @@ export default {
         }
       }
     ]
-    var data1 = [
-      { name: '从法科技', address: '00740f...aaba8', nodetype: '主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '授权审核中', status: '1' },
-      { name: '从法科技', address: '00da0c...cfbe5', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '1' },
-      { name: '从法科技', address: '00740f...dadaf', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '1' }
-    ]
     return {
       acceptLimit: '1/3',
       name: '',
       address: '',
       addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      columns,
+      oldList: [
+        {
+          'clientnode_id': '1', // 前置节点身份标识
+          'main_system_system_id': '1',
+          'chainnode_name': '前置节点名称',
+          'main_system_system_name': '组织名称',
+          'main_company_company_id': '1', // 隶属企业名称id
+          'main_company_company_name': '企业名称', // 隶属企业名称
+          'node_server_id': 'nodeserver1',
+          'node_license_amount': 0,
+          'join_time': 1599704154000
+        }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: '',
         status: ''
       },
       switch1: '0',
-      popup: 0
+      popup: 0,
+      listLoading: false
     }
   },
   mounted () {
@@ -207,54 +229,43 @@ export default {
   computed: {},
   methods: {
     init () {
-      var that = this
-      this.$http.post('/cmw/pbqcl.do').then(res => {
-        console.log(res)
-        if (res.retCode == '1') {
-          that.$Message.success('查询成功')
-        } else {
-          that.$Message.error(res.retMsg)
-        }
+      this.listLoading = true
+      api.pbqcn().then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+        this.rule = res.rule
       }).catch(err => {
-        console.log(err)
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
       })
     },
     // 添加列表
     confirmAdd () {
-      this.$router.push('/chain-frontNodeAdd')
+      this.$Message.warning('待确认需求')
+      // this.$router.push('/chain-frontNodeAdd')
     },
     ok () {},
     // 删除信息
-    del (obj) {
-      var that = this
-      this.popup = 1,
-      this.creatQrCode()
+    del (row) {
+      this.$Message.warning('待确认需求')
     },
     cancel () {},
-    search () {
-
+    search () {},
+    // 分页
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
     },
     // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     },
-    // 生成二维码
-    creatQrCode () {
-      let linkData = {
-        // url:"http://47.116.17.247:9000/api/clt/pblin.do",
-        // func:"Login",
-        // data:{
-        // }
-      }
-      var qrcode = new QRCode('qrcode', {
-        text: JSON.stringify(linkData), // 需要转换为二维码的内容
-        width: 260,
-        height: 260,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: 3// 容错率，L/M/H
-      })
-      console.log(qrcode)
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
     }
   }
 }

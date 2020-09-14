@@ -144,9 +144,9 @@ export default {
     return {
       rule: null,
       name: '',
-      listLoading: false,
       address: '',
       addModal: false,
+      listLoading: false,
       columns,
       oldList: [
         // {
@@ -160,7 +160,7 @@ export default {
       list: [],
       addLoading: false,
       page: {
-        total: 0,
+        total: 1,
         current: 1,
         size: 10
       },
@@ -179,9 +179,6 @@ export default {
   computed: {
   },
   methods: {
-    getList () {
-      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
-    },
     async init () {
       this.listLoading = true
       let dataId = await api.pbqgi({
@@ -370,6 +367,9 @@ export default {
     },
     // 查询
     search () {
+    },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
     },
     sizeChange (size) {
       this.page.current = 1

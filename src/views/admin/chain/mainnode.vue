@@ -43,18 +43,18 @@
           <Input type="text" v-model="form.address" placeholder="节点服务器身份标识"></Input>
         </div>
         </Col>
-        <Col span="6">
-        <div class="condition-item">
-          <span class="condition-label">状态：</span>
-          <Select v-model="form.status" value="0">
-            <Option value="0">全部</Option>
-            <Option value="1">已添加</Option>
-            <Option value="2">已删除</Option>
-            <Option value="3">添加审核中</Option>
-            <Option value="4">删除审核中</Option>
-          </Select>
-        </div>
-        </Col>
+        <!--        <Col span="6">-->
+        <!--        <div class="condition-item">-->
+        <!--          <span class="condition-label">状态：</span>-->
+        <!--          <Select v-model="form.status" value="0">-->
+        <!--            <Option value="0">全部</Option>-->
+        <!--            <Option value="1">已添加</Option>-->
+        <!--            <Option value="2">已删除</Option>-->
+        <!--            <Option value="3">添加审核中</Option>-->
+        <!--            <Option value="4">删除审核中</Option>-->
+        <!--          </Select>-->
+        <!--        </div>-->
+        <!--        </Col>-->
         <Col span="6">
         <div class="condition-item">
           <Button style="width: 80px;" @click="search" type="primary">查询</Button>
@@ -62,11 +62,16 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange"/>
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -74,35 +79,52 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    // {
+    //   'chainnode_id': '1', // 节点id——节点身份标识
+    //   'main_system_system_id': '1',
+    //   'chainnode_name': '打块节点名称',
+    //   'main_system_system_name': '系统-组织名称',
+    //   'online_status': '',
+    //   'main_company_company_id': '1', // 隶属企业id
+    //   'main_company_company_name': '企业名称', // 隶属企业名称
+    //   'join_time': 1598345923000, // 添加时间
+    //   'main_storage_storage_id': '1', // 数据存管域id
+    //   'main_storage_storage_name': '数据存管域名称', // 数据存管域名称
+    //   'node_license_amount': 0,
+    //   'node_server_id': '1', // 服务器身份标识
+    //   'node_type': 'accountnode' // 节点类型 accountnode:主节点-记账节点；syncnode:主节点-同步节点
+    // }
+    let columns = [
       {
         title: '隶属企业名称',
-        key: 'name'
+        key: 'main_company_company_name'
       },
       {
         title: '服务器身份标识',
-        key: 'address'
+        key: 'node_server_id'
       },
       {
         title: '节点类型',
-        key: 'nodetype',
+        key: 'node_type',
         width: 120
       },
       {
         title: '数据存管域名称',
-        key: 'databasename'
+        key: 'main_storage_storage_name'
       },
       {
         title: '添加时间',
-        key: 'time'
+        key: 'join_time'
       },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
+      // {
+      //   title: '状态',
+      //   key: 'statuslabel'
+      // },
       {
         title: '操作',
         width: 120,
@@ -112,27 +134,42 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
-                that.data1.splice(index, 1)
+                that.$Message.warning('待确认需求')
+                // var index = p.index
+                // that.data1.splice(index, 1)
               }
             }
           }, label)
         }
       }
     ]
-    var data1 = [
-      { name: '从法科技', address: '00630e...cabc3', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-5 9:15:20', statuslabel: '已授权', status: '2' },
-      { name: '从法科技', address: '00740f...abcde', nodetype: '主节点', databasename: '从法存管域', time: '--', statuslabel: '申请审核中', status: '1' },
-      { name: '从法科技', address: '00740f...fbeda', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-5 13:12:40', statuslabel: '收回授权审核中', status: '1' }
-    ]
     return {
-      acceptLimit: '1/3',
-      name: '',
-      address: '',
-      addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'chainnode_id': '1', // 节点id——节点身份标识
+        //   'main_system_system_id': '1',
+        //   'chainnode_name': '打块节点名称',
+        //   'main_system_system_name': '系统-组织名称',
+        //   'online_status': '',
+        //   'main_company_company_id': '1', // 隶属企业id
+        //   'main_company_company_name': '企业名称', // 隶属企业名称
+        //   'join_time': 1598345923000, // 添加时间
+        //   'main_storage_storage_id': '1', // 数据存管域id
+        //   'main_storage_storage_name': '数据存管域名称', // 数据存管域名称
+        //   'node_license_amount': 0,
+        //   'node_server_id': '1', // 服务器身份标识
+        //   'node_type': 'accountnode' // 节点类型 accountnode:主节点-记账节点；syncnode:主节点-同步节点
+        // }
+      ],
+      list: [],
+      addLoading: false,
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: '',
@@ -152,23 +189,15 @@ export default {
   },
   methods: {
     init () {
-      this.initList()
-    },
-    initList () {
-      setTimeout(() => {
-        this.$http.post('/cmw/pbqmn.do').then(res => {
-          console.log(res)
-          if (res.retCode === '1') {
-            this.$Message.success('查询成功')
-          } else {
-            if (res.retMsg) {
-              this.$Message.error(res.retMsg)
-            }
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      }, 100)
+      api.pbqmn().then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     ok () {
 
@@ -180,10 +209,21 @@ export default {
 
     },
     confirmAdd () {
-      this.$router.push('/chain-nodeManage')
+      this.$Message.warning('待确认需求')
+      // this.$router.push('/chain-nodeManage')
     },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

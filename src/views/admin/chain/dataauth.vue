@@ -1,22 +1,22 @@
 <template>
   <div class="node-admission">
     <chain-header title="数据存管域授权管理" :btn="true" />
-    <div class="bg-white padding" style="margin-bottom: 10px;color: #373737;">
-      <span>数据存管域创建审批：</span>
-      <Tooltip
-        placement="top"
-        max-width="600"
-        transfer>
-        <Icon type="ios-help-circle-outline" />
-      </Tooltip>
-      <RadioGroup
-        style="margin: 0 20px;"
-        v-model="switch1">
-        <Radio label="1">开启</Radio>
-        <Radio label="0">关闭</Radio>
-      </RadioGroup>
-      <Button type="primary" style="float: right;">修改</Button>
-    </div>
+    <!--    <div class="bg-white padding" style="margin-bottom: 10px;color: #373737;">-->
+    <!--      <span>数据存管域创建审批：</span>-->
+    <!--      <Tooltip-->
+    <!--        placement="top"-->
+    <!--        max-width="600"-->
+    <!--        transfer>-->
+    <!--        <Icon type="ios-help-circle-outline" />-->
+    <!--      </Tooltip>-->
+    <!--      <RadioGroup-->
+    <!--        style="margin: 0 20px;"-->
+    <!--        v-model="switch1">-->
+    <!--        <Radio label="1">开启</Radio>-->
+    <!--        <Radio label="0">关闭</Radio>-->
+    <!--      </RadioGroup>-->
+    <!--      <Button type="primary" style="float: right;">修改</Button>-->
+    <!--    </div>-->
     <div class="padding bg-white" style="margin-bottom: 20px;">
       <div style="margin-bottom: 10px;color: #273D52;">
         <span style="color: #273D52;font-weight: 600;">数据存管域列表</span>
@@ -49,11 +49,16 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange"/>
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -113,49 +118,57 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    // {
+    //   'storage_id': '1', // 数据存管域id--唯一标识
+    //   'storage_name': '数据存管域1', // 数据存管域名称
+    //   'rule': 100, // 规则
+    //   'node_operating_licenses': '10', // 节点运行许可总量
+    //   'capacity_license': '', // 存储容量许可总量
+    //   'create_org_address': '1', // 创建者归属组织地址
+    //   'create_org_name': '1', // 创建者归属组织名称
+    //   'join_time': '' // 加入时间
+    // }
+    let columns = [
       {
         title: '数据存管域名称',
-        key: 'name'
+        key: 'storage_name'
       },
       {
         title: '数据存管域唯一标识',
-        key: 'address'
+        key: 'storage_id'
       },
       {
         title: '创建时间',
-        key: 'time'
+        key: 'join_time'
       },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
+      // {
+      //   title: '状态',
+      //   key: 'statuslabel'
+      // },
       {
         title: '操作',
         render (h, p) {
-          // var row = p.row || {}
+          let row = p.row || {}
           // var status = row.status || ''
           // var label = row.status == '2' ? '删除' : '撤销'
           // label = row.status == '0' ? '--' : label
           // var opt = h('a', {
           // })
-          var opt2 = h('a', {
+          let opt2 = h('a', {
             on: {
               click () {
                 // var index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
-                let { showBusinessSubmenu } = that.$route.query
+                // let { showBusinessSubmenu } = that.$route.query
                 that.$router.push({
                   name: 'data-detail',
                   query: {
-                    showDataSubmenu: '1',
-                    showBusinessSubmenu,
-                    mainActive: 'data',
-                    activeIndex: '1',
-                    subActive: 'data-detail'
+                    storage_id: row.storage_id
                   }
                 })
               }
@@ -166,26 +179,34 @@ export default {
         }
       }
     ]
-    var data1 = [
-      { name: '蜂巢存管域', address: '00740f...cbfda', time: '--', statuslabel: '创建审核中', status: '0' },
-      { name: '泛融存管域', address: '00740f...bdca2', time: '2020-1-5 15:34:57', statuslabel: '删除审核中', status: '1' },
-      { name: '从法存管域', address: '00740f...facb7', time: '2020-1-5 10:21:32', statuslabel: '已创建', status: '2' }
-    ]
 
     return {
-      acceptLimit: '1/3',
-      name: '',
-      address: '',
-      addModal: false,
-      columns1,
-      data1,
-      total: 100,
       form: {
         name: '',
         address: '',
         status: ''
       },
-      switch1: '0'
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'storage_id': '1', // 数据存管域id--唯一标识
+        //   'storage_name': '数据存管域1', // 数据存管域名称
+        //   'rule': 100, // 规则
+        //   'node_operating_licenses': '10', // 节点运行许可总量
+        //   'capacity_license': '', // 存储容量许可总量
+        //   'create_org_address': '1', // 创建者归属组织地址
+        //   'create_org_name': '1', // 创建者归属组织名称
+        //   'join_time': '' // 加入时间
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      }
+      // switch1: '0'
     }
   },
   mounted () {
@@ -199,7 +220,15 @@ export default {
   },
   methods: {
     init () {
-
+      api.pbqsl().then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     ok () {
 
@@ -213,8 +242,18 @@ export default {
     addSee () {
       this.$router.push('/chain-chdetial')
     },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

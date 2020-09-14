@@ -23,39 +23,38 @@
           <div>创建企业身份标识：00740f...ccbb1</div>
           </Col>
         </Row>
-        </Row>
       </div>
     </div>
     <div class="business-detail-item">
       <div class="section-title" style="margin-top: 25px;margin-bottom: 2px;"><span>域内节点信息</span></div>
-      <div style="color: #1E1E1E;">联合构建企业成员数量：<b>3</b></div>
+      <div style="color: #1E1E1E;">联合构建企业成员数量：<b>{{node.unitedCompanyMember}}</b></div>
       <div class="mb20">
         <div class="chain-content-item">
           <Row class="bg-white padding" style="margin-bottom: 10px;">
             <Col :span="8">
-            <p><span>3</span></p>
+            <p><span>{{node.accountNum}}</span></p>
             <div>域内主节点数量</div>
             </Col>
             <Col :span="8">
-            <p><span>3</span></p>
+            <p><span>{{node.usedAccountNum}}</span></p>
             <div>在线主节点数量</div>
             </Col>
             <Col :span="8">
-            <p><span>0</span></p>
+            <p><span>{{node.outAccountNum}}</span></p>
             <div>离线主节点数量</div>
             </Col>
           </Row>
           <Row class="bg-white padding">
             <Col :span="8">
-            <p><span>1</span></p>
+            <p><span>{{node.resourceNum}}</span></p>
             <div>域内资源节点数量</div>
             </Col>
             <Col :span="8">
-            <p><span>0</span></p>
+            <p><span>{{node.usedResourceNum}}</span></p>
             <div>在线资源节点数量</div>
             </Col>
             <Col :span="8">
-            <p><span>1</span></p>
+            <p><span>{{node.outResourceNum}}</span></p>
             <div>离线资源主节点数量</div>
             </Col>
           </Row>
@@ -70,7 +69,7 @@
       <div class="chain-content-item">
         <Row>
           <Col :span="24">
-          <p><span>2</span></p>
+          <p><span>{{biz.bizNum}}</span></p>
           <div>业务域数量</div>
           </Col>
           <!-- <Col :span="8">
@@ -85,13 +84,13 @@
       <div>
         <Row>
           <Col :span="8">
-          <div>文件碎片化数量：<span>5</span></div>
+          <div>文件碎片化数量：<span>未确认</span></div>
           </Col>
           <Col :span="8">
-          <div>文件保存副本数量：<span>3</span></div>
+          <div>文件保存副本数量：<span>未确认</span></div>
           </Col>
           <Col :span="8">
-          <div>文件副本在不同site分散保存：<span>生效</span></div>
+          <div>文件副本在不同site分散保存：<span>未确认</span></div>
           </Col>
         </Row>
       </div>
@@ -102,15 +101,15 @@
         <div class="chain-content-item">
           <Row>
             <Col :span="8">
-            <p><span>5.00 TB</span></p>
+            <p><span>{{node.capacityLicense}}TB</span></p>
             <div>最大存储容量</div>
             </Col>
             <Col :span="8">
-            <p><span>2.00 TB</span></p>
+            <p><span>{{node.outCapacityLicense}} TB</span></p>
             <div>可用存储容量</div>
             </Col>
             <Col :span="8">
-            <p><span>3.00 TB</span></p>
+            <p><span>{{node.usedCapacityLicense}} TB</span></p>
             <div>已用存储容量</div>
             </Col>
           </Row>
@@ -121,10 +120,38 @@
 </template>
 
 <script>
+import * as api from '../chain/api'
 export default {
   data () {
     return {
-
+      storage: {},
+      biz: {
+        bizNum: '--', // 业务域数量
+        runBizNum: '--', // 运行业务域数量
+        outBizNum: '--'// 停运业务域数量
+      },
+      node: {
+        accountNum: '--', // 主节点服务器数量
+        usedAccountNum: '--', // 在线主节点服务器数量
+        outAccountNum: '--', // 离线主节点服务器数量
+        resourceNum: '--', // 资源节点服务器数量
+        usedResourceNum: '--', // 在线资源节点服务器数量
+        outResourceNum: '--', // 离线资源节点服务器数量
+        usedSyncNum: '--', // 在线只读节点
+        clientNum: '--', // 接入前置节点数量
+        clientCompanyNum: '--', // 前置隶属企业数量
+        usedSystemNum: '--', // 接入业务系统数量
+        systemCompanyNum: '--', // 业务系统隶属企业数量
+        accountCompanyNum: '--', // 主节点隶属企业数量
+        resourceCompanyNum: '--', // 资源节点隶属企业数量
+        nodeLicenseNum: '--', // 节点运行许可总数量
+        usedLicenseNum: '--', // 已发放节点许可数量
+        outLicenseNum: '--', // 未发放节点许可数量
+        capacityLicense: '--', // 存储许可总容量
+        usedCapacityLicense: '--', // 已发放存储许可容量
+        outCapacityLicense: '--', // 未发存储许可容量
+        unitedCompanyMember: '--' // 联合构建企业成员数量
+      }
     }
   },
   watch: {},
@@ -137,25 +164,42 @@ export default {
       this.initList()
     },
     initList () {
-      let storage_id = ''
-      let params = {
-        storage_id: storage_id
+      console.log(this.$route.query)
+      let storage_id = this.$route.query.storage_id
+      let params = {}
+      if (storage_id) {
+        params = { storage_id }
       }
       // 查询数据存管域详情
-      setTimeout(() => {
-        this.$http.poat('/cmw/pbqsd.do', params).then(res => {
-          console.log(res)
-          if (res.retCode === '1') {
-            this.$Message.success('查询成功')
-          } else {
-            if (res.retMsg) {
-              this.$Message.error(res.retMsg)
+      api.pbqsd(params).then(res => {
+        if (res.retCode === 1) {
+          this.$Message.success('查询成功')
+          if (res.storage) {
+            this.storage = {
+              ...this.storage,
+              ...res.storage
             }
           }
-        }).catch(() => {
-
-        })
-      }, 1000)
+          if (res.biz) {
+            this.biz = {
+              ...this.biz,
+              ...res.biz
+            }
+          }
+          if (res.node) {
+            this.node = {
+              ...this.node,
+              ...res.node
+            }
+          }
+        } else {
+          if (res.retMsg) {
+            this.$Message.error(res.retMsg)
+          }
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+      })
     }
   }
 }

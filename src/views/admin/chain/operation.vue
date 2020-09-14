@@ -70,11 +70,16 @@
         </Row>
       </div>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns1" :loading="listLoading1" :data="list1"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page1.total"
+            :current="page1.current"
+            @on-change="pageChange1"
+            @on-page-size-change="sizeChange1"/>
         </div>
       </div>
     </div>
@@ -124,11 +129,16 @@
           </Col>
         </Row>
         <div>
-          <Table :columns="columns2" :data="data2"></Table>
+          <Table :columns="columns2" :loading="listLoading2" :data="list2"></Table>
         </div>
         <div class="page">
           <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page
+              show-sizer
+              :total="page2.total"
+              :current="page2.current"
+              @on-change="pageChange2"
+              @on-page-size-change="sizeChange2"/>
           </div>
         </div>
       </div>
@@ -162,26 +172,28 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
     var columns1 = [
       {
         title: '数据存管域名称',
-        key: 'name',
+        key: 'storage_name',
         width: 140
       },
       {
         title: '数据存管域唯一标识',
-        key: 'id'
+        key: 'storage_id'
       },
       {
         title: '现有许可存储容量',
-        key: 'storage'
+        key: 'capacity_license'
       },
       {
         title: '申请新增存储容量',
-        key: 'newstorage'
-      },
+        key: 'applay_capacity_license'
+      }
       // {
       //   title: '现有节点许可证',
       //   key: 'nodepermissin',
@@ -191,63 +203,85 @@ export default {
       //   title: '申请新增节点许可证',
       //   key: 'newnodepermissin'
       // },
-      {
-        title: '申请状态',
-        key: 'status',
-        width: 120
-      }
+      // {
+      //   title: '申请状态',
+      //   key: 'status',
+      //   width: 120
+      // }
     ]
-    var data1 = [
-      { name: '蜂巢链存证域', id: '00740f...aeea2', storage: '0.00TB', newstorage: '5.00 TB', nodepermissin: '0', newnodepermissin: '10', status: '申请审核中' },
-      { name: '从法存管域', id: '00740f...facb7', storage: '5.00TB', newstorage: '--', nodepermissin: '50', newnodepermissin: '--', status: '--' }
-    ]
-    var columns2 = [
+    let columns2 = [
       {
         title: '数据存管域名称',
-        key: 'name'
+        key: 'storage_name'
       },
       {
         title: '数据存管域唯一标识',
-        key: 'address'
+        key: 'storage_id'
       },
       {
         title: '节点许可证',
-        key: 'time'
+        key: 'node_operating_licenses'
       }
 
     ]
-    var data2 = [
-      { name: '从法科技', address: '00740f...ccbb1', time: '2020-1-5 10:05:51' },
-      { name: '金桥信息', address: '00740f...feac3', time: '' },
-      { name: '泛融科技', address: '00740f...bdae4', time: '2020-1-5 10:15:31' }
-    ]
     return {
-      acceptLimit: '1/3',
-      name: '',
-      address: '',
       addModal: false,
+      listLoading1: false,
+      listLoading2: false,
       columns1,
       columns2,
-      data1,
-      data2,
-      total: 100,
+      oldList1: [],
+      oldList2: [],
+      list1: [],
+      list2: [],
+      page1: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
+      page2: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       popups: 0,
       form: {
         name: '',
         address: ''
-
       },
       switch1: '0',
       popup: 0
     }
   },
   mounted () {
-    this.init()
+    this.init1()
+    this.init2()
   },
   watch: {},
   computed: {},
   methods: {
-    init () {},
+    init1 () {
+      api.pbqfc().then(res => {
+        this.listLoading1 = false
+        this.oldList1 = res.rows
+        this.page1.total = this.oldList1.length
+        this.getList1()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
+    init2 () {
+      api.pbqll().then(res => {
+        this.listLoading2 = false
+        this.oldList2 = res.rows
+        this.page2.total = this.oldList2.length
+        this.getList2()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
     ok () {},
     cancel () {},
     search () {
@@ -255,15 +289,35 @@ export default {
     },
     // 扩容绑定
     expansionBind () {
+      this.$Message.warning('待确认需求')
       console.log(111)
       this.popup = 1
-      this.creatQrCode()
     },
-    pageChange (page) {
-      console.log(page)
+    getList1 () {
+      this.list1 = this.oldList1.slice((this.page1.current - 1) * this.page1.size, this.page1.size * this.page1.current)
     },
-    // 二维码
-    creatQrCode () {
+    sizeChange1 (size) {
+      this.page1.current = 1
+      this.page1.size = size
+      this.getList1()
+    },
+    // 分页
+    pageChange1 (page) {
+      this.page1.current = page
+      this.getList1()
+    },
+    getList2 () {
+      this.list2 = this.oldList2.slice((this.page2.current - 2) * this.page2.size, this.page2.size * this.page2.current)
+    },
+    sizeChange2 (size) {
+      this.page2.current = 2
+      this.page2.size = size
+      this.getList2()
+    },
+    // 分页
+    pageChange2 (page) {
+      this.page2.current = page
+      this.getList2()
     }
   }
 }

@@ -237,7 +237,7 @@ export default {
   methods: {
     init () {
       api.pbqct().then(res => {
-        sessionStorage.setItem('fbs_storageId', res.storage.storageId)
+        sessionStorage.setItem('fbs_storageId', res.storage.storageId || '')
         if (res.storage) {
           this.storage = {
             ...this.storage,
