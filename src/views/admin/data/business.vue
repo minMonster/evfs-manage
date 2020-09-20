@@ -87,11 +87,16 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange"/>
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -153,7 +158,7 @@
 export default {
   data () {
     let that = this
-    let columns1 = [
+    let columns = [
       {
         title: '业务域名称',
         key: 'name'
@@ -203,7 +208,7 @@ export default {
         }
       }
     ]
-    let data1 = [
+    let data = [
       { name: '泛融存证业务', address: '00740f...aaba8', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
       { name: '司法业务域', address: '00da0c...cfbe5', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' }
     ]

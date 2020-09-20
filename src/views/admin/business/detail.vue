@@ -35,14 +35,14 @@
       <div>
         <Row style="color: #000;">
           <Col :span="8">
-          <div>允许信息监管：<a href="javascript:;">允许</a></div>
+          <div>允许信息监管：<a href="javascript:;">{{biz.information?'允许':'不允许'}}</a></div>
           </Col>
           <Col :span="8">
-          <div>允许文件删除：<a href="javascript:;">允许</a></div>
+          <div>允许文件删除：<a href="javascript:;">{{biz.filePermission?'允许':'不允许'}}</a></div>
           </Col>
-          <Col :span="8">
-          <div>允许任何人域内保存文件：<a href="javascript:;">允许</a></div>
-          </Col>
+          <!--          <Col :span="8">-->
+          <!--          <div>允许任何人域内保存文件：<a href="javascript:;">{{biz.information?'允许':'不允许'}}</a></div>-->
+          <!--          </Col>-->
         </Row>
       </div>
     </div>
@@ -52,25 +52,25 @@
         <div>
           <Row class="bg-white" style="margin-bottom: 10px; padding: 20px 0;">
             <Col :span="8">
-            <p><span>5.00 TB</span></p>
+            <p><span>{{biz.occupyCapacity}}TB</span></p>
             <div>占用存储容量</div>
             </Col>
             <Col :span="8">
-            <p><span>5</span></p>
+            <p><span>{{biz.bizContractNum}}</span></p>
             <div>域内合约数量</div>
             </Col>
             <Col :span="8">
-            <p><span>3</span></p>
+            <p><span>{{biz.bizSysNum}}</span></p>
             <div>业务系统数量</div>
             </Col>
           </Row>
           <Row class="bg-white" style="padding: 20px 0;">
             <Col :span="8">
-            <p><span>3</span></p>
+            <p><span>{{biz.companyNum}}</span></p>
             <div>接入企业数量</div>
             </Col>
             <Col :span="8">
-            <p><span>100</span></p>
+            <p><span>{{biz.userNum}}</span></p>
             <div>接入用户数量</div>
             </Col>
           </Row>
@@ -82,10 +82,27 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
     return {
-
+      biz: {
+        // 占用存储容量
+        occupyCapacity: '--',
+        // 域内合约数量
+        bizContractNum: '--',
+        // 业务系统数量
+        bizSysNum: '--',
+        // 接入企业数量
+        companyNum: '--',
+        // 接入用户数量
+        userNum: '--',
+        // 域内文件操作规则信息-允许信息监管
+        information: '--',
+        // 域内文件操作规则信息-允许文件删除
+        filePermission: '--'
+      }
     }
   },
   watch: {},
@@ -95,7 +112,16 @@ export default {
   },
   methods: {
     init () {
-
+      api.pbqbd({
+        biz_id: sessionStorage.getItem('active_biz_id')
+      }).then(res => {
+        this.biz = {
+          ...this.biz,
+          ...res
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+      })
     }
   }
 }

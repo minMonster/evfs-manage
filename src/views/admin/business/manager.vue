@@ -8,24 +8,24 @@
           <Tooltip
             placement="top"
             max-width="600"
-            transfer
+            transfer>
             <Icon type="ios-help-circle-outline" />
           </Tooltip>
           <Button type="primary" style="float: right;">修改</Button>
         </div>
-        <RadioGroup class="approval" v-model="acceptLimit">
+        <RadioGroup class="approval" v-model="rule">
           <Row>
             <Col span="6">
             <Radio label="0">任意一个成员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="1/3">1/3成员同时签批</Radio>
+            <Radio label="100">1/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="2/3">2/3成员同时签批</Radio>
+            <Radio label="200">2/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="3/3">所有成员同时签批</Radio>
+            <Radio label="300">所有成员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -49,18 +49,18 @@
               <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
             </div>
             </Col>
-            <Col span="6">
-            <div class="condition-item">
-              <span class="condition-label">状态：</span>
-              <Select v-model="form.status">
-                <Option value="0">全部</Option>
-                <Option value="1">已添加</Option>
-                <Option value="2">已删除</Option>
-                <Option value="3">添加审核中</Option>
-                <Option value="4">删除审核中</Option>
-              </Select>
-            </div>
-            </Col>
+            <!--            <Col span="6">-->
+            <!--            <div class="condition-item">-->
+            <!--              <span class="condition-label">状态：</span>-->
+            <!--              <Select v-model="form.status">-->
+            <!--                <Option value="0">全部</Option>-->
+            <!--                <Option value="1">已添加</Option>-->
+            <!--                <Option value="2">已删除</Option>-->
+            <!--                <Option value="3">添加审核中</Option>-->
+            <!--                <Option value="4">删除审核中</Option>-->
+            <!--              </Select>-->
+            <!--            </div>-->
+            <!--            </Col>-->
             <Col span="6">
             <div class="condition-item">
               <Button style="width: 80px;" @click="search" type="primary">查询</Button>
@@ -68,10 +68,15 @@
             </Col>
           </Row>
         </div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
         <div class="page">
           <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page
+              show-sizer
+              :total="page.total"
+              :current="page.current"
+              @on-change="pageChange"
+              @on-page-size-change="sizeChange"/>
           </div>
         </div>
       </div>
@@ -90,10 +95,12 @@
 </template>
 
 <script>
+import * as api from './api'
+
 export default {
   data () {
     let that = this
-    let columns1 = [
+    let columns = [
       {
         title: '管理员姓名',
         key: 'name'
@@ -119,7 +126,7 @@ export default {
           if (row.status == '1') {
             label = '撤销'
           }
-          if (row.status == '2') {
+          if (row.status === '2') {
             label = '删除'
           }
           return h('a', {
@@ -133,19 +140,18 @@ export default {
         }
       }
     ]
-    let data1 = [
-      { name: '郭志', address: '008b0f...effbc', time: '--', status: '添加审核中', type: '1' },
-      { name: '吴载舟', address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
-      { name: '张力', address: '008b0f...acfe5', time: '2020-1-5 19:41:11', status: '已添加', type: '2' }
-    ]
     return {
-      acceptLimit: '1/3',
-      name: '',
-      address: '',
+      rule: '0',
       addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: '',
@@ -155,6 +161,8 @@ export default {
   },
   mounted () {
     this.init()
+    // 审批规则
+    this.approvalRules()
   },
   watch: {
 
@@ -164,17 +172,41 @@ export default {
   },
   methods: {
     init () {
-
+      this.listLoading = true
+      api.pbqml({
+        groupId: '4',
+        dataId: sessionStorage.getItem('fbs_biz_id'),
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.rule = res.rule
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
+    approvalRules () {
     },
     ok () {
-
     },
     cancel () {
-
     },
     search () {},
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-
+      this.page.current = page
+      this.getList()
     }
   }
 }

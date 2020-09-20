@@ -10,7 +10,7 @@
       >
         <Icon type="ios-help-circle-outline" />
       </Tooltip>
-      <RadioGroup style="margin: 0 20px;" v-model="switch1">
+      <RadioGroup style="margin: 0 20px;" v-model="information">
         <Radio label="1" style="margin-right: 40px;">允许</Radio>
         <Radio label="0">禁止</Radio>
       </RadioGroup>
@@ -26,7 +26,7 @@
         >
           <Icon type="ios-help-circle-outline" />
         </Tooltip>
-        <RadioGroup style="margin: 0 20px;" v-model="switch2">
+        <RadioGroup style="margin: 0 20px;" v-model="filePermission">
           <Radio label="1" style="margin-right: 40px;">允许</Radio>
           <Radio label="0">禁止</Radio>
         </RadioGroup>
@@ -106,6 +106,8 @@
 </template>
 
 <script>
+import * as api from './api'
+
 export default {
   data () {
     // let that = this
@@ -158,10 +160,13 @@ export default {
     //   {name: '吴载舟', address: '008b0f...aeafc', time: '2020-1-5 10:50:11', statuslabel: '删除审核中', status: '2' },
     // ]
     return {
-      switch1: '0',
-      switch2: '0',
-      switch3: '0'
-
+      // switch1: '0',
+      // switch2: '0',
+      switch3: '0',
+      // 信息监管-允许信息监管
+      information: '',
+      // 文件权限控制-允许文件删除
+      filePermission: ''
     }
   },
   watch: {},
@@ -171,7 +176,16 @@ export default {
   },
   methods: {
     init () {
-
+      console.log(this.$route.query.biz_id, 'this.$route.query.biz_id')
+      api.pbqbi({
+        // biz_id: this.$route.query.biz_id
+        biz_id: sessionStorage.getItem('active_biz_id')
+      }).then(res => {
+        this.filePermission = res.filePermission
+        this.information = res.information
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+      })
     },
     pageChange (val) {
 
