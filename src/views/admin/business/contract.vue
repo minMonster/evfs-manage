@@ -47,7 +47,7 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div  v-show="popup">
         <div id="qrcode"></div>
@@ -55,7 +55,12 @@
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
       <Modal
@@ -80,24 +85,37 @@
 
 <script>
 import QRCode from 'qrcodejs2'
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var columns1 = [
+    // {
+    //   "contract_id": "1",  //合约id（合约唯一标识）
+    //   "contract_name": "合约名称", //合约名称
+    //   "join_time": 1599704154000, //加入时间
+    //   "status": "1", //状态
+    //   "main_biz_biz_id": "1" //所属业务域id
+    // },
+    let columns = [
       {
         title: '合约名称',
-        key: 'name'
+        key: 'contract_name'
       },
       {
         title: '合约链上唯一标识',
-        key: 'id'
+        key: 'contract_id'
       },
       {
-        title: '发布时间',
-        key: 'time'
+        title: '加入时间',
+        key: 'join_time'
+      },
+      {
+        title: '所属业务域id',
+        key: 'main_biz_biz_id'
       },
       {
         title: '状态',
-        key: 'statuslabel'
+        key: 'status'
       },
       {
         title: '操作',
@@ -126,20 +144,27 @@ export default {
         }
       }
     ]
-    var data1 = [
-      { name: '电子卷宗管理', id: '00fb0a...eac32', time: '--', statuslabel: '发布审核中', status: '0' },
-      { name: '银行贷款信息', id: '00fb0a...dfa86', time: '2020-4-20 13:10:09', statuslabel: '正常', status: '1' },
-      { name: '公证书管理', id: '00fb0a...adee2', time: '2020-4-20 15:22:24', statuslabel: '冻结', status: '2' },
-      { name: '执行管理', id: '00fb0a...ffe76', time: '2020-4-20 15:22:24', statuslabel: '解冻审核中', status: '4' },
-      { name: '仲裁管理', id: '00fb0a...efcca', time: '2020-4-20 14:21:05', statuslabel: '冻结审核中', status: '3' }
-    ]
     return {
       switch1: '0',
       switch2: '0',
       switch3: '0',
-      total: 90,
-      columns1,
-      data1,
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       addModal: false,
       conName: '',
       remarks: '',
@@ -161,28 +186,31 @@ export default {
   },
   methods: {
     init () {
-      this.initList()
+      this.listLoading = true
+      api.pbqbc({
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
-    initList () {
-      this.loading = true
-      let biz_id = this.form.name
-      let params = {
-        biz_id
-      }
-      setTimeout(() => {
-        this.$http.post('/cmw/pbqbc.do', params).then(res => {
-          console.log(res)
-          if (res.retCode === '1') {
-            this.$Message.success('查询成功')
-          } else {
-            if (res.retMsg) {
-              this.$Message.error(res.retMsg)
-            }
-          }
-        }).catch(() => {
-
-        })
-      }, 100)
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
+    pageChange (page) {
+      this.page.current = page
+      this.getList()
     },
     ok () {
       this.popup = 1

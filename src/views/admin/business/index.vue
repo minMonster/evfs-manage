@@ -10,11 +10,16 @@
         </div>
       </div>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
       <Modal
@@ -36,38 +41,50 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    // {
+    //   "biz_id": "1",    // 业务域唯一标识（业务域id）
+    //   "main_storage_storage_id": "1", // 隶属数据存管域ID
+    //   "main_storage_storage_name":aa"", //隶属数据存管域名称
+    //   "biz_name": "业务域名称",			// 业务域名称
+    //   "rule": 300,
+    //   "information": "枚举暂缺",
+    //   "file_permission": "枚举暂缺",
+    //   "join_time": 1599704154000				//创建时间
+    // }
+    let columns = [
       {
         title: '业务域名称',
-        key: 'name',
+        key: 'biz_name',
         width: 130
       },
       {
         title: '业务域唯一标识',
         width: 150,
-        key: 'id'
+        key: 'biz_id'
       },
       {
         title: '隶属数据存管域名称',
-        key: 'storagename'
+        key: 'main_storage_storage_name'
       },
       {
         title: '隶属数据存管域ID',
-        key: 'storageid'
+        key: 'main_storage_storage_id'
       },
       {
         title: '创建时间',
         width: 160,
-        key: 'time'
+        key: 'join_time'
       },
-      {
-        title: '状态',
-        key: 'status',
-        width: 110
-      },
+      // {
+      //   title: '状态',
+      //   key: 'status',
+      //   width: 110
+      // },
       {
         title: '操作',
         width: 180,
@@ -91,9 +108,11 @@ export default {
                 // var index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 let { showDataSubmenu } = that.$route.query
+                sessionStorage.setItem('fbs_biz_id', row.biz_id)
                 that.$router.push({
                   name: 'business-detail',
                   query: {
+                    // biz_id: row.biz_id,
                     mainActive: 'business',
                     activeIndex: '2',
                     subActive: 'business-detail',
@@ -129,21 +148,29 @@ export default {
           }
           return h('div', {
             'class': 'opt-btns'
-          }, opts)
+          }, [opt2])
         }
 
       }
     ]
-    var data1 = [
-      { name: '司法业务域', id: '00740f...ffbc3', storagename: '从法存管域', storageid: '00740f...facb7', time: '2020-1-5 10:21:32', status: '运行', type: '2' },
-      { name: '金融共享业务', id: '00740f...bcaa1', storagename: '从法存管域', storageid: '00740f...facb7', time: '2020-1-5 14:01:05', status: '停运', type: '4' },
-      { name: '蜂巢公证业务', id: '00740f...bcb18', storagename: '泛融存管域', storageid: '00740f...bdca2', time: '2020-1-5 17:34:57', status: '删除审核中', type: '3' },
-      { name: '泛融存证业务', id: '00740f...eecfe', storagename: '泛融存管域', storageid: '00740f...bdca2', time: '2020-1-5 15:10:22', status: '创建审核中', type: '1' }
-    ]
     return {
-      columns1,
-      data1,
-      total: 103,
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       addModal: false,
       addLoading: false,
       businame: ''
@@ -160,23 +187,17 @@ export default {
   },
   methods: {
     init () {
-      this.initList()
-    },
-    // 查询业务域列表
-    initList () {
-      setTimeout(() => {
-        this.$http.post('/cmw/pbqbl.do').then(res => {
-          console.log(res)
-          if (res.retCode === '1') {
-            this.$Message.success('查询成功')
-          } else {
-            if (res.retMsg) {
-              this.$Message.error(res.retMsg)
-            }
-          }
-        }).catch(() => {
-
-        })
+      this.listLoading = true
+      api.pbqbl({
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
       })
     },
     ok () {
@@ -185,8 +206,18 @@ export default {
     cancel () {
 
     },
-    pageChange (value) {
-
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
+    pageChange (page) {
+      this.page.current = page
+      this.getList()
     }
   }
 }
