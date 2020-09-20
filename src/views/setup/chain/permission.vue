@@ -109,8 +109,8 @@
 import moment from 'moment'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '前置节点名称',
         key: 'name'
@@ -125,7 +125,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
@@ -133,7 +133,7 @@ export default {
         }
       }
     ]
-    var columns2 = [
+    let columns2 = [
       {
         title: '前置节点名称',
         key: 'name'
@@ -148,7 +148,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data2.splice(index, 1)
               }
             }
@@ -156,9 +156,9 @@ export default {
         }
       }
     ]
-    var data1 = []
+    let data1 = []
 
-    var data2 = []
+    let data2 = []
     return {
       anonymousAccess: '2',
       columns1,
@@ -207,10 +207,10 @@ export default {
   },
   computed: {
     formatDuration () {
-      var time = this.duration
-      var h = Math.floor(time / (60 * 60))
-      var m = Math.floor(time % (60 * 60) / 60)
-      var s = time % 60
+      let time = this.duration
+      let h = Math.floor(time / (60 * 60))
+      let m = Math.floor(time % (60 * 60) / 60)
+      let s = time % 60
       if (h) {
         return h + '小时' + m + '分钟' + s + '秒'
       } else if (m) {
@@ -228,8 +228,8 @@ export default {
       this.initStartDate()
     },
     initStartDate () {
-      var startdate = localStorage.getItem('startdate')
-      var enddate = localStorage.getItem('enddate')
+      let startdate = localStorage.getItem('startdate')
+      let enddate = localStorage.getItem('enddate')
       if (startdate && enddate) {
         this.startdate = startdate
         this.enddate = enddate
@@ -249,8 +249,8 @@ export default {
       }, 1000)
     },
     creating () {
-      var enddate = Date.now()
-      var startdate = localStorage.getItem('startdate')
+      let enddate = Date.now()
+      let startdate = localStorage.getItem('startdate')
       console.log(startdate, enddate)
       startdate = new Date(startdate).getTime()
       this.duration = Math.floor((enddate - startdate) / 1000)
@@ -258,7 +258,7 @@ export default {
         res = res.data
         if (res.retCode === 1) {
           clearInterval(this.timer)
-          var enddate = moment().format('YYYY-MM-DD HH:mm:ss')
+          let enddate = moment().format('YYYY-MM-DD HH:mm:ss')
           localStorage.setItem('enddate', enddate)
           this.enddate = enddate
           this.end = true
@@ -290,7 +290,7 @@ export default {
     },
     copy () {
       let txt = this.hash
-      var that = this
+      let that = this
       this.$copyText(txt).then(function (e) {
         that.$Message.success('复制成功')
       }, function (e) {
@@ -310,14 +310,14 @@ export default {
         whiteListName.push(item.name)
         whiteListAddress.push(item.address)
       })
-      var anonymousAccess = this.anonymousAccess === '1'
-      var data = {
+      let anonymousAccess = this.anonymousAccess === '1'
+      let data = {
         anonymousAccess, whiteListName, whiteListAddress, blackListName, blackListAddress
       }
       this.$http.post('/fbs/man/pbsnw.do', data).then(res => {
         res = res.data
         if (res.retCode === 1) {
-          var startdate = moment().format('YYYY-MM-DD HH:mm:ss')
+          let startdate = moment().format('YYYY-MM-DD HH:mm:ss')
           localStorage.setItem('startdate', startdate)
           this.startdate = startdate
           this.duration = 0
@@ -341,14 +341,14 @@ export default {
       this.addModal = true
     },
     ok () {
-      var type = this.type
-      var name = this.name.trim()
-      var address = this.address.trim()
+      let type = this.type
+      let name = this.name.trim()
+      let address = this.address.trim()
       if (!name || !address) {
         this.$Message.error('请输入前置节点名称或者前置节点身份标识地址')
         return
       }
-      var data = {
+      let data = {
         name, address
       }
       if (type === 1) {

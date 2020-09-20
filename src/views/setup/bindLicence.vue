@@ -53,7 +53,7 @@ export default {
     },
     copy () {
       let hash = this.hash
-      var that = this
+      let that = this
       this.$copyText(hash).then(function (e) {
         that.$Message.success('复制成功')
       }, function (e) {

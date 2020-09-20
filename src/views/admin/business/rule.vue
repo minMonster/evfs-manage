@@ -108,8 +108,8 @@
 <script>
 export default {
   data () {
-    // var that = this
-    // var columns1 = [
+    // let that = this
+    // let columns1 = [
     //   {
     //     title: "用户姓名",
     //     key: "name"
@@ -129,9 +129,9 @@ export default {
     //   {
     //     title:'操作',
     //     render(h,p) {
-    //       var row = p.row || {}
-    //       var label = '--'
-    //       var status = row.status
+    //       let row = p.row || {}
+    //       let label = '--'
+    //       let status = row.status
     //       if (status == '2') {
     //         label = '删除'
     //       }
@@ -141,7 +141,7 @@ export default {
     //       return h('a', {
     //         on: {
     //           click() {
-    //             var index = p.index
+    //             let index = p.index
     //             if (status == '2') {
     //               that.data1.splice(index,1)
     //             }
@@ -151,7 +151,7 @@ export default {
     //     }
     //   }
     // ]
-    // var data1 = [
+    // let data1 = [
     //   {name: '张力', address: '008b0f...acfe5',  time: '2020-1-5 10:46:18', statuslabel: '已添加', status: '2' },
     //   {name: '李志伟', address: '008b0f...abbc3',  time: '--', statuslabel: '添加审核中', status: '1' },
     //   {name: '郭志', address: '008b0f...edb28',  time: '--', statuslabel: '添加审核中', status: '1' },

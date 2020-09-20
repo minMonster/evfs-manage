@@ -32,7 +32,7 @@ import permission from './permission'
 import business from './business'
 import manager from './manager'
 import alliance from './alliance'
-var tabs = [
+let tabs = [
   // {text: '域内固存规则',name: 'data-rule', count: 0},
   { text: '节点准入', name: 'data-node', count: 3 },
   { text: '运行许可证', name: 'data-permission', count: 8 },
@@ -64,12 +64,12 @@ export default {
       this.initTab()
     },
     initTab () {
-      var query = this.$route.query
-      var tab = query.tab || tabs[0].name
+      let query = this.$route.query
+      let tab = query.tab || tabs[0].name
       this.active = tab
     },
     changeTab (name) {
-      var query = this.$route.query
+      let query = this.$route.query
       this.$router.push({
         name: 'data-audit',
         query: {

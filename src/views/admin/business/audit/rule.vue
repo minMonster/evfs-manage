@@ -71,7 +71,7 @@
 <script>
 export default {
   data () {
-    // var that = this
+    // let that = this
     return {
       switch1: '0',
       switch2: '0',

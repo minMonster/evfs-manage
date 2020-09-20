@@ -25,7 +25,7 @@
 <script>
 export default {
   data () {
-    var that = this
+    let that = this
     return {
       input1: '10000',
       input2: '10',

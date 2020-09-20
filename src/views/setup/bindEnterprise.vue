@@ -62,16 +62,16 @@ export default {
       })
     },
     initServerName () {
-      var serverName = this.$cookie.get('serverName')
+      let serverName = this.$cookie.get('serverName')
       this.serverName = serverName
     },
     bind () {
-      // var timestamp = Date.now()
-      // var str = this.key + this.pubKey + timestamp
+      // let timestamp = Date.now()
+      // let str = this.key + this.pubKey + timestamp
       // sign(str)
       this.timer = setInterval(() => {
-        var signResult = document.getElementById('signResult')
-        var signature = signResult.value
+        let signResult = document.getElementById('signResult')
+        let signature = signResult.value
         if (signature && !signature.match(/^(doing)|(fail)|(refuse)$/)) {
           this.closeTimer()
           console.log(signature)
@@ -112,7 +112,7 @@ export default {
     },
     copyPubKey () {
       let pubKey = this.pubKey
-      var that = this
+      let that = this
       this.$copyText(pubKey).then(function (e) {
         that.shareModal = false
         that.$Message.success('复制成功')
@@ -136,7 +136,7 @@ export default {
     closeTimer () {
       if (this.timer) {
         clearInterval(this.timer)
-        // var signResult = document.getElementById('signResult')
+        // let signResult = document.getElementById('signResult')
         // signResult = ''
       }
     }

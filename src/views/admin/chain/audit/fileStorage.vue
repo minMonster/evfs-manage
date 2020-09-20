@@ -90,8 +90,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '文件存储域名称',
         key: 'name'
@@ -113,7 +113,7 @@ export default {
         key: 'optstatus'
       }
     ]
-    var data1 = []
+    let data1 = []
     return {
       acceptLimit: '0',
       columns1,
@@ -135,17 +135,17 @@ export default {
       // this.$emit('next', 'step4.3')
     },
     confirm () {
-      var acceptLimit = this.acceptLimit
-      var data = this.data1
-      var name = []
-      var address = []
+      let acceptLimit = this.acceptLimit
+      let data = this.data1
+      let name = []
+      let address = []
       if (data.length) {
         data.forEach((item, index) => {
           name.push(item.name)
           address.push(item.address)
         })
       }
-      var param = {
+      let param = {
         name,
         address,
         acceptLimit
@@ -164,8 +164,8 @@ export default {
         .then(() => {})
     },
     ok () {
-      var name = this.name.trim()
-      var address = this.address.trim()
+      let name = this.name.trim()
+      let address = this.address.trim()
       if (!name) {
         this.$Message.error('请输入委员名称')
         return
@@ -174,7 +174,7 @@ export default {
         this.$Message.error('请输入委员身份地址')
         return
       }
-      var data = {
+      let data = {
         name,
         address
       }

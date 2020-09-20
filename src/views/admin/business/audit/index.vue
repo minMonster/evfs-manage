@@ -30,7 +30,7 @@ import rule from './rule'
 import file from './file'
 import contract from './contract'
 import manager from './manager'
-var tabs = [
+let tabs = [
   { text: '业务系统准入', name: 'business-permission', count: 3 },
   { text: '文件操作规则', name: 'business-rule', count: 2 },
   { text: '域内文件治理', name: 'business-file' },
@@ -61,12 +61,12 @@ export default {
       this.initTab()
     },
     initTab () {
-      var query = this.$route.query
-      var tab = query.tab || tabs[0].name
+      let query = this.$route.query
+      let tab = query.tab || tabs[0].name
       this.active = tab
     },
     changeTab (name) {
-      var query = this.$route.query
+      let query = this.$route.query
       this.$router.push({
         name: 'business-audit',
         query: {

@@ -128,7 +128,7 @@
 <script>
 export default {
   data () {
-    var columns1 = [
+    let columns1 = [
       {
         title: '用户姓名',
         key: 'name'
@@ -144,7 +144,7 @@ export default {
         }
       }
     ]
-    var columns2 = [
+    let columns2 = [
       {
         title: '用户姓名',
         key: 'name'
@@ -160,10 +160,10 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
     ]
-    var data2 = [
+    let data2 = [
       { name: '银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
     ]
     return {
@@ -193,7 +193,7 @@ export default {
     },
     copyPubKey () {
       let pubKey = this.pubKey
-      var that = this
+      let that = this
       this.$copyText(pubKey).then(function (e) {
         that.shareModal = false
         that.$Message.success('复制成功')

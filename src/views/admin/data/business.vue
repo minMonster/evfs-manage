@@ -152,8 +152,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '业务域名称',
         key: 'name'
@@ -174,15 +174,15 @@ export default {
         width: 120,
         title: '操作',
         render (h, p) {
-          // var row = p.row || {}
-          // var status = row.status || ''
-          // var opt = h('a', {
+          // let row = p.row || {}
+          // let status = row.status || ''
+          // let opt = h('a', {
           //
           // })
-          var opt2 = h('a', {
+          let opt2 = h('a', {
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 let { showBusinessSubmenu } = that.$route.query
                 that.$router.push({
@@ -198,16 +198,16 @@ export default {
               }
             }
           }, '详情')
-          var opts = [opt2]
+          let opts = [opt2]
           return h('div', {}, opts)
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '泛融存证业务', address: '00740f...aaba8', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
       { name: '司法业务域', address: '00da0c...cfbe5', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' }
     ]
-    var columns2 = [
+    let columns2 = [
       {
         title: '企业名称',
         key: 'name'
@@ -228,13 +228,13 @@ export default {
         title: '操作',
         width: 120,
         render (h, p) {
-          var row = p.row || {}
-          var label = row.status === '1' ? '删除' : '撤销'
+          let row = p.row || {}
+          let label = row.status === '1' ? '删除' : '撤销'
           label = row.status === '0' ? '--' : label
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
@@ -242,7 +242,7 @@ export default {
         }
       }
     ]
-    var data2 = [
+    let data2 = [
       { name: '金桥信息', address: '00740f...feac3', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
       { name: '泛融科技', address: '00740f...bdae4', time: '2020-1-5 10:15:31', statuslabel: '删除审核中', status: '1' },
       { name: '从法科技', address: '00740f...ccbb1', time: '2020-1-5 10:05:51', statuslabel: '已添加', status: '2' }

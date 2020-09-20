@@ -67,13 +67,13 @@ export default {
         render (h, p) {
           let row = p.row || {}
           let status = row.status || ''
-          var opt1 = h('a', {
+          let opt1 = h('a', {
             style: {
               'margin-right': '10px'
             },
             on: {
               click () {
-                var query = that.$route.query
+                let query = that.$route.query
                 that.$router.push({
                   name: 'nodedetail',
                   query: {
@@ -86,10 +86,10 @@ export default {
               }
             }
           }, '详情')
-          var opt2 = h('a', {
+          let opt2 = h('a', {
 
           }, '断开链接')
-          var opts = [opt1, opt2]
+          let opts = [opt1, opt2]
           return h('div', {}, opts)
         }
       }

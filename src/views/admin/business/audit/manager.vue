@@ -64,8 +64,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '管理员姓名',
         key: 'name'
@@ -91,7 +91,7 @@ export default {
         width: 130,
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -104,7 +104,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -113,17 +113,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -135,7 +135,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '郭志', address: '008b0f...effbc', applicant: '张力', time: '--', status: '添加审核中', type: '1' },
       { name: '吴载舟', address: '008b0f...abbc3', applicant: '张力', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
       { name: '张力', address: '008b0f...acfe5', applicant: '张力', time: '2020-1-5 19:41:11', status: '删除审核中', type: '2' }

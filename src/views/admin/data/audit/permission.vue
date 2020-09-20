@@ -90,8 +90,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '隶属企业名称',
         key: 'name'
@@ -119,7 +119,7 @@ export default {
       {
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -132,7 +132,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -141,17 +141,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -163,7 +163,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '从法科技', address: '00630e...cabc3', nodetype: '主节点', time: '--', applicant: '张力', statuslabel: '添加审核中', status: '2' },
       { name: '泛融科技', address: '00740f...dafc7', nodetype: '资源节点', time: '2020-1-5 10:05:13', applicant: '张力', statuslabel: '删除审核中', status: '2' }
     ]

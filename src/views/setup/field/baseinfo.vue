@@ -51,7 +51,7 @@
 <script>
 export default {
   data () {
-    var columns1 = [
+    let columns1 = [
       {
         title: '管理员名称',
         key: 'name'
@@ -67,7 +67,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '张三', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…', nodeprikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
     ]
     return {

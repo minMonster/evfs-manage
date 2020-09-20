@@ -35,10 +35,10 @@ export default {
           this.dics.genesis = JSON.parse(res.data.genesis)
           this.dics.config = []
           for (let i = 0; i < res.data.configKeys.length; i += 1) {
-            var configKey = res.data.configKeys[i]
+            let configKey = res.data.configKeys[i]
             if (configKey.length < 50) {
-              var length = configKey.length
-              for (var k = 0; k < 50 - length; k++) {
+              let length = configKey.length
+              for (let k = 0; k < 50 - length; k++) {
                 configKey = ' ' + configKey
               }
             }

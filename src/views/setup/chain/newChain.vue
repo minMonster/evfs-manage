@@ -86,7 +86,7 @@
 <script>
 export default {
   data () {
-    var columns1 = [
+    let columns1 = [
       {
         title: '隶属企业名称',
         key: 'name'
@@ -106,7 +106,7 @@ export default {
         }
       }
     ]
-    var columns2 = [
+    let columns2 = [
       {
         title: '隶属企业名称',
         key: 'name'
@@ -122,10 +122,10 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…', nodeprikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
     ]
-    var data2 = [
+    let data2 = [
       { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
     ]
     return {
@@ -148,7 +148,7 @@ export default {
       // this.initServerName()
     },
     initServerName () {
-      var serverName = this.$cookie.get('serverName')
+      let serverName = this.$cookie.get('serverName')
       this.serverName = serverName
     },
     next () {
@@ -195,7 +195,7 @@ export default {
     },
     createChain () {
       let needApprove = this.approval == 'on'
-      var orgName = this.orgName
+      let orgName = this.orgName
       let data = {
         orgName: orgName,
         needApprove

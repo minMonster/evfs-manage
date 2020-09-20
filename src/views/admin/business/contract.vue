@@ -82,7 +82,7 @@
 import QRCode from 'qrcodejs2'
 export default {
   data () {
-    var columns1 = [
+    let columns1 = [
       {
         title: '合约名称',
         key: 'name'
@@ -102,9 +102,9 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row || {}
-          var label = '--'
-          var status = row.status
+          let row = p.row || {}
+          let label = '--'
+          let status = row.status
           if (status === '1') {
             label = '冻结'
           }
@@ -126,7 +126,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '电子卷宗管理', id: '00fb0a...eac32', time: '--', statuslabel: '发布审核中', status: '0' },
       { name: '银行贷款信息', id: '00fb0a...dfa86', time: '2020-4-20 13:10:09', statuslabel: '正常', status: '1' },
       { name: '公证书管理', id: '00fb0a...adee2', time: '2020-4-20 15:22:24', statuslabel: '冻结', status: '2' },
@@ -210,7 +210,7 @@ export default {
         // data:{
         // }
       }
-      var qrcode = new QRCode('qrcode', {
+      let qrcode = new QRCode('qrcode', {
         text: JSON.stringify(linkData), // 需要转换为二维码的内容
         width: 260,
         height: 260,

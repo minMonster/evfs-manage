@@ -96,7 +96,7 @@
 <script>
 export default {
   data () {
-    var columns1 = [
+    let columns1 = [
       {
         title: '文件名称',
         key: 'name'
@@ -112,9 +112,9 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row || {}
-          var label = '--'
-          var status = row.status
+          let row = p.row || {}
+          let label = '--'
+          let status = row.status
           if (status === '1') {
             label = '冻结'
           }
@@ -136,13 +136,13 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '测试.doc', id: '00fb0a...ef34a', statuslabel: '正常', status: '1' },
       { name: '照片.jpg', id: '00fb0a...eda4e', statuslabel: '冻结', status: '2' },
       { name: '视频.MP4', id: '00fb0a...eac4f', statuslabel: '解冻审核中', status: '4' },
       { name: '音频.MP3', id: '00fb0a...a43fe', statuslabel: '冻结审核中', status: '3' }
     ]
-    var columns2 = [
+    let columns2 = [
       {
         title: '数据链上唯一标识',
         key: 'id'
@@ -154,9 +154,9 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row || {}
-          var label = '--'
-          var status = row.status
+          let row = p.row || {}
+          let label = '--'
+          let status = row.status
           if (status === '1') {
             label = '冻结'
           }
@@ -178,7 +178,7 @@ export default {
         }
       }
     ]
-    var data2 = [
+    let data2 = [
       { id: '00fb0a...ef34a', statuslabel: '正常', status: '1' },
       { id: '00fb0a...eda4e', statuslabel: '冻结', status: '2' },
       { id: '00fb0a...eac4f', statuslabel: '解冻审核中', status: '4' },

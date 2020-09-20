@@ -96,7 +96,7 @@ export default {
       {
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -109,7 +109,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -118,17 +118,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')

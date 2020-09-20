@@ -102,8 +102,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '管理员名称',
         key: 'name'
@@ -115,7 +115,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -126,7 +126,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '金桥信息', address: '00630eslj9876sljflk...fafc1', status: '添加审核中' },
       { name: '泛融信息', address: '00630eslj9876sljflk...afea5', status: '删除审核中' },
       { name: '从法科技', address: '00630eslj9876sljflk...fafc1', status: '已添加', type: '2' }

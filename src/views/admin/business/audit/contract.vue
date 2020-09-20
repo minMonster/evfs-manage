@@ -52,8 +52,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '合约名称',
         key: 'name'
@@ -79,7 +79,7 @@ export default {
         width: 130,
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -92,7 +92,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -101,17 +101,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -123,14 +123,14 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '电子卷宗管理', address: '00fb0a...eac32', applicant: '张力', time: '--', statuslabel: '发布审核中', status: '0' },
       { name: '银行贷款信息', address: '00fb0a...dfa86', applicant: '张力', time: '2020-4-20 13:10:09', statuslabel: '解冻审核中', status: '1' },
       { name: '公证书管理', address: '00fb0a...adee2', applicant: '张力', time: '2020-4-20 15:22:24', statuslabel: '冻结审核中', status: '2' },
       { name: '执行管理', address: '00fb0a...ffe76', applicant: '张力', time: '2020-4-20 15:22:24', statuslabel: '解冻审核中', status: '4' },
       { name: '仲裁管理', address: '00fb0a...efcca', applicant: '张力', time: '2020-4-20 14:21:05', statuslabel: '冻结审核中', status: '3' }
     ]
-    var columns2 = [
+    let columns2 = [
       {
         title: '数据链上唯一标识',
         key: 'address'
@@ -148,7 +148,7 @@ export default {
         width: 130,
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -161,7 +161,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -170,17 +170,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -194,7 +194,7 @@ export default {
       {
         title: '审核结果',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -203,17 +203,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -225,13 +225,13 @@ export default {
         }
       }
     ]
-    var data2 = [
+    let data2 = [
       { address: '00fb0a...ef34a', applicant: '张力', statuslabel: '解冻审核中', status: '1' },
       { address: '00fb0a...eda4e', applicant: '张力', statuslabel: '冻结审核中', status: '2' },
       { address: '00fb0a...eac4f', applicant: '张力', statuslabel: '解冻审核中', status: '4' },
       { address: '00fb0a...a43fe', applicant: '张力', statuslabel: '冻结审核中', status: '3' }
     ]
-    var columns3 = [
+    let columns3 = [
       {
         title: '文件名称',
         key: 'name'
@@ -260,7 +260,7 @@ export default {
         width: 130,
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -273,7 +273,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -282,17 +282,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -304,7 +304,7 @@ export default {
         }
       }
     ]
-    var data3 = [
+    let data3 = [
       {
         name: '测试122.doc',
         address: '00fb0a...ef34a',

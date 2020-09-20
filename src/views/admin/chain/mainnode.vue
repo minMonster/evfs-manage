@@ -129,13 +129,13 @@ export default {
         title: '操作',
         width: 120,
         render (h, p) {
-          var row = p.row || {}
-          var label = row.status === '2' ? '收回授权' : '撤销'
+          let row = p.row || {}
+          let label = row.status === '2' ? '收回授权' : '撤销'
           return h('a', {
             on: {
               click () {
                 that.$Message.warning('待确认需求')
-                // var index = p.index
+                // let index = p.index
                 // that.data1.splice(index, 1)
               }
             }

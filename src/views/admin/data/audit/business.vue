@@ -159,8 +159,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '业务域名称',
         key: 'name'
@@ -184,7 +184,7 @@ export default {
       {
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -197,7 +197,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -206,17 +206,17 @@ export default {
             },
             on: {
               click () {
-                var index = p.index
+                let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                var index = p.index
+                let index = p.index
               }
             }
           }, '拒绝')
@@ -228,7 +228,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '泛融存证业务', address: '00740f...aaba8', applicant: '张力', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
       { name: '司法业务域', address: '00da0c...cfbe5', applicant: '张力', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' }
     ]

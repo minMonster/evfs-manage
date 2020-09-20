@@ -176,7 +176,7 @@ import * as api from './api'
 // import * as cApi from '@/http/api'
 export default {
   data () {
-    var columns1 = [
+    let columns1 = [
       {
         title: '数据存管域名称',
         key: 'storage_name',

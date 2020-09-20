@@ -214,7 +214,7 @@ import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
-    var columns = [
+    let columns = [
       {
         title: '隶属企业名称',
         key: 'main_company_company_name'
@@ -243,12 +243,12 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row || {}
-          // var label = row.status == '2' ? '删除' : '撤销'
+          let row = p.row || {}
+          // let label = row.status == '2' ? '删除' : '撤销'
           return h('a', {
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
                 // that.data1.splice(index,1)]
                 that.del(row)
               }

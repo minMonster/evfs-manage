@@ -53,7 +53,7 @@
 </template>
 
 <script>
-var units = [
+let units = [
   { value: '1', label: 'MB' },
   { value: '2', label: 'GB' },
   { value: '3', label: 'TB' },
@@ -81,7 +81,7 @@ export default {
     },
     copy () {
       let hash = this.hash
-      var that = this
+      let that = this
       this.$copyText(hash).then(function (e) {
         that.$Message.success('复制成功')
       }, function (e) {
@@ -90,7 +90,7 @@ export default {
     },
     copy2 () {
       let hash = this.hash
-      var that = this
+      let that = this
       this.$copyText(hash).then(function (e) {
         that.$Message.success('复制成功')
       }, function (e) {

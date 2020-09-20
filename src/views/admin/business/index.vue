@@ -38,8 +38,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '业务域名称',
         key: 'name',
@@ -72,10 +72,10 @@ export default {
         title: '操作',
         width: 180,
         render (h, p) {
-          // var index = p.index
-          var row = p.row || {}
-          var type = row.type
-          var opt1 = h('a', {
+          // let index = p.index
+          let row = p.row || {}
+          let type = row.type
+          let opt1 = h('a', {
             on: {
               click () {
                 that.$Modal.confirm({
@@ -85,10 +85,10 @@ export default {
               }
             }
           }, '断开联接')
-          var opt2 = h('a', {
+          let opt2 = h('a', {
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 let { showDataSubmenu } = that.$route.query
                 that.$router.push({
@@ -104,15 +104,15 @@ export default {
               }
             }
           }, '详情')
-          var opt3 = h('a', {
+          let opt3 = h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
           }, '删除')
-          var opts = [opt1]
+          let opts = [opt1]
           switch (type) {
           case '1':
             opts.push(opt2)
@@ -129,12 +129,12 @@ export default {
           }
           return h('div', {
             'class': 'opt-btns'
-          }, opts)
+          }, [opt2])
         }
 
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '司法业务域', id: '00740f...ffbc3', storagename: '从法存管域', storageid: '00740f...facb7', time: '2020-1-5 10:21:32', status: '运行', type: '2' },
       { name: '金融共享业务', id: '00740f...bcaa1', storagename: '从法存管域', storageid: '00740f...facb7', time: '2020-1-5 14:01:05', status: '停运', type: '4' },
       { name: '蜂巢公证业务', id: '00740f...bcb18', storagename: '泛融存管域', storageid: '00740f...bdca2', time: '2020-1-5 17:34:57', status: '删除审核中', type: '3' },

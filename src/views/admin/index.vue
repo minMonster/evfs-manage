@@ -34,7 +34,7 @@ export default {
   },
   watch: {
     $route () {
-      var d = document.getElementsByClassName('admin-content')
+      let d = document.getElementsByClassName('admin-content')
       if (d.length) {
         d = d[0]
         d.scrollTop = 0

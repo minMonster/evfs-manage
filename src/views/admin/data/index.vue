@@ -10,11 +10,16 @@
         </div>
       </div>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
       <Modal
@@ -36,53 +41,51 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
         title: '数据存管域名称',
-        key: 'name',
+        key: 'storage_name',
         width: 140
       },
       {
         title: '数据存管域唯一标识',
-        key: 'id'
+        key: 'storage_id'
       },
       {
         title: '创建时间',
-        key: 'time'
+        key: 'join_time'
       },
       {
         title: '最大许可存储容量',
-        key: 'maxstorage'
-      },
-      {
-        title: '状态',
-        key: 'status',
-        width: 120
+        key: 'capacity_license'
       },
       {
         title: '操作',
         render (h, p) {
-          // var index = p.index
-          var row = p.row || {}
-          var type = row.type
-          var opt1 = h('a', {
+          // let index = p.index
+          let row = p.row || {}
+          let type = row.type
+          let opt1 = h('a', {
             on: {
               click () {
                 // that.data1.splice(index,1)
               }
             }
           }, '断开连接')
-          var opt2 = h('a', {
+          let opt2 = h('a', {
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 let { showBusinessSubmenu } = that.$route.query
+                sessionStorage.setItem('fbs_storage_id', row.storage_id)
                 that.$router.push({
-                  path: 'data/detail',
+                  path: 'data-detail',
                   query: {
                     showDataSubmenu: '1',
                     showBusinessSubmenu,
@@ -94,14 +97,14 @@ export default {
               }
             }
           }, '详情')
-          var opt3 = h('a', {
+          let opt3 = h('a', {
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '删除')
-          var opts = [opt1]
+          let opts = [opt1, opt2]
           switch (type) {
           case '1':
             opts.push(opt2)
@@ -120,34 +123,39 @@ export default {
 
       }
     ]
-    var data1 = [
-      { name: '泛融存管域', id: '00740f...bdca2', time: '2020-1-5 15:34:57', maxstorage: '5.0TB', status: '删除审核中', type: '0' },
-      { name: '从法存管域', id: '00740f...facb7', time: '2020-1-5 10:21:32', maxstorage: '5.0TB', status: '运行', type: '1' },
-      { name: '金融共享域', id: '00740f...ccbb3', time: '2020-1-5 12:34:04', maxstorage: '5.0TB', status: '停运', type: '2' }
-    ]
     return {
-      columns1,
-      data1,
-      total: 103,
+      listLoading: false,
+      columns,
+      oldList: [],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       addLoading: false,
       addModal: false,
       name: '',
       address: ''
-
     }
   },
   mounted () {
     this.init()
   },
-  watch: {
-
-  },
-  computed: {
-
-  },
   methods: {
     init () {
-
+      this.listLoading = true
+      api.pbqss({
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     destoryed () {
       this.closeTimer()
@@ -155,7 +163,7 @@ export default {
     closeTimer () {
       if (this.timer) {
         clearInterval(this.timer)
-        // var signResult = document.getElementById('signResult')
+        // let signResult = document.getElementById('signResult')
         // signResult = ''
       }
     },
@@ -163,40 +171,40 @@ export default {
 
     },
     ok () {
-      // var timestamp = Date.now()
-      // let signStr = this.timestamp + ''
-      // sign(signStr)
-      this.timer = setInterval(() => {
-        var signResult = document.getElementById('signResult')
-        var signature = signResult.value
-        if (signature && !signature.match(/^(doing)|(fail)|(refuse)$/)) {
-          this.closeTimer()
-          console.log(signature)
-          this._add()
-        }
-        if (signature === 'fail') {
-          console.log('签名失败')
-          this.closeTimer()
-          // this.$toast('签名失败')
-        }
-        if (signature === 'refuse') {
-          console.log('拒绝签名')
-          this.closeTimer()
-          // this.$toast('签名失败')
-        }
-      }, 100)
-      let name = this.name.trim()
-      this.addLoading = true
-      var data = {
-        name
-      }
-      this.$http.post('', data).then(res => {
-        res = res.data
-      }).catch(() => {
-
-      }).then(res => {
-        this.cancel()
-      })
+      // // let timestamp = Date.now()
+      // // let signStr = this.timestamp + ''
+      // // sign(signStr)
+      // this.timer = setInterval(() => {
+      //   let signResult = document.getElementById('signResult')
+      //   let signature = signResult.value
+      //   if (signature && !signature.match(/^(doing)|(fail)|(refuse)$/)) {
+      //     this.closeTimer()
+      //     console.log(signature)
+      //     this._add()
+      //   }
+      //   if (signature === 'fail') {
+      //     console.log('签名失败')
+      //     this.closeTimer()
+      //     // this.$toast('签名失败')
+      //   }
+      //   if (signature === 'refuse') {
+      //     console.log('拒绝签名')
+      //     this.closeTimer()
+      //     // this.$toast('签名失败')
+      //   }
+      // }, 100)
+      // let name = this.name.trim()
+      // this.addLoading = true
+      // let data = {
+      //   name
+      // }
+      // this.$http.post('', data).then(res => {
+      //   res = res.data
+      // }).catch(() => {
+      //
+      // }).then(res => {
+      //   this.cancel()
+      // })
     },
     cancel () {
       this.name = ''
@@ -204,8 +212,18 @@ export default {
       this.addModal = false
       this.addLoading = false
     },
-    pageChange (value) {
-
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
+    pageChange (page) {
+      this.page.current = page
+      this.getList()
     }
   }
 }

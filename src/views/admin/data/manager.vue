@@ -97,8 +97,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '管理员名称',
         key: 'name'
@@ -119,13 +119,13 @@ export default {
         title: '操作',
         width: 100,
         render (h, p) {
-          var row = p.row
+          let row = p.row
           console.log(row)
-          var label = row.type == '2' ? '删除' : '撤销'
+          let label = row.type == '2' ? '删除' : '撤销'
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
@@ -133,7 +133,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '张建国', address: '008b0f...effbc', time: '2020-1-5 09:41:11', status: '添加审核中', type: '1' },
       { name: '李志伟', address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
       { name: '张力', address: '008b0f...acfe5', time: '2020-1-5 19:41:11', status: '已添加', type: '2' }
@@ -185,7 +185,7 @@ export default {
       let address = this.address.trim()
       let name = this.name.trim()
       this.addLoading = true
-      var data = {
+      let data = {
         address, name
       }
       this.$http.post('', data).then(res => {

@@ -44,15 +44,15 @@ export default {
 
     },
     next () {
-      var client = this.client
-      var node = this.node
+      let client = this.client
+      let node = this.node
       // 前端数据传输加密
-      var key1 = 'org.brewchain.client.transfer.encryption'
+      let key1 = 'org.brewchain.client.transfer.encryption'
       // 节点间数据传输加密
-      var key2 = 'org.brewchain.node.transfer.encryption'
-      var keys = [key1, key2]
-      var values = [client, node]
-      var data = {
+      let key2 = 'org.brewchain.node.transfer.encryption'
+      let keys = [key1, key2]
+      let values = [client, node]
+      let data = {
         keys, values
       }
       this.$http.post('/fbs/man/pbsgo.do', data).then(res => {

@@ -30,14 +30,14 @@ export default {
 
     },
     set () {
-      var key = 'org.brewchain.account.name'
-      var value = this.serverName.trim()
+      let key = 'org.brewchain.account.name'
+      let value = this.serverName.trim()
       if (!value) {
         this.$Message.error('请输入服务器名称')
         return
       }
-      var timestamp = Date.now()
-      var data = {
+      let timestamp = Date.now()
+      let data = {
         key, value, timestamp
       }
       this.loading = true

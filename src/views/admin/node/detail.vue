@@ -166,8 +166,8 @@
 import QRCode from 'qrcodejs2'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '管理员姓名',
         key: 'adminName'
@@ -179,7 +179,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -191,11 +191,11 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { adminName: '张力', address: '008b0f...acfe5' },
       { adminName: '李志伟', address: '008b0f...abbc3' }
     ]
-    var formItem = {
+    let formItem = {
       adminName: '',
       address: ''
     }
@@ -233,7 +233,7 @@ export default {
       this.initStatus()
     },
     initStatus () {
-      var status = this.$route.query.status || ''
+      let status = this.$route.query.status || ''
       this.status = status
       if (status == 4) {
         this.nodeType = '2'
@@ -258,7 +258,7 @@ export default {
       this.addModal = false
     },
     del (obj) {
-      var that = this
+      let that = this
       this.$Modal.confirm({
         title: '删除确认',
         content: '<p style="color:black;font-size:15px;">确定将当前管理员从管理列表中删除？</p><br/> 管理员姓名： ' + obj.adminName + ' <br/> 管理员身份标识: ' + obj.address + '',
@@ -290,7 +290,7 @@ export default {
         data: {
         }
       }
-      var qrcode = new QRCode('qrcode', {
+      let qrcode = new QRCode('qrcode', {
         text: JSON.stringify(linkData), // 需要转换为二维码的内容
         width: 260,
         height: 260,

@@ -50,24 +50,24 @@ export default {
     closeTimer () {
       if (this.timer) {
         clearInterval(this.timer)
-        // var signResult = document.getElementById('signResult')
+        // let signResult = document.getElementById('signResult')
         // signResult = ''
       }
     },
     bind () {
-      var key = 'local.node.admin.address'
-      var value = localStorage.getItem('money-address')
-      var timestamp = Date.now()
-      var str = key + value + timestamp
+      let key = 'local.node.admin.address'
+      let value = localStorage.getItem('money-address')
+      let timestamp = Date.now()
+      let str = key + value + timestamp
       // eslint-disable-next-line no-undef
       sign(str)
       this.timer = setInterval(() => {
-        var signResult = document.getElementById('signResult')
-        var signature = signResult.value
+        let signResult = document.getElementById('signResult')
+        let signature = signResult.value
         if (signature && !signature.match(/^(doing)|(fail)|(refuse)$/)) {
           this.closeTimer()
           console.log(signature)
-          var data = {
+          let data = {
             key, value, timestamp, signature
           }
           this._bind(data)

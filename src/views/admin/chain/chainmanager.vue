@@ -227,7 +227,7 @@ export default {
       // this.addLoading = false
     },
     del (obj) {
-      // var index = p.index
+      // let index = p.index
       // that.data1.splice(index,1)
     },
     search () {},

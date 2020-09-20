@@ -97,8 +97,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '隶属企业名称',
         key: 'name'
@@ -122,9 +122,9 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row || {}
-          var label = ''
-          var status = row.status
+          let row = p.row || {}
+          let label = ''
+          let status = row.status
           if (status == '1') {
             label = '--'
           } else if (status == '2') {
@@ -135,7 +135,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
@@ -143,7 +143,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '从法科技', address: '00630e...cabc3', nodetype: '主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '已添加', status: '2' },
       { name: '从法科技', address: '00630e...cacc2', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
       { name: '从法科技', address: '00630e...fafc1', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
@@ -177,8 +177,8 @@ export default {
     },
     // 查询
     search () {
-      var that = this
-      var storageId = that.$router.params && that.$router.params.storageId
+      let that = this
+      let storageId = that.$router.params && that.$router.params.storageId
       const url = `/cmw/pbqml.do/${storageId}`
       this.$http.post(url).then(res => {
         res = res.data

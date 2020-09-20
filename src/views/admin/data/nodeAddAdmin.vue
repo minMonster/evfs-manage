@@ -111,7 +111,7 @@ export default {
 
     serachBtn () {
       this.popup = 1
-      // var self = this
+      // let self = this
       let params = {
         name: this.form.name,
         address: this.form.address,
@@ -142,7 +142,7 @@ export default {
         //     data:{
         //     }
       }
-      var qrcode = new QRCode('qrcode', {
+      let qrcode = new QRCode('qrcode', {
         text: JSON.stringify(linkData), // 需要转换为二维码的内容
         width: 260,
         height: 260,

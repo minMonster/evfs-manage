@@ -38,7 +38,7 @@ export default {
 
     },
     route (name = 'admin') {
-      // var { showBusinessSubmenu, showDataSubmenu } = this.$route.query
+      // let { showBusinessSubmenu, showDataSubmenu } = this.$route.query
       this.$router.push({
         path: '/chain?mainActive=chain&subActive=&activeIndex=0&showDataSubmenu=1'
       })

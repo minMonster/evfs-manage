@@ -132,8 +132,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '管理员名称',
         key: 'name'
@@ -146,12 +146,12 @@ export default {
         title: '操作',
         width: 100,
         render (h, p) {
-          var row = p.row
-          var label = '删除'
+          let row = p.row
+          let label = '删除'
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
@@ -159,7 +159,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '张建国', address: '008b0f...effbc', type: '删除' },
       { name: '李志伟', address: '008b0f...abbc3', type: '删除' },
       { name: '张力', address: '008b0f...acfe5', type: '删除' }

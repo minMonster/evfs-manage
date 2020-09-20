@@ -33,7 +33,7 @@ export default {
   methods: {
     route () {
       let address = localStorage.getItem('money-address')
-      var params = {
+      let params = {
         address
       }
       this.$http.post('/cmw/pbqpr.do', params).then(res => {
@@ -51,8 +51,8 @@ export default {
 
       })
 
-      var name = this.$route.name
-      var query = this.$route.query
+      let name = this.$route.name
+      let query = this.$route.query
       this.$router.push({
         name: 'chain-audit',
         query: {

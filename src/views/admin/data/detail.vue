@@ -164,8 +164,7 @@ export default {
       this.initList()
     },
     initList () {
-      console.log(this.$route.query)
-      let storage_id = this.$route.query.storage_id
+      let storage_id = sessionStorage.getItem('fbs_storage_id')
       let params = {}
       if (storage_id) {
         params = { storage_id }

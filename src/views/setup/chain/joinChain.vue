@@ -124,7 +124,7 @@ export default {
       this.initServerName()
     },
     initServerName () {
-      var serverName = this.$cookie.get('serverName')
+      let serverName = this.$cookie.get('serverName')
       this.serverName = serverName
     },
     getEntbkey () {
@@ -159,7 +159,7 @@ export default {
     },
     create () {
       let needApprove = this.approval == 'on'
-      var orgName = this.orgName
+      let orgName = this.orgName
       let data = {
         orgName: '',
         needApprove

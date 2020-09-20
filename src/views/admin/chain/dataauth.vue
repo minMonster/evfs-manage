@@ -154,15 +154,15 @@ export default {
         title: '操作',
         render (h, p) {
           let row = p.row || {}
-          // var status = row.status || ''
-          // var label = row.status == '2' ? '删除' : '撤销'
+          // let status = row.status || ''
+          // let label = row.status == '2' ? '删除' : '撤销'
           // label = row.status == '0' ? '--' : label
-          // var opt = h('a', {
+          // let opt = h('a', {
           // })
           let opt2 = h('a', {
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 // let { showBusinessSubmenu } = that.$route.query
                 that.$router.push({
@@ -174,7 +174,7 @@ export default {
               }
             }
           }, '详情')
-          var opts = [opt2]
+          let opts = [opt2]
           return h('div', {}, opts)
         }
       }

@@ -66,8 +66,8 @@
 <script>
 export default {
   data () {
-    // var that = this
-    var columns1 = [
+    // let that = this
+    let columns1 = [
       {
         title: '委员名称',
         key: 'name'
@@ -100,7 +100,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               marginRight: '8px'
             },
@@ -109,17 +109,17 @@ export default {
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '同意')
-          var refuse = h('a', {
+          let refuse = h('a', {
             domProps: {
               href: 'javascript:;'
             },
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -131,7 +131,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '金桥信息', address: '008b0f...effbc', applicant: '张力', time: '--', status: '添加审核中', type: '1' },
       { name: '泛融科技', address: '008b0f...abbc3', applicant: '张力', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' }
     ]

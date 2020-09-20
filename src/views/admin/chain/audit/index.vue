@@ -100,7 +100,7 @@ export default {
   },
   mounted () {
     this.init()
-    let query = this.$route.query
+    // let query = this.$route.query
     // console.log(query)
   },
   methods: {

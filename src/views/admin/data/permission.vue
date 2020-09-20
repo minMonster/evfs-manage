@@ -118,7 +118,7 @@
 <script>
 export default {
   data () {
-    var columns1 = [
+    let columns1 = [
       {
         title: '隶属企业名称',
         key: 'name'
@@ -140,7 +140,7 @@ export default {
         key: 'statuslabel'
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '从法科技', address: '00630e...cabc3', nodetype: '10TB', databasename: '——', statuslabel: '——' },
       { name: '从法科技', address: '00630e...cacc2', nodetype: '10TB', databasename: '10TB', statuslabel: '申请审核中' },
       { name: '从法科技', address: '00630e...fafc1', nodetype: '2TB', databasename: '——', statuslabel: '——' },

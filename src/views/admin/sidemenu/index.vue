@@ -97,7 +97,7 @@ export default {
       this.initActive()
     },
     initActive () {
-      var query = this.$route.query
+      let query = this.$route.query
       let mainActive = query.mainActive
       let subActive = query.subActive
       let activeIndex = query.activeIndex

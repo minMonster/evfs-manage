@@ -78,8 +78,8 @@
 <script>
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns1 = [
       {
         title: '业务系统名称',
         key: 'name'
@@ -99,9 +99,9 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var row = p.row || {}
-          var label = '--'
-          var status = row.status
+          let row = p.row || {}
+          let label = '--'
+          let status = row.status
           if (status == '2') {
             label = '删除'
           }
@@ -111,7 +111,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
@@ -119,7 +119,7 @@ export default {
         }
       }
     ]
-    var data1 = [
+    let data1 = [
       { name: '上海公证系统', address: '00740f...aaba8', time: '2020-1-5 10:45:25', statuslabel: '已添加', status: '2' },
       { name: '四川公证系统', address: '00da0c...cfbe5', time: '--', statuslabel: '删除审核中', status: '1' },
       { name: '四川公证系统', address: '00da0c...cfbe5', time: '--', statuslabel: '添加审核中', status: '1' },

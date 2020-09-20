@@ -182,7 +182,7 @@ export default {
       {
         title: '审核通过人',
         render (h, p) {
-          var row = p.row
+          let row = p.row
           return h('a', {
             on: {
               click () {
@@ -195,19 +195,19 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          var agree = h('a', {
+          let agree = h('a', {
             style: {
               'margin-right': '10px'
             }
           }, '同意')
-          var disagree = h('a', {
+          let disagree = h('a', {
 
           }, '拒绝')
-          var opts = [agree, disagree]
+          let opts = [agree, disagree]
           return h('div', {
             on: {
               click () {
-                // var index = p.index
+                // let index = p.index
               }
             }
           }, [opts])
