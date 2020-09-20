@@ -81,11 +81,16 @@
         </Row>
       </div>  -->
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -148,10 +153,12 @@
 </template>
 
 <script>
+import * as api from '../api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
         title: '隶属企业名称',
         key: 'name'
@@ -162,7 +169,7 @@ export default {
       },
       {
         title: '添加时间',
-        key: 'time'
+        key: 'join_time'
       },
       {
         title: '状态',
@@ -170,7 +177,7 @@ export default {
       },
       {
         title: '申请人',
-        key: 'apply'
+        key: 'applicant_name'
       },
       {
         title: '审核通过人',
@@ -207,35 +214,20 @@ export default {
         }
       }
     ]
-    var data1 = [
-      {
-        name: '从法科技',
-        address: '00740f...aecf6',
-        type: '资源节点',
-        storagename: '从法存管域',
-        time: '--',
-        status: '添加审批中',
-        apply: '王蓉'
-      },
-      {
-        name: '从法科技',
-        address: '00630e...cabc3',
-        type: '主节点',
-        storagename: '从法存管域',
-        time: '2020-1-5 13:05:10',
-        status: '删除审批中',
-        apply: '张力'
-      }
-    ]
     return {
       acceptLimit: '1/3',
       name: '',
       address: '',
       addModal: false,
-      columns1,
-      data1,
-      // data2,
-      total: 100,
+      columns,
+      listLoading: false,
+      oldList: [],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -249,7 +241,22 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    init () {},
+    init () {
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'chaincommittee',
+        reviewType: 'chain_httpclient',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
     ok () {},
     // 查看
     adds (obj) {
@@ -260,8 +267,18 @@ export default {
       })
     },
     cancel () {},
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

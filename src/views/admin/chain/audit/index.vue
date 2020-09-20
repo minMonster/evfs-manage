@@ -15,7 +15,7 @@
       </div>
       <div class="split-line"></div>
       <div class="audit-content">
-        <component :review-type="active" :is="tabs[active].nodeName"></component>
+        <component :review-type="active" v-if="tabs[active].nodeName" :is="tabs[active].nodeName"></component>
       </div>
     </div>
   </div>
@@ -88,7 +88,13 @@ export default {
   },
   data () {
     return {
-      tabs: {},
+      tabs: {
+        chain_committee: {
+          name: '联盟委员会',
+          num: 0,
+          nodeName: 'alliance'
+        }
+      },
       active: 'chain_committee'
     }
   },

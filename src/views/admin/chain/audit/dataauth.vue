@@ -34,11 +34,16 @@
         <b>数据存管域列表</b>
       </div>
       <div>
-        <Table :columns="columns1" :data="data1" />
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="100" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -57,10 +62,12 @@
 </template>
 
 <script>
+import * as api from '../api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
         title: '数据存管域名称',
         key: 'name'
@@ -71,7 +78,7 @@ export default {
       },
       {
         title: '创建时间',
-        key: 'time'
+        key: 'join_time'
       },
       {
         title: '状态',
@@ -79,7 +86,7 @@ export default {
       },
       {
         title: '申请人',
-        key: 'apply'
+        key: 'applicant_name'
       },
       {
         title: '审核通过人',
@@ -108,23 +115,16 @@ export default {
         }
       }
     ]
-    var data1 = [
-      {
-        name: '泛融存管域',
-        address: '00740f...aeea2',
-        time: '2020-1-5 15:34:57',
-        status: '删除审核中',
-        apply: '张力'
-      }
-    ]
     return {
-      switch1: 'on',
-      name: '',
-      address: '',
-      addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      columns,
+      listLoading: false,
+      list: [],
+      oldList: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -137,7 +137,22 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    init () {},
+    init () {
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'chaincommittee',
+        reviewType: 'chain_storage',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
     // 查看
     adds (obj) {
       this.$Modal.confirm({
@@ -148,8 +163,18 @@ export default {
     },
     ok () {},
     cancel () {},
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

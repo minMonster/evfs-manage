@@ -34,11 +34,16 @@
         <b>主节点服务器列表</b>
       </div>
       <div>
-        <Table :columns="columns1" :data="data1" />
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="100" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -46,10 +51,12 @@
 </template>
 
 <script>
+import * as api from '../api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
         title: '隶属企业名称',
         key: 'name'
@@ -60,15 +67,15 @@ export default {
       },
       {
         title: '节点类型',
-        key: 'nodeType'
+        key: 'node_type'
       },
       {
         title: '数据存管域名称',
-        key: 'storagename'
+        key: 'storage_name'
       },
       {
         title: '创建时间',
-        key: 'time'
+        key: 'join_time'
       },
       {
         title: '状态',
@@ -76,7 +83,7 @@ export default {
       },
       {
         title: '申请人',
-        key: 'apply'
+        key: 'applicant_name'
       },
       {
         title: '审核通过人',
@@ -105,35 +112,16 @@ export default {
         }
       }
     ]
-    var data1 = [
-      {
-        name: '从法科技',
-        address: '00740f...aeea2',
-        nodeType: '主节点',
-        time: '--',
-        storagename: '从法存管域',
-        status: '申请审核中',
-        apply: '张力'
-      },
-      // 收回授权审核中
-      {
-        name: '从法科技',
-        address: '00740f...acbea3',
-        nodeType: '主节点',
-        storagename: '从法存管域',
-        time: '2020-1-5 13:12:40',
-        status: '收回授权审核中',
-        apply: '张力'
-      }
-    ]
     return {
-      switch1: 'on',
-      name: '',
-      address: '',
-      addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -146,7 +134,22 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    init () {},
+    init () {
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'chaincommittee',
+        reviewType: 'chain_mainnode',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
     adds (obj) {
       this.$Modal.confirm({
         title: '已审核人列表',
@@ -156,8 +159,18 @@ export default {
     },
     ok () {},
     cancel () {},
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

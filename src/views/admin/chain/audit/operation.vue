@@ -3,35 +3,35 @@
     <h2 class="content-title clear">
       运行证许可管理
     </h2>
-    <div class="padding bg-white mb20">
-      <div style="margin-bottom: 0px;color: #273D52;">
-        <b>链内节点运行许可信息</b>
-      </div>
-      <div class="info-item">
-        <Row>
-          <Col span="8">
-          节点运行许可最大数量：<span>50</span>
-          </Col>
-          <Col span="8">
-          已发放节点许可数量：<span>50</span>
-          </Col>
-          <Col span="8">
-          未发放节点许可数量：<span>50</span>
-          </Col>
-        </Row>
-      </div>
-    </div>
-    <div class="padding bg-white mb20">
-      <div class="section-title"><span>链内文件存储容量许可分布信息</span></div>
-      <div>
-        <Table :columns="columns1" :data="data1" />
-      </div>
-      <div class="page">
-        <div class="page-inner">
-          <Page :total="100" />
-        </div>
-      </div>
-    </div>
+    <!--    <div class="padding bg-white mb20">-->
+    <!--      <div style="margin-bottom: 0px;color: #273D52;">-->
+    <!--        <b>链内节点运行许可信息</b>-->
+    <!--      </div>-->
+    <!--      <div class="info-item">-->
+    <!--        <Row>-->
+    <!--          <Col span="8">-->
+    <!--          节点运行许可最大数量：<span>50</span>-->
+    <!--          </Col>-->
+    <!--          <Col span="8">-->
+    <!--          已发放节点许可数量：<span>50</span>-->
+    <!--          </Col>-->
+    <!--          <Col span="8">-->
+    <!--          未发放节点许可数量：<span>50</span>-->
+    <!--          </Col>-->
+    <!--        </Row>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <div class="padding bg-white mb20">-->
+    <!--      <div class="section-title"><span>链内文件存储容量许可分布信息</span></div>-->
+    <!--      <div>-->
+    <!--        <Table :columns="columns1" :data="data1" />-->
+    <!--      </div>-->
+    <!--      <div class="page">-->
+    <!--        <div class="page-inner">-->
+    <!--          <Page :total="100" />-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div class="padding bg-white mb20">
       <div style="margin-bottom: 10px;color: #273D52;">
         <b>链内文件存储容量许可信息</b>
@@ -53,11 +53,16 @@
     <div class="padding bg-white mb20">
       <div class="section-title"><span>运行许可证分布信息</span></div>
       <div>
-        <Table :columns="columns2" :data="data2" />
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="100" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -65,10 +70,12 @@
 </template>
 
 <script>
+import * as api from '../api'
+
 export default {
   data () {
     var that = this
-    var columns1 = [
+    var columns = [
       {
         title: '数据存管域名称',
         key: 'name'
@@ -77,17 +84,17 @@ export default {
         title: '数据存管域唯一标识',
         key: 'address'
       },
-      {
-        title: '节点运行许可数量',
-        key: 'numbers'
-      },
+      // {
+      //   title: '节点运行许可数量',
+      //   key: 'numbers'
+      // },
       {
         title: '现有许可存储容量',
-        key: 'capacity'
+        key: 'capacity_license'
       },
       {
         title: '申请新增存储容量',
-        key: 'applycapacity'
+        key: 'applay_capacity_license'
       },
       {
         title: '申请状态',
@@ -95,7 +102,7 @@ export default {
       },
       {
         title: '申请人',
-        key: 'apply'
+        key: 'applicant_name'
       },
       {
         title: '审核通过人',
@@ -122,91 +129,19 @@ export default {
           var opts = [agree, disagree]
           return h('div', {}, opts)
         }
-      }
-    ]
-    var data1 = [
-      {
-        name: '蜂巢链存证域',
-        address: '00740f...aeea2',
-        numbers: '00740f...aeea2',
-        capacity: '0.00 TB',
-        applycapacity: '5.00 TB',
-        status: '申请审核中',
-        apply: '张力'
-      }
-    ]
-    var columns2 = [
-      {
-        title: '数据存管域名称',
-        key: 'name'
-      },
-      {
-        title: '数据存管域唯一标识',
-        key: 'address'
-      },
-      {
-        title: '现有许可证数量',
-        key: 'num'
-      },
-      {
-        title: '申请新增许可证数量',
-        key: 'applynum'
-      },
-      {
-        title: '申请状态',
-        key: 'status'
-      },
-      {
-        title: '申请人',
-        key: 'apply'
-      },
-      {
-        title: '审核通过人',
-        render (h, p) {
-          var row = p.row
-          return h('a', {
-            on: {
-              click () {
-                that.adds(row)
-              }
-            }
-          }, '查看')
-        }
-      },
-      {
-        title: '操作',
-        render (h, p) {
-          var agree = h('a', {
-            style: {
-              'margin-right': '10px'
-            }
-          }, '同意')
-          var disagree = h('a', {}, '拒绝')
-          var opts = [agree, disagree]
-          return h('div', {}, opts)
-        }
-      }
-    ]
-    var data2 = [
-      {
-        name: '蜂巢链存证域',
-        address: '00740f...aeea2',
-        num: '0',
-        applynum: '10',
-        status: '申请审核中',
-        apply: '王安'
       }
     ]
     return {
-      acceptLimit: '1/3',
-      name: '',
-      address: '',
       addModal: false,
-      columns1,
-      columns2,
-      data1,
-      data2,
-      total: 100,
+      columns,
+      listLoading: false,
+      list: [],
+      oldList: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -220,7 +155,22 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    init () {},
+    init () {
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'chaincommittee',
+        reviewType: 'chain_license',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
     ok () {},
     // 查看
     adds (obj) {
@@ -231,8 +181,18 @@ export default {
       })
     },
     cancel () {},
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

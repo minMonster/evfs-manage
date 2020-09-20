@@ -4,7 +4,7 @@
       链管理员管理
     </h2>
     <div>
-      <div class="bg-white padding" style="margin-bottom: 20px;">
+      <div class="bg-white padding" v-if="rule" style="margin-bottom: 20px;">
         <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
           <span>链管理员决议审批规则：</span>
           <Tooltip
@@ -16,27 +16,27 @@
           </Tooltip>
 
         </div>
-        <RadioGroup class="approval" v-model="acceptLimit">
+        <RadioGroup class="approval" v-model="rule">
           <Row>
             <Col span="6">
             <Radio label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="1/3">1/3联盟委员同时签批</Radio>
+            <Radio label="100">1/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="2/3">2/3联盟委员同时签批</Radio>
+            <Radio label="200">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="3/3">所有联盟委员同时签批</Radio>
+            <Radio label="300">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
         <div class="audit-item">
           <div class="audit-item-content">
             <P>变更前：</P>
-            <div>链管理员决议审批规则：1/3成员同时签批</div>
-            <div>申请人： 张丽<span>审核通过人： <a href="javascript:;">查看</a></span></div>
+            <div>联盟委员决议审批规则：{{ruleJson[old_rule]}}</div>
+            <div>申请人： {{applicant_name}}<span>审核通过人： <a href="javascript:;">查看</a></span></div>
           </div>
           <div class="audit-item-btns">
             <div class="btn-inner">
@@ -50,43 +50,48 @@
         <div class="league-mem">
           <span>链管理员列表</span>
         </div>
-        <div>
-          <Row>
-            <Col span="6">
-            <div class="condition-item">
-              <span class="condition-label">管理员名称：</span>
-              <Input type="text" v-model="form.name" placeholder="管理员名称"></Input>
-            </div>
-            </Col>
-            <Col span="6">
-            <div class="condition-item">
-              <span class="condition-label">管理员身份标识：</span>
-              <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
-            </div>
-            </Col>
-            <Col span="6">
-            <div class="condition-item">
-              <span class="condition-label">状态：</span>
-              <Select v-model="form.status">
-                <Option value="0">全部</Option>
-                <Option value="1">已添加</Option>
-                <Option value="2">已删除</Option>
-                <Option value="3">添加审核中</Option>
-                <Option value="4">删除审核中</Option>
-              </Select>
-            </div>
-            </Col>
-            <Col span="6">
-            <div class="condition-item">
-              <Button style="width: 80px;" type="primary">查询</Button>
-            </div>
-            </Col>
-          </Row>
-        </div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <!--        <div>-->
+        <!--          <Row>-->
+        <!--            <Col span="6">-->
+        <!--            <div class="condition-item">-->
+        <!--              <span class="condition-label">管理员名称：</span>-->
+        <!--              <Input type="text" v-model="form.name" placeholder="管理员名称"></Input>-->
+        <!--            </div>-->
+        <!--            </Col>-->
+        <!--            <Col span="6">-->
+        <!--            <div class="condition-item">-->
+        <!--              <span class="condition-label">管理员身份标识：</span>-->
+        <!--              <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>-->
+        <!--            </div>-->
+        <!--            </Col>-->
+        <!--            &lt;!&ndash;            <Col span="6">&ndash;&gt;-->
+        <!--            &lt;!&ndash;            <div class="condition-item">&ndash;&gt;-->
+        <!--            &lt;!&ndash;              <span class="condition-label">状态：</span>&ndash;&gt;-->
+        <!--            &lt;!&ndash;              <Select v-model="form.status">&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="0">全部</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="1">已添加</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="2">已删除</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="3">添加审核中</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="4">删除审核中</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;              </Select>&ndash;&gt;-->
+        <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--            &lt;!&ndash;            </Col>&ndash;&gt;-->
+        <!--            <Col span="6">-->
+        <!--            <div class="condition-item">-->
+        <!--              <Button style="width: 80px;" type="primary">查询</Button>-->
+        <!--            </div>-->
+        <!--            </Col>-->
+        <!--          </Row>-->
+        <!--        </div>-->
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
         <div class="page">
           <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page
+              show-sizer
+              :total="page.total"
+              :current="page.current"
+              @on-change="pageChange"
+              @on-page-size-change="sizeChange"/>
           </div>
         </div>
       </div>
@@ -96,8 +101,8 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <div class="add-modal-body">
-          <div><Input placeholder="请输入管理员名称" v-model="name" /></div>
-          <div><Input placeholder="请输入管理员身份标志地址" v-model="address" /></div>
+          <div><Input placeholder="请输入管理员名称" v-model="form.name" /></div>
+          <div><Input placeholder="请输入管理员身份标志地址" v-model="form.address" /></div>
         </div>
       </Modal>
     </div>
@@ -105,10 +110,12 @@
 </template>
 
 <script>
+import * as api from '../api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
         title: '管理员名称',
         key: 'name'
@@ -157,18 +164,35 @@ export default {
         }
       }
     ]
-    var data1 = [
-      { name: '张建国', address: '008b0f...effbc', time: '--', apply: '张力', status: '添加审批中', type: '1' },
-      { name: '李志伟', address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审批中', type: '1' }
-    ]
+    let ruleJson = {
+      '0': '任意一个联盟委员签批',
+      '100': '1/3联盟委员同时签批',
+      '200': '2/3联盟委员同时签批',
+      '300': '所有联盟委员同时签批'
+    }
     return {
-      acceptLimit: '1/3',
-      name: '',
-      address: '',
       addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      ruleJson,
+      rule: '',
+      old_rule: '',
+      applicant_name: '',
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -186,7 +210,33 @@ export default {
   },
   methods: {
     init () {
-
+      api.pbqrc({
+        reviewType: 'chaincommittee',
+        'menu': 'chain_manager_rule', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        'address': sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        if (res.rows) {
+          let data = res.rows[0]
+          this.rule = data.role || ''
+          this.old_rule = data.old_rule || ''
+        } else {
+          this.rule = false
+        }
+      })
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'chaincommittee',
+        reviewType: 'chain_committee',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     // 查看
     adds (obj) {
@@ -202,8 +252,18 @@ export default {
     cancel () {
 
     },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }
