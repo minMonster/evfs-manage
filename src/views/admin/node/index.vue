@@ -18,10 +18,15 @@
         <Button style="float: right;" @click="addModal = true" type="primary">连接节点服务器</Button>
       </div>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
         <div class="page">
           <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page
+              show-sizer
+              :total="page.total"
+              :current="page.current"
+              @on-change="pageChange"
+              @on-page-size-change="sizeChange"/>
           </div>
         </div>
         <Modal
@@ -43,29 +48,19 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
-        title: '服务器身份标识',
-        key: 'hash'
-      },
-      {
-        title: '节点类型',
-        key: 'type'
-      },
-      {
-        title: '链实例ID',
-        key: 'chainid'
-      },
-      {
-        title: '数据存管域名称',
-        key: 'storagename'
+        title: '数据存管域ID',
+        key: 'admin_address'
       },
       {
         title: '数据存管域ID',
-        key: 'storageid'
+        key: 'admin_address'
       },
       {
         title: '操作',
@@ -99,17 +94,17 @@ export default {
         }
       }
     ]
-    var data1 = [
-      { hash: '00630e...cabc3', type: '主节点', chainid: '00740f...aaba8', storagename: '从法存管域', storageid: '00740f...facb7', status: '3' },
-      { hash: '00630e...cacc2', type: '资源节点', chainid: '00740f...aaba8', storagename: '从法存管域', storageid: '00740f...facb7', status: '4' },
-      { hash: '00630e...fafc1', type: '主节点', chainid: '00740f...aaba8', storagename: '--', storageid: '--', status: '2' },
-      { hash: '00630e...bbac5', type: '--', chainid: '--', storagename: '--', storageid: '--', status: '1' }
-    ]
     return {
       title: '节点服务器管理',
-      columns1,
-      data1,
-      total: 78,
+      listLoading: false,
+      columns,
+      oldList: [],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       addModal: false,
       addLoading: false,
       nodeAddress: ''
@@ -126,7 +121,19 @@ export default {
   },
   methods: {
     init () {
-
+      this.listLoading = true
+      api.pbqml({
+        'node_server_id': 'nodeserver1'
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+        this.rule = res.rule
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     ok () {
 

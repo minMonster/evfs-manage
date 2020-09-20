@@ -5,24 +5,17 @@
         待审核事项
       </h2>
       <div class="tab-wrapper">
-        <div class="tab-item" v-for="item in tabs" :key="item.name" :class="{active: active == item.name}"
-             @click="changeTab(item.name)"
+        <div class="tab-item" v-for="(item, index) in tabs" :key="index" :class="{active: active === index}"
+             @click="changeTab(index)"
         >
-          <Badge :dot="item.count > 0">
-            <button>{{item.text}}</button>
+          <Badge :dot="item.num > 0">
+            <button>{{item.name}}</button>
           </Badge>
         </div>
       </div>
       <div class="split-line"></div>
       <div class="audit-content">
-        <alliance v-if="active == 'chain-alliance'"></alliance>
-        <configure v-if="active == 'chain-configure'"></configure>
-        <nodeadmission v-if="active == 'chain-nodeadmission'"></nodeadmission>
-        <frontnodelicence v-if="active == 'chain-frontnodelicence'"></frontnodelicence>
-        <operation v-if="active == 'chain-operation'" />
-        <dataauth v-if="active == 'dataauth'" />
-        <mainnode v-if="active == 'mainnode'" />
-        <chainadmin v-if="active == 'chainmanager'"></chainadmin>
+        <component :review-type="active" :is="tabs[active].nodeName"></component>
       </div>
     </div>
   </div>
@@ -37,19 +30,48 @@ import operation from './operation'
 import dataauth from './dataauth'
 import mainnode from './mainnode'
 import chainadmin from './chainadmin'
+import * as api from '../api'
+// import * as cApi from '@/http/api'
 // import node from './node'
 // import frontnode from './frontNode'
 // import filestroage from './fileStorage'
-var tabs = [
-  { text: '联盟委员会', name: 'chain-alliance', count: 0 },
-  // {text: '行为审计',name: 'chain-configure', count: 3},
-  { text: '节点准入', name: 'chain-nodeadmission', count: 8 },
-  { text: '前置节点准入', name: 'chain-frontnodelicence', count: 6 },
-  { text: '运行许可证', name: 'chain-operation', count: 0 },
-  { text: '数据存管域授权', name: 'dataauth', count: 22 },
-  { text: '主节点授权', name: 'mainnode', count: 99 },
-  { text: '链管理员', name: 'chainmanager', count: 4 }
-]
+let tabsJson = {
+  chain_committee: {
+    name: '联盟委员会',
+    num: 0,
+    nodeName: 'alliance'
+  },
+  chain_node: {
+    name: '节点准入',
+    num: 0,
+    nodeName: 'nodeadmission'
+  },
+  chain_httpclient: {
+    name: '前置节点准入',
+    num: 0,
+    nodeName: 'frontnodelicence'
+  },
+  chain_license: {
+    name: '运行许可证',
+    num: 0,
+    nodeName: 'operation'
+  },
+  chain_storage: {
+    name: '数据存管域授权',
+    num: 0,
+    nodeName: 'dataauth'
+  },
+  chain_mainnode: {
+    name: '主节点授权',
+    num: 0,
+    nodeName: 'mainnode'
+  },
+  chain_manager: {
+    name: '链管理员',
+    num: 0,
+    nodeName: 'chainadmin'
+  }
+}
 export default {
   components: {
     alliance,
@@ -66,37 +88,34 @@ export default {
   },
   data () {
     return {
-      tabs: [],
-      active: 'alliance'
-    }
-  },
-  watch: {
-    $route (n) {
-      this.initTab()
+      tabs: {},
+      active: 'chain_committee'
     }
   },
   mounted () {
     this.init()
+    let query = this.$route.query
+    // console.log(query)
   },
   methods: {
     init () {
-      this.tabs = tabs
+      api.pbqrm({
+        menu: 'chaingroup', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        'address': sessionStorage.getItem('fbs_address') // 登陆人的地址
+      }).then(res => {
+        if (res.rows) {
+          res.rows.map(r => {
+            tabsJson[r.review_type].num = r.num
+          })
+          this.tabs = tabsJson
+        }
+      })
       this.initTab()
     },
     initTab () {
-      var query = this.$route.query
-      var tab = query.tab || tabs[0].name
-      this.active = tab
     },
-    changeTab (name) {
-      var query = this.$route.query
-      this.$router.push({
-        name: 'chain-audit',
-        query: {
-          ...query,
-          tab: name
-        }
-      })
+    changeTab (type) {
+      this.active = type
     }
   }
 }

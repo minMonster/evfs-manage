@@ -15,19 +15,19 @@
           </Tooltip>
           <Button type="primary" style="float: right;">修改</Button>
         </div>
-        <RadioGroup class="approval" v-model="acceptLimit">
+        <RadioGroup class="approval" v-model="rule">
           <Row>
             <Col span="6">
             <Radio label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="1/3">1/3联盟委员同时签批</Radio>
+            <Radio label="100">1/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="2/3">2/3联盟委员同时签批</Radio>
+            <Radio label="200">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="3/3">所有联盟委员同时签批</Radio>
+            <Radio label="300">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -70,10 +70,15 @@
             </Col>
           </Row>
         </div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
         <div class="page">
           <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page
+              show-sizer
+              :total="page.total"
+              :current="page.current"
+              @on-change="pageChange"
+              @on-page-size-change="sizeChange"/>
           </div>
         </div>
       </div>
@@ -87,8 +92,8 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <div class="add-modal-body">
-          <div><Input placeholder="请输入管理员名称" v-model="name" /></div>
-          <div><Input placeholder="请输入管理员身份标志地址" v-model="address" /></div>
+          <div><Input placeholder="请输入管理员名称" v-model="form.name" /></div>
+          <div><Input placeholder="请输入管理员身份标志地址" v-model="form.address" /></div>
         </div>
         <div slot="footer">
           <Button :loading="addLoading" type="primary" class='clearBtn' @click="ok" >添加</Button>
@@ -100,38 +105,38 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
-    var that = this
-    var columns1 = [
+    let that = this
+    let columns = [
       {
         title: '管理员名称',
-        key: 'name'
+        key: 'member_name'
       },
       {
         title: '管理员身份标志地址',
-        key: 'address'
+        key: 'member_address'
       },
       {
         title: '添加时间',
-        key: 'time'
+        key: 'join_time'
       },
-      {
-        title: '状态',
-        key: 'status'
-      },
+      // {
+      //   title: '状态',
+      //   key: 'status'
+      // },
       {
         title: '操作',
         width: 100,
         render (h, p) {
-          var row = p.row
-          console.log(row)
-          var label = row.type == '2' ? '删除' : '撤销'
+          let row = p.row
+          let label = row.type === '2' ? '删除' : '撤销'
           return h('a', {
             on: {
               click () {
-                var index = p.index
+                let index = p.index
                 that.data1.splice(index, 1)
               }
             }
@@ -139,20 +144,20 @@ export default {
         }
       }
     ]
-    var data1 = [
-      { name: '张建国', address: '008b0f...effbc', time: '2020-1-5 09:41:11', status: '添加审核中', type: '1' },
-      { name: '李志伟', address: '008b0f...abbc3', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
-      { name: '张力', address: '008b0f...acfe5', time: '2020-1-5 19:41:11', status: '已添加', type: '2' }
-    ]
     return {
       acceptLimit: '1/3',
-      name: '',
-      address: '',
       addModal: false,
-      columns1,
-      data1,
+      columns,
+      listLoading: false,
       addLoading: false,
-      total: 100,
+      rule: 100,
+      oldList: [],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: '',
@@ -171,72 +176,73 @@ export default {
 
   },
   methods: {
-    init () {
-
+    async init () {
+      this.listLoading = true
+      let dataId = await api.pbqgi({
+        rule: 'chaingroup' // chaincommittee:链-联盟委员会，chaingroup：链-链管理员
+      }).then(res => {
+        return res.dataId
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+      api.pbqml({
+        'groupId': '2', // 组织类型 枚举 "1": 联盟委员会,"2": 链管理员,"3": 数据存管域,"4": 业务域
+        'address': sessionStorage.getItem('fbs_address'), // 登陆人的地址
+        'dataId': dataId // /fbs/cmw/pbqgi.do 查询出来的结果 dataId 的值
+      }).then(res => {
+        this.listLoading = false
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+        }
+        this.getList()
+        if (this.rule) {
+          this.rule = res.rule
+        }
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     // 添加列表功能
     ok () {
-      let name = this.name.trim()
-      let address = this.address.trim()
-      if (!name) {
-        this.$Message.error('请输入管理员名称')
-        return
-      }
-      if (!address) {
-        this.$Message.error('请输入管理员身份标识密钥')
-        return
-      }
-      this.add()
+      // let name = this.name.trim()
+      // let address = this.address.trim()
+      // if (!name) {
+      //   this.$Message.error('请输入管理员名称')
+      //   return
+      // }
+      // if (!address) {
+      //   this.$Message.error('请输入管理员身份标识密钥')
+      // }
+      // this.add()
     },
     add () {
-      this.popup = 1,
-      this.creatQrCode()
-      let address = this.address.trim()
-      let name = this.name.trim()
-      this.addLoading = true
-      var data = {
-        address, name
-      }
-      this.$http.post('', data).then(res => {
-        res = res.data
-      }).catch(() => {
-
-      }).then(res => {
-        this.cancel()
-      })
     },
     cancel () {
-      this.name = ''
-      this.address = ''
-      this.addModal = false
-      this.addLoading = false
+      // this.name = ''
+      // this.address = ''
+      // this.addModal = false
+      // this.addLoading = false
     },
     del (obj) {
-      var that = this
       // var index = p.index
       // that.data1.splice(index,1)
     },
     search () {},
-    // 删除管理页面
-    pageChange (page) {
-      console.log(page)
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
     },
-    creatQrCode () {
-      let linkData = {
-        // url:"http://47.116.17.247:9000/api/clt/pblin.do",
-        // func:"Login",
-        // data:{
-        // }
-      }
-      var qrcode = new QRCode('qrcode', {
-        text: JSON.stringify(linkData), // 需要转换为二维码的内容
-        width: 260,
-        height: 260,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: 3// 容错率，L/M/H
-      })
-      console.log(qrcode)
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
+    pageChange (page) {
+      this.page.current = page
+      this.getList()
     }
   }
 }

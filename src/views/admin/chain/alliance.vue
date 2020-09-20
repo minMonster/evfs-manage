@@ -146,6 +146,7 @@ export default {
       name: '',
       address: '',
       addModal: false,
+      addLoading: false,
       listLoading: false,
       columns,
       oldList: [
@@ -158,7 +159,6 @@ export default {
         // }
       ],
       list: [],
-      addLoading: false,
       page: {
         total: 1,
         current: 1,

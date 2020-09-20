@@ -1,62 +1,22 @@
 <template>
   <div class="chain-configure">
-    <h2 class="content-title clear">链全局参数</h2>
-    <div class="clear chain-baseinfo">
-      <Row>
-        <Col span="12">
-        <div>链实例唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
-        </Col>
-        <Col span="8">
-        <div>链实例创建时间：2020-1-5 12:00:00</div>
-        </Col>
-      </Row>
-    </div>
+    <h2 class="content-title clear">节点网络准入许可管理</h2>
     <div class="split-line"></div>
     <div class="encryption-wrapper padding bg-white" style="margin-bottom: 20px;">
-      <Row>
-        <Col span="16">
-        <div class="encryption-item">
-          <span>前置节点数据传输加密：</span>
-          <Tooltip
-            placement="top"
-            max-width="600"
-            transfer
-            content='选项说明：外部系统调用的前置节点和任何一个链的节点服务器间使用加密传输，从而进一步加强网络传输过程中的数据安全性。'>
-            <Icon type="ios-help-circle-outline" />
-          </Tooltip>
-          <RadioGroup v-model="encryption1" style="margin-left: 20px;">
-            <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
-          </RadioGroup>
+      <div>
+        <div class="league-mem">
+          <span>准入节点服务器列表：</span>
         </div>
-        <div class="encryption-item">
-          <span>节点间数据传输加密：</span>
-          <Tooltip
-            placement="top"
-            max-width="600"
-            transfer
-            content='选项说明：节点网络中的节点服务器之间使用加密传输，使得节点间的系统内数据交换安全性得到进一步加强。'>
-            <Icon type="ios-help-circle-outline" />
-          </Tooltip>
-          <RadioGroup style="margin-left: 20px;" v-model="encryption2">
-            <Radio label="1">加密</Radio><Radio label="0">明文</Radio>
-          </RadioGroup>
-        </div>
-        </Col>
-        <Col span="8">
-        </Col>
-      </Row>
-      <div class="audit-item">
-        <div class="audit-item-content">
-          <P>变更前：</P>
-          <div>前置节点数据传输加密：加密</div>
-          <div>节点服务器间数据传输加密：加密</div>
-          <div>申请人： 张丽<span>审核通过人： <a href="javascript:;">查看</a></span></div>
-        </div>
-        <div class="audit-item-btns">
-          <div class="btn-inner">
-            <button class="refuse-btn">拒绝</button>
-            <button class="agree-btn">同意</button>
-          </div>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
+      </div>
+      <div class="page">
+        <div class="page-inner">
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -64,11 +24,62 @@
 </template>
 
 <script>
+import * as api from '../api'
+
 export default {
   data () {
+    let columns = [
+      {
+        title: '隶属企业名称',
+        key: 'name'
+      },
+      {
+        title: '服务器身份标识',
+        key: 'address'
+      },
+      {
+        title: '节点类型',
+        key: 'node_type'
+      },
+      {
+        title: '数据存管域名称',
+        key: 'storage_name'
+      },
+      {
+        title: '添加时间',
+        key: 'join_time'
+      },
+      {
+        title: '状态',
+        key: 'user_status'
+      },
+      {
+        title: '申请人',
+        key: 'applicant_name'
+      },
+      {
+        title: '已审核人',
+        key: 'name'
+      },
+      {
+        title: '操作',
+        key: 'name'
+      },
+      {
+        title: '审核结果',
+        key: 'status'
+      }
+    ]
     return {
-      encryption1: '0',
-      encryption2: '0'
+      columns,
+      listLoading: false,
+      oldList: [],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      }
     }
   },
   mounted () {
@@ -82,7 +93,33 @@ export default {
   },
   methods: {
     init () {
-
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'chaincommittee',
+        reviewType: 'chain_node',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
+    pageChange (page) {
+      this.page.current = page
+      this.getList()
     }
   }
 }

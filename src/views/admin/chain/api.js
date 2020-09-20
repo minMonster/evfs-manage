@@ -20,3 +20,9 @@ export const pbqmn = (params, opts) => request.post('cmw/pbqmn.do', params, opts
 export const pbqsl = (params, opts) => request.post('cmw/pbqsl.do', params, opts)
 // 链-数据存管域详情
 export const pbqsd = (params, opts) => request.post('cmw/pbqsd.do', params, opts)
+// pbqrm.do
+export const pbqrm = (params, opts) => request.post('cmw/pbqrm.do', params, opts)
+// 待审核事项菜单-各tab点击时间的明细查询
+export const pbqrc = (params, opts) => request.post('cmw/pbqrc.do', params, opts)
+// 节点服务器详情-服务器管理员列表
+export const pbqnm = (params, opts) => request.post('cmw/pbqnm.do', params, opts)
