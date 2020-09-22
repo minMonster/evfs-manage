@@ -15,7 +15,7 @@
       </div>
       <div class="split-line"></div>
       <div class="audit-content">
-        <component :review-type="active" v-if="tabs[active].nodeName" :is="tabs[active].nodeName"></component>
+        <component :review-type="active" v-if="active" :is="tabs[active].nodeName"></component>
       </div>
     </div>
   </div>
@@ -35,43 +35,6 @@ import * as api from '../api'
 // import node from './node'
 // import frontnode from './frontNode'
 // import filestroage from './fileStorage'
-let tabsJson = {
-  chain_committee: {
-    name: '联盟委员会',
-    num: 0,
-    nodeName: 'alliance'
-  },
-  chain_node: {
-    name: '节点准入',
-    num: 0,
-    nodeName: 'nodeadmission'
-  },
-  chain_httpclient: {
-    name: '前置节点准入',
-    num: 0,
-    nodeName: 'frontnodelicence'
-  },
-  chain_license: {
-    name: '运行许可证',
-    num: 0,
-    nodeName: 'operation'
-  },
-  chain_storage: {
-    name: '数据存管域授权',
-    num: 0,
-    nodeName: 'dataauth'
-  },
-  chain_mainnode: {
-    name: '主节点授权',
-    num: 0,
-    nodeName: 'mainnode'
-  },
-  chain_manager: {
-    name: '链管理员',
-    num: 0,
-    nodeName: 'chainadmin'
-  }
-}
 export default {
   components: {
     alliance,
@@ -93,14 +56,58 @@ export default {
           name: '联盟委员会',
           num: 0,
           nodeName: 'alliance'
+        },
+        chain_node: {
+          name: '节点准入',
+          num: 0,
+          nodeName: 'nodeadmission'
+        },
+        chain_httpclient: {
+          name: '前置节点准入',
+          num: 0,
+          nodeName: 'frontnodelicence'
+        },
+        chain_license: {
+          name: '运行许可证',
+          num: 0,
+          nodeName: 'operation'
+        },
+        chain_storage: {
+          name: '数据存管域授权',
+          num: 0,
+          nodeName: 'dataauth'
+        },
+        chain_mainnode: {
+          name: '主节点授权',
+          num: 0,
+          nodeName: 'mainnode'
+        },
+        chain_manager: {
+          name: '链管理员',
+          num: 0,
+          nodeName: 'chainadmin'
         }
       },
-      active: 'chain_committee'
+      active: ''
     }
   },
   mounted () {
     this.init()
-    // let query = this.$route.query
+    let query = this.$route.query
+    let mapRoute = {
+      'chain-alliance': 'chain_committee',
+      'chain-nodeadmission': 'chain_node',
+      'chain-frontnodelicence': 'chain_httpclient',
+      'chain-operation': 'chain_license',
+      'dataauth': 'chain_storage',
+      'mainnode': 'chain_mainnode',
+      'chainmanager': 'chain_manager'
+    }
+    if (mapRoute[query.tab]) {
+      this.active = mapRoute[query.tab]
+    } else {
+      this.active = 'chain_committee'
+    }
     // console.log(query)
   },
   methods: {
@@ -111,9 +118,8 @@ export default {
       }).then(res => {
         if (res.rows) {
           res.rows.map(r => {
-            tabsJson[r.review_type].num = r.num
+            this.tabs[r.review_type].num = r.num
           })
-          this.tabs = tabsJson
         }
       })
       this.initTab()

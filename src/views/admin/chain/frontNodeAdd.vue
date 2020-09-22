@@ -55,7 +55,7 @@
         <Row>
           <Col>
           <div class="set-from-item" style="text-align:center">
-            <Button style="width: 80px;" @click="serachBtn" type="primary">申请</Button>
+            <Button style="width: 80px;" @click="submit" type="primary">申请</Button>
           </div>
           </Col>
         </Row>
@@ -70,7 +70,9 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
+// import * as api from './api'
+import * as cApi from '@/http/api'
+
 export default {
   data () {
     return {
@@ -85,7 +87,6 @@ export default {
   },
   mounted () {
     this.init()
-    this.creatQrCode()
   },
   watch: {
 
@@ -98,48 +99,72 @@ export default {
 
     },
 
-    serachBtn () {
-      this.popup = 1
-      // let self = this
-      let params = {
-        name: this.form.name,
-        address: this.form.address,
-        nameAddr: this.form.nameAddr,
-        addressAddr: this.form.addressAddr
+    async submit () {
+      if (this.form.address === '' || this.form.nameAddr === '' || this.form.addressAddr === '' || this.form.name === '') {
+        this.$Message.warning('请完成表单！')
+        return
       }
-      this.$http.post('', params).then(res => {
-        console.log(res)
-        res = res.data
-        if (res.retCode === '1') {
-          this.$router.push('/chain-frontnodelicence')
-        } else {
-
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'orgAddress': this.form.address, // 节点归属组织地址
+        'orgName': this.form.nameAddr, // 节点归属组织名称
+        'nodeAddr': this.form.addressAddr, // 节点地址
+        'nodeInfo': { // 节点信息
+          'name': '', // 节点名称
+          'cpu': '', // CPU数量
+          'memory': '', // 内存大小
+          'disk': '', // 磁盘大小
+          'bandwidth': '' // 带宽大小
+        },
+        'amount': '', // 许可证容量
+        'nodeType': 3, // 1主节点;2节点网络准入;3前置节点
+        'op': 1 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'ChainNodeApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
         }
-      }).catch(() => {
-
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
       })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$router.go(-1)
+                this.$Message.success('保存成功！')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     back () {
-      window.history.go(-1)
-    },
-    // 二维码
-    creatQrCode () {
-      // const _this = this
-      let linkData = {
-        //     url:this.apiUrl +"/clt/pblin.do",
-        //     func:"Login",
-        //     data:{
-        //     }
-      }
-      let qrcode = new QRCode('qrcode', {
-        text: JSON.stringify(linkData), // 需要转换为二维码的内容
-        width: 260,
-        height: 260,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: 3// 容错率，L/M/H
-      })
-      console.log(qrcode)
+      this.$router.go(-1)
     }
   }
 }

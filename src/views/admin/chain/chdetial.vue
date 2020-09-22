@@ -8,7 +8,7 @@
           <Col span="12">
           <div class="condition-item">
             <span class="condition-label">数据存管域名称：</span>
-            <Input type="text" v-model="form.name" placeholder="请输入全链唯一的数据存管域名称"></Input>
+            <Input type="text" v-model="name" placeholder="请输入全链唯一的数据存管域名称"></Input>
           </div>
           </Col>
         </Row>
@@ -26,19 +26,19 @@
           </Tooltip> -->
         <!-- <Button type="primary" style="float: right;">修改</Button> -->
       </div>
-      <RadioGroup class="approval" v-model="acceptLimit">
+      <RadioGroup class="approval" v-model="rule">
         <Row>
           <Col span="6">
           <Radio label="0">任意一个联盟委员签批</Radio>
           </Col>
           <Col span="6">
-          <Radio label="1/3">1/3联盟委员同时签批</Radio>
+          <Radio label="100">1/3联盟委员同时签批</Radio>
           </Col>
           <Col span="6">
-          <Radio label="2/3">2/3联盟委员同时签批</Radio>
+          <Radio label="200">2/3联盟委员同时签批</Radio>
           </Col>
           <Col span="6">
-          <Radio label="3/3">所有联盟委员同时签批</Radio>
+          <Radio label="300">所有联盟委员同时签批</Radio>
           </Col>
         </Row>
       </RadioGroup>
@@ -46,7 +46,7 @@
     <div class="bg-white padding">
       <div class="league-mem">
         <span>数据存管域管理列表</span>
-        <Button type="primary" @click="addModal = true" class="fr">添加</Button>
+        <Button type="primary" @click="add" class="fr">添加</Button>
       </div>
       <!-- <div>
           <Row>
@@ -90,17 +90,19 @@
       v-model="addModal"
       title="添加联盟委员会成员"
       @on-ok="ok"
+      :loading="submitLoading"
       @on-cancel="cancel">
       <div class="add-modal-body">
-        <div><Input placeholder="请输入委员名称" v-model="name" /></div>
-        <div><Input placeholder="请输入委员身份标志地址" v-model="address" /></div>
+        <div><Input placeholder="请输入委员名称" v-model="form.name" /></div>
+        <div><Input placeholder="请输入委员身份标志地址" v-model="form.address" /></div>
       </div>
     </Modal>
-  </div>
   </div>
 </template>
 
 <script>
+// import * as api from './api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
@@ -120,25 +122,21 @@ export default {
           return h('a', {
             on: {
               click () {
-
+                that.del(row)
               }
             }
           }, '删除')
         }
       }
     ]
-    let data1 = [
-      { name: '金桥信息', address: '00630eslj9876sljflk...fafc1', status: '添加审核中' },
-      { name: '泛融信息', address: '00630eslj9876sljflk...afea5', status: '删除审核中' },
-      { name: '从法科技', address: '00630eslj9876sljflk...fafc1', status: '已添加', type: '2' }
-    ]
     return {
-      acceptLimit: '1/3',
+      rule: '0',
       name: '',
       address: '',
+      submitLoading: true,
       addModal: false,
       columns1,
-      data1,
+      data1: [],
       total: 100,
       loading: false,
       form: {
@@ -157,20 +155,86 @@ export default {
 
   },
   methods: {
+    add () {
+      this.addModal = true
+    },
     init () {
 
     },
     ok () {
-
+      setTimeout(() => {
+        this.submitLoading = false
+        this.$nextTick(() => {
+          this.submitLoading = true
+        })
+      }, 100)
+      console.log(this.form)
+      if (this.form.name === '' || this.form.address === '') {
+        this.$Message.warning('请先完成表单！')
+      } else {
+        this.data1.push({ ...this.form })
+        this.form.name = ''
+        this.form.address = ''
+        this.addModal = false
+      }
     },
-    cancel () {
-
-    },
+    cancel () {},
     back () {
       window.history.go(-1)
     },
-    next () {
-      this.$router.push('/chain-nextChdetial')
+    async next () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'orgAddress': '', // 节点归属组织地址
+        'orgName': '', // 节点归属组织名称
+        'name': this.name, // 存管域名称
+        'members': this.data1.map(i => i.address), // 存管域管理员钱包地址列表
+        'amount': '1', // 许可证数量，固定传 1
+        'rule': this.rule // 审批规则，下同
+      }
+      let data = await cApi.pbgen({
+        'method': 'DSDomainApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('添加成功')
+                this.$router.go(-1)
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+      // this.$router.push('/chain-nextChdetial')
     },
     pageChange (page) {
       console.log(page)

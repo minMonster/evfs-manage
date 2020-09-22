@@ -226,7 +226,7 @@ export default {
         'opType': 1 // 1委员会变更操作；2链管理员变更操作
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeRuleApplyContractTxReq',
+        'method': 'CommitteeMemberApplyContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -250,6 +250,10 @@ export default {
             // resPromise 轮询的结果 在此处处理业务逻辑
             return resPromise.then(res => {
               // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
@@ -326,7 +330,7 @@ export default {
         rule: this.rule
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeRuleApplyContractTxReq',
+        'method': 'AdminRuleApplyContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

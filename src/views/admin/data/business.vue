@@ -155,31 +155,29 @@
 </template>
 
 <script>
+import * as api from './api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
     let columns = [
       {
         title: '业务域名称',
-        key: 'name'
+        key: 'biz_name'
       },
       {
         title: '业务域唯一标识',
-        key: 'address'
+        key: 'biz_id'
       },
       {
         title: '创建时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'statuslabel'
+        key: 'join_time'
       },
       {
         width: 120,
         title: '操作',
         render (h, p) {
-          // let row = p.row || {}
+          let row = p.row || {}
           // let status = row.status || ''
           // let opt = h('a', {
           //
@@ -190,13 +188,14 @@ export default {
                 // let index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 let { showBusinessSubmenu } = that.$route.query
+                sessionStorage.setItem('fbs_biz_id', row.biz_id)
                 that.$router.push({
                   name: 'business-detail',
                   query: {
                     showDataSubmenu: '1',
                     showBusinessSubmenu,
                     mainActive: 'business',
-                    activeIndex: '1',
+                    activeIndex: '2',
                     subActive: 'business-detail'
                   }
                 })
@@ -208,61 +207,62 @@ export default {
         }
       }
     ]
-    let data = [
-      { name: '泛融存证业务', address: '00740f...aaba8', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
-      { name: '司法业务域', address: '00da0c...cfbe5', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' }
-    ]
-    let columns2 = [
-      {
-        title: '企业名称',
-        key: 'name'
-      },
-      {
-        title: '企业身份标识',
-        key: 'address'
-      },
-      {
-        title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
-      {
-        title: '操作',
-        width: 120,
-        render (h, p) {
-          let row = p.row || {}
-          let label = row.status === '1' ? '删除' : '撤销'
-          label = row.status === '0' ? '--' : label
-          return h('a', {
-            on: {
-              click () {
-                let index = p.index
-                that.data1.splice(index, 1)
-              }
-            }
-          }, label)
-        }
-      }
-    ]
-    let data2 = [
-      { name: '金桥信息', address: '00740f...feac3', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
-      { name: '泛融科技', address: '00740f...bdae4', time: '2020-1-5 10:15:31', statuslabel: '删除审核中', status: '1' },
-      { name: '从法科技', address: '00740f...ccbb1', time: '2020-1-5 10:05:51', statuslabel: '已添加', status: '2' }
-    ]
+    // let columns2 = [
+    //   {
+    //     title: '企业名称',
+    //     key: 'name'
+    //   },
+    //   {
+    //     title: '企业身份标识',
+    //     key: 'address'
+    //   },
+    //   {
+    //     title: '添加时间',
+    //     key: 'time'
+    //   },
+    //   {
+    //     title: '状态',
+    //     key: 'statuslabel'
+    //   },
+    //   {
+    //     title: '操作',
+    //     width: 120,
+    //     render (h, p) {
+    //       let row = p.row || {}
+    //       let label = row.status === '1' ? '删除' : '撤销'
+    //       label = row.status === '0' ? '--' : label
+    //       return h('a', {
+    //         on: {
+    //           click () {
+    //             let index = p.index
+    //             that.data1.splice(index, 1)
+    //           }
+    //         }
+    //       }, label)
+    //     }
+    //   }
+    // ]
     return {
       acceptLimit: '1/3',
       myswitch: '1',
-      name: '',
-      address: '',
       addModal: false,
-      columns1,
-      columns2,
-      data1,
-      data2,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -281,7 +281,16 @@ export default {
   },
   methods: {
     init () {
-
+      this.listLoading = true
+      api.pbqsb({}).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     ok () {
 
@@ -293,8 +302,18 @@ export default {
     addEstablish () {
       this.$router.push('/data-busestablish')
     },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

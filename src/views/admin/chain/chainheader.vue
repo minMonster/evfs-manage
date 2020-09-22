@@ -32,25 +32,6 @@ export default {
   },
   methods: {
     route () {
-      let address = localStorage.getItem('money-address')
-      let params = {
-        address
-      }
-      this.$http.post('/cmw/pbqpr.do', params).then(res => {
-        res = res.data
-        if (res.resCode == '1') {
-          this.$Message.success('查询成功')
-        } else {
-          if (data.retMsg) {
-            that.$Message.warning(data.retMsg)
-          }
-        }
-      }).catch(err => {
-
-      }).then(res => {
-
-      })
-
       let name = this.$route.name
       let query = this.$route.query
       this.$router.push({

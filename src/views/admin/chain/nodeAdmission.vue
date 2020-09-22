@@ -335,19 +335,12 @@ export default {
     async del (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
-        'orgAddress': '', // 节点归属组织地址
-        'orgName': '', // 节点归属组织名称
-        'nodeAddr': '', // 节点地址
-        'nodeInfo': { // 节点信息
-          'name': '司法部', // 节点名称
-          'cpu': '2', // CPU数量
-          'memory': '64G', // 内存大小
-          'disk': '1000G', // 磁盘大小
-          'bandwidth': '1000M' // 带宽大小
-        },
-        'amount': 100, // 许可证容量
-        'nodeType': 0, // 1主节点;2节点网络准入;3前置节点
-        'op': 1 // 1添加；2移除
+        'orgAddress': row.main_company_company_id, // 节点归属组织地址
+        'orgName': row.main_company_company_name, // 节点归属组织名称
+        'nodeAddr': row.chainnode_id, // 节点地址
+        'amount': row.node_license_amount, // 许可证容量
+        'nodeType': 2, // 1主节点;2节点网络准入;3前置节点
+        'op': 2 // 1添加；2移除
       }
       let data = await cApi.pbgen({
         'method': 'ChainNodeApplyContractTxReq',
@@ -374,8 +367,13 @@ export default {
             // resPromise 轮询的结果 在此处处理业务逻辑
             return resPromise.then(res => {
               // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
               if (res.status === 3) {
                 this.$Message.success('修改成功')
+                this.init()
                 return true
               } else {
                 return false

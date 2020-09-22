@@ -5,21 +5,22 @@
         待审核事项
       </h2>
       <div class="tab-wrapper" style="width: 70%;">
-        <div class="tab-item" v-for="item in tabs" :key="item.name" :class="{active: active == item.name}"
-             @click="changeTab(item.name)"
+        <div class="tab-item" v-for="(item, index) in tabs" :key="index" :class="{active: active === index}"
+             @click="changeTab(index)"
         >
-          <Badge :dot="item.count > 0">
-            <button>{{item.text}}</button>
+          <Badge :dot="item.num > 0">
+            <button>{{item.name}}</button>
           </Badge>
         </div>
       </div>
       <div class="audit-content">
-        <rule v-if="active == 'data-rule'"></rule>
-        <node v-if="active == 'data-node'"></node>
-        <permission v-if="active == 'data-permission'"></permission>
-        <business v-if="active == 'data-business'"></business>
-        <manager v-if="active == 'data-manager'" />
-        <alliance v-if="active == 'data-alliance'" />
+        <component :review-type="tabs[active].review_type" v-if="active" :is="tabs[active].nodeName"></component>
+        <!--        <rule v-if="active == 'data-rule'"></rule>-->
+        <!--        <node v-if="active == 'data-node'"></node>-->
+        <!--        <permission v-if="active == 'data-permission'"></permission>-->
+        <!--        <business v-if="active == 'data-business'"></business>-->
+        <!--        <manager v-if="active == 'data-manager'" />-->
+        <!--        <alliance v-if="active == 'data-alliance'" />-->
       </div>
     </div>
   </div>
@@ -32,22 +33,51 @@ import permission from './permission'
 import business from './business'
 import manager from './manager'
 import alliance from './alliance'
-let tabs = [
-  // {text: '域内固存规则',name: 'data-rule', count: 0},
-  { text: '节点准入', name: 'data-node', count: 3 },
-  { text: '运行许可证', name: 'data-permission', count: 8 },
-  { text: '业务域授权', name: 'data-business', count: 6 },
-  { text: '域管理员', name: 'data-manager', count: 0 }
-  // {text: '联盟委员会',name: 'data-alliance', count: 22},
-]
+import * as api from '../api'
+
 export default {
   components: {
     rule, node, permission, business, manager, alliance
   },
   data () {
     return {
-      tabs: [],
-      active: 'rule'
+      tabs: {
+        // 'data-rule': {
+        //   name: '域内固存规则',
+        //   num: 0,
+        //   nodeName: 'rule'
+        // },
+        'data-node': {
+          name: '联盟委员会',
+          num: 0,
+          nodeName: 'node',
+          review_type: 'storage'
+        },
+        'data-permission': {
+          name: '运营许可证',
+          num: 0,
+          nodeName: 'permission',
+          review_type: 'storage_license'
+        },
+        'data-business': {
+          name: '业务域',
+          num: 0,
+          nodeName: 'business',
+          review_type: 'storage_biz'
+        },
+        'data-manager': {
+          name: '域管理员',
+          num: 0,
+          nodeName: 'manager',
+          review_type: 'storage_manage'
+        }
+        // 'data-alliance': {
+        //   name: '联盟委员会',
+        //   num: 0,
+        //   nodeName: 'alliance'
+        // }
+      },
+      active: 'data-node'
     }
   },
   watch: {
@@ -60,23 +90,29 @@ export default {
   },
   methods: {
     init () {
-      this.tabs = tabs
+      api.pbqrm({
+        menu: 'storage', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        'address': sessionStorage.getItem('fbs_address') // 登陆人的地址
+      }).then(res => {
+        if (res.rows) {
+          res.rows.map(r => {
+            this.tabs[r.review_type].num = r.num
+          })
+        }
+      })
       this.initTab()
     },
     initTab () {
       let query = this.$route.query
-      let tab = query.tab || tabs[0].name
-      this.active = tab
+      let tab = query.tab
+      if (this.tabs[tab]) {
+        this.active = tab
+      } else {
+        this.active = 'data-node'
+      }
     },
     changeTab (name) {
-      let query = this.$route.query
-      this.$router.push({
-        name: 'data-audit',
-        query: {
-          ...query,
-          tab: name
-        }
-      })
+      this.active = name
     }
   }
 }
