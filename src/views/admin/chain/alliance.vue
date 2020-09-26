@@ -192,7 +192,7 @@ export default {
       api.pbqml({
         'groupId': '1', // 组织类型 枚举 "1": 联盟委员会,"2": 链管理员,"3": 数据存管域,"4": 业务域
         'address': sessionStorage.getItem('fbs_address'), // 登陆人的地址
-        'dataId': dataId | '1' // /fbs/cmw/pbqgi.do 查询出来的结果 dataId 的值
+        'dataId': dataId // /fbs/cmw/pbqgi.do 查询出来的结果 dataId 的值
       }).then(res => {
         this.listLoading = false
         this.oldList = res.rows

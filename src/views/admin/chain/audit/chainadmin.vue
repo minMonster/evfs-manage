@@ -111,7 +111,7 @@
 
 <script>
 import * as api from '../api'
-// import * as cApi from '@/http/api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
@@ -152,15 +152,39 @@ export default {
       },
       {
         title: '操作',
+        'width': 120,
         render (h, p) {
+          let row = p.row
           let agree = h('a', {
             style: {
-              'margin-right': '10px'
+              marginRight: '8px'
+            },
+            domProps: {
+              href: 'javascript:;'
+            },
+            on: {
+              click () {
+                // let index = p.index
+                that.agree(row)
+              }
             }
           }, '同意')
-          let disagree = h('a', {}, '拒绝')
-          let opts = [agree, disagree]
-          return h('div', {}, opts)
+          let refuse = h('a', {
+            domProps: {
+              href: 'javascript:;'
+            },
+            on: {
+              click () {
+                that.refuse(row)
+                // let index = p.index
+              }
+            }
+          }, '拒绝')
+          return h('div', {
+            'class': 'opt-btns'
+          }, [
+            agree, refuse
+          ])
         }
       }
     ]
@@ -187,6 +211,7 @@ export default {
         //   'member_name': '名称'
         // }
       ],
+      review_rule: '',
       list: [],
       page: {
         total: 1,
@@ -219,6 +244,7 @@ export default {
           let data = res.rows[0]
           this.rule = data.role || ''
           this.old_rule = data.old_rule || ''
+          this.review_rule = data.review_id
         } else {
           this.rule = false
         }
@@ -245,6 +271,194 @@ export default {
         content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
         oktext: '关闭'
       })
+    },
+    async agree (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'ChainNodeAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuse (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'AdminDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async agreeRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule
+      }
+      let data = await cApi.pbgen({
+        'method': 'AdminRuleAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuseRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule
+      }
+      let data = await cApi.pbgen({
+        'method': 'AdminDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     ok () {
 

@@ -1,7 +1,7 @@
 <template>
   <div class="alliance">
     <div>
-      <div class="padding bg-white" v-if="rule" style="margin-bottom: 20px;">
+      <div class="padding bg-white" style="margin-bottom: 20px;" v-if="rule">
         <div style="margin-bottom: 20px;color: #273D52;">
           <span>联盟委员决议审批规则：</span>
           <Tooltip
@@ -30,16 +30,16 @@
             </Col>
           </Row>
         </RadioGroup>
-        <div class="audit-item">
-          <div class="audit-item-content" v-if="old_rule">
+        <div class="audit-item" v-if="old_rule">
+          <div class="audit-item-content" >
             <P>变更前：</P>
             <div>联盟委员决议审批规则：{{ruleJson[old_rule]}}</div>
             <div>申请人： {{applicant_name}}<span>审核通过人： <a href="javascript:;">查看</a></span></div>
           </div>
           <div class="audit-item-btns">
             <div class="btn-inner">
-              <button class="refuse-btn">拒绝</button>
-              <button class="agree-btn">同意</button>
+              <button class="refuse-btn" @click="refuseRule">拒绝</button>
+              <button class="agree-btn" @click="agreeRule">同意</button>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
 
 <script>
 import * as api from '../api'
-// import * as cApi from '@/http/api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
@@ -109,6 +109,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
+          let row = p.row
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -119,6 +120,7 @@ export default {
             on: {
               click () {
                 // let index = p.index
+                that.agree(row)
               }
             }
           }, '同意')
@@ -128,6 +130,7 @@ export default {
             },
             on: {
               click () {
+                that.refuse(row)
                 // let index = p.index
               }
             }
@@ -150,6 +153,7 @@ export default {
       ruleJson,
       rule: '',
       old_rule: '',
+      review_rule: '',
       applicant_name: '',
       listLoading: false,
       columns,
@@ -193,6 +197,7 @@ export default {
         if (res.rows) {
           let data = res.rows[0]
           this.rule = data.role || ''
+          this.review_rule = data.review_id
           this.old_rule = data.old_rule || ''
         } else {
           this.rule = false
@@ -214,6 +219,194 @@ export default {
       })
     },
     // 查看
+    async agree (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuse (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async agreeRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeRuleAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuseRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
     adds (obj) {
       this.$Modal.confirm({
         title: '已审核人列表',

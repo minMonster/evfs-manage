@@ -116,7 +116,7 @@ export default {
           'disk': '', // 磁盘大小
           'bandwidth': '' // 带宽大小
         },
-        'amount': '', // 许可证容量
+        'amount': '1', // 许可证容量
         'nodeType': 3, // 1主节点;2节点网络准入;3前置节点
         'op': 1 // 1添加；2移除
       }
