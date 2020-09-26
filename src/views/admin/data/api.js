@@ -6,3 +6,5 @@ export const pbqsb = (params, opts) => request.post('cmw/pbqsb.do', params, opts
 // 数据存管域-域管理员
 export const pbqml = (params, opts) => request.post('cmw/pbqml.do', params, opts)
 export const pbqrm = (params, opts) => request.post('cmw/pbqrm.do', params, opts)
+// 链-节点准入-准入节点服务器列表
+export const pbqan = (params, opts) => request.post('cmw/pbqan.do', params, opts)

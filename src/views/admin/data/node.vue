@@ -64,18 +64,18 @@
           <Input type="text"  v-model="form.address" placeholder="节点服务器身份标识"></Input>
         </div>
         </Col>
-        <Col span="6">
-        <div class="condition-item">
-          <span class="condition-label">状态：</span>
-          <Select v-model="form.status" value="0">
-            <Option value="0">全部</Option>
-            <Option value="1">已添加</Option>
-            <Option value="2">已删除</Option>
-            <Option value="3">添加审核中</Option>
-            <Option value="4">删除审核中</Option>
-          </Select>
-        </div>
-        </Col>
+        <!--        <Col span="6">-->
+        <!--        <div class="condition-item">-->
+        <!--          <span class="condition-label">状态：</span>-->
+        <!--          <Select v-model="form.status" value="0">-->
+        <!--            <Option value="0">全部</Option>-->
+        <!--            <Option value="1">已添加</Option>-->
+        <!--            <Option value="2">已删除</Option>-->
+        <!--            <Option value="3">添加审核中</Option>-->
+        <!--            <Option value="4">删除审核中</Option>-->
+        <!--          </Select>-->
+        <!--        </div>-->
+        <!--        </Col>-->
         <Col span="6">
         <div class="condition-item">
           <Button style="width: 80px;" @click="search" type="primary">查询</Button>
@@ -83,11 +83,16 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange"/>
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -95,66 +100,74 @@
 </template>
 
 <script>
+import * as api from './api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
-    let columns1 = [
+    let columns = [
       {
         title: '隶属企业名称',
-        key: 'name'
+        key: 'main_company_company_name'
       },
       {
         title: '服务器身份标识',
-        key: 'address'
+        key: 'node_server_id'
       },
       {
         title: '节点类型',
-        key: 'nodetype'
+        key: 'node_type'
       },
       {
         title: '添加时间',
-        key: 'time'
+        key: 'join_time'
       },
-      {
-        title: '状态',
-        key: 'statuslabel'
-      },
+      // {
+      //   title: '状态',
+      //   key: 'statuslabel'
+      // },
       {
         title: '操作',
         render (h, p) {
           let row = p.row || {}
-          let label = ''
-          let status = row.status
-          if (status == '1') {
-            label = '--'
-          } else if (status == '2') {
-            label = '删除'
-          } else if (status == '3') {
-            label = '撤销'
-          }
+          let label = '删除'
+          // let status = row.status
+          // if (status === '1') {
+          //   label = '--'
+          // } else if (status === '2') {
+          //   label = '删除'
+          // } else if (status === '3') {
+          //   label = '撤销'
+          // }
           return h('a', {
             on: {
               click () {
-                let index = p.index
-                that.data1.splice(index, 1)
+                that.remove(row)
               }
             }
           }, label)
         }
       }
     ]
-    let data1 = [
-      { name: '从法科技', address: '00630e...cabc3', nodetype: '主节点', databasename: '——', time: '2020-1-1 12:00:00', statuslabel: '已添加', status: '2' },
-      { name: '从法科技', address: '00630e...cacc2', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
-      { name: '从法科技', address: '00630e...fafc1', nodetype: '主节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '添加审核中', status: '1' },
-      { name: '泛融科技', address: '00630e...fafc7', nodetype: '资源节点', databasename: '从法存管域', time: '2020-1-1 12:00:00', statuslabel: '删除审核中', status: '3' }
-      // 泛融科技
-    ]
     return {
       myswitch: '1',
-      columns1,
-      data1,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: '',
@@ -173,30 +186,91 @@ export default {
   },
   methods: {
     init () {
-
+      this.listLoading = true
+      let storage_id = sessionStorage.getItem('fbs_storage_id')
+      api.pbqan({
+        storage_id,
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     // 查询
     search () {
-      let that = this
-      let storageId = that.$router.params && that.$router.params.storageId
-      const url = `/cmw/pbqml.do/${storageId}`
-      this.$http.post(url).then(res => {
-        res = res.data
-        console.log(res)
-        if (res.retCode == '1') {
-          that.$Message.success('查询成功')
-        } else {
-          if (res.retMsg) {
-            that.$Message.error(res.retMsg)
-          }
+    },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    async remove (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_storage_id'), // 存管域ID
+        'nodeAddress': row.chainnode_id, // 节点地址
+        'nodeInfo': {
+          'nodeName': '', // 节点名称
+          'orgName': '', // 节点归属组织名称
+          'orgAddress': '', // 节点归属组织地址
+          'dSName': '' // 存管域名称
+        },
+        'url': '', // 提供给该存管域文件上传下载的url,如：http://124.70.164.10:8000/fbs
+        'amount': '1', // 许可证数量，固定传 1
+        'op': 2 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'DSDomainDSNodeApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
         }
-      }).catch(err => {})
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 3) {
+                this.$Message.success('删除成功')
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    // 分页
+    pageChange (page) {
+      this.page.current = page
+      this.getList()
     },
     confirmAdd () {
       this.$router.push('/data-nodeAddAdmin')
-    },
-    pageChange (value) {
-
     }
   }
 }

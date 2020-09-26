@@ -34,39 +34,39 @@
         <Row>
           <Col>
           <div class="condition-item">
-            <p class="condition-label">节点服务器名称：</p>
-            <input  class="condition-int" type="text" v-model="form.name"  placeholder="请输入要申请链实例准入的节点服务器名称"></input>
+            <p class="condition-label" label-position="top">节点服务器名称：</p>
+            <input class="condition-int" type="text" v-model="form.name"  placeholder="请输入要申请链实例准入的节点服务器名称"></input>
           </div>
           </Col>
         </Row>
         <Row>
           <Col>
           <div class="condition-item">
-            <p class="condition-label">节点服务器身份标识：</p>
-            <input  class="condition-int" type="text" v-model="form.address" placeholder="请输入要申请链实例准入的节点身份标识"></input>
+            <p class="condition-label" label-position="top">节点服务器身份标识：</p>
+            <input class="condition-int" type="text" v-model="form.address" placeholder="请输入要申请链实例准入的节点身份标识"></input>
           </div>
           </Col>
         </Row>
         <Row>
           <Col>
           <div class="condition-item">
-            <p class="condition-label">隶属企业名称：</p>
-            <input  class="condition-int" type="text" v-model="form.nameAddr" placeholder="请输入节点隶属的企业名称"></input>
+            <p class="condition-label" label-position="top">隶属企业名称：</p>
+            <input class="condition-int" type="text" v-model="form.nameAddr" placeholder="请输入节点隶属的企业名称"></input>
           </div>
           </Col>
         </Row>
         <Row>
           <Col>
-          <div class="condition-item">
+          <div class="condition-item" label-position="top">
             <p class="condition-label">隶属企业身份标识：</p>
-            <input  class="condition-int" type="text" v-model="form.addressAddr" placeholder="请输入节点隶属的企业身份标识"></input>
+            <input class="condition-int" type="text" v-model="form.addressAddr"  placeholder="请输入节点隶属的企业身份标识"></input>
           </div>
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col >
           <div class="set-from-item" style="text-align:center;">
-            <Button style="width: 80px;" @click="serachBtn" type="primary">申请</Button>
+            <Button style="width: 80px;" @click="submit" type="primary">申请</Button>
           </div>
           </Col>
         </Row>
@@ -81,7 +81,8 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
+import * as cApi from '@/http/api'
+
 export default {
   data () {
     return {
@@ -96,7 +97,6 @@ export default {
   },
   mounted () {
     this.init()
-    this.creatQrCode()
   },
   watch: {
 
@@ -108,49 +108,66 @@ export default {
     init () {
 
     },
-
-    serachBtn () {
-      this.popup = 1
-      // let self = this
-      let params = {
-        name: this.form.name,
-        address: this.form.address,
-        nameAddr: this.form.nameAddr,
-        addressAddr: this.form.addressAddr
+    async submit () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_storage_id'), // 存管域ID
+        'nodeAddress': this.form.addressAddr, // 节点地址
+        'nodeInfo': {
+          'nodeName': this.form.name, // 节点名称
+          'orgName': this.form.nameAddr, // 节点归属组织名称
+          'orgAddress': this.form.address, // 节点归属组织地址
+          'dSName': sessionStorage.getItem('fbs_storage_id') // 存管域名称
+        },
+        'url': '', // 提供给该存管域文件上传下载的url,如：http://124.70.164.10:8000/fbs
+        'amount': '1', // 许可证数量，固定传 1
+        'op': 1 // 1添加；2移除
       }
-      this.$http.post('', params).then(res => {
-        console.log(res)
-        res = res.data
-        if (res.retCode === '1') {
-          this.$router.push('/chain-nodeadmission')
-        } else {
-
+      let data = await cApi.pbgen({
+        'method': 'DSDomainDSNodeApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
         }
-      }).catch(() => {
-
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
       })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$router.go(-1)
+                this.$Message.success('保存成功！')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     back () {
       window.history.go(-1)
-    },
-    // 二维码
-    creatQrCode () {
-      // const _this = this
-      let linkData = {
-        //     url:this.apiUrl +"/clt/pblin.do",
-        //     func:"Login",
-        //     data:{
-        //     }
-      }
-      let qrcode = new QRCode('qrcode', {
-        text: JSON.stringify(linkData), // 需要转换为二维码的内容
-        width: 260,
-        height: 260,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: 3// 容错率，L/M/H
-      })
-      console.log(qrcode)
     }
   }
 }
