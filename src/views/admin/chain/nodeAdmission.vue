@@ -335,8 +335,8 @@ export default {
     async del (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
-        'orgAddress': row.main_company_company_id, // 节点归属组织地址
-        'orgName': row.main_company_company_name, // 节点归属组织名称
+        'orgAddress': row.main_company_company_id || '00', // 节点归属组织地址
+        'orgName': row.main_company_company_name || '00', // 节点归属组织名称
         'nodeAddr': row.chainnode_id, // 节点地址
         'amount': row.node_license_amount, // 许可证容量
         'nodeType': 2, // 1主节点;2节点网络准入;3前置节点

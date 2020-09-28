@@ -1,105 +1,115 @@
 <template>
   <div class="data-manager">
     <div class="content-title"><span>区块链联盟委员会管理</span></div>
-    <div>
-      <div class="bg-white padding" style="margin-bottom: 20px;">
-        <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
-          <span>联盟委员决议审批规则</span>
+    <div class="padding bg-white" style="margin-bottom: 20px;" v-if="rule">
+      <div style="margin-bottom: 20px;color: #273D52;">
+        <span>联盟委员决议审批规则：</span>
+        <Tooltip
+          placement="top"
+          max-width="600"
+          transfer
+          content='选项说明:所有需要联盟委员审批的事务，通过决议的签批规则。* “任意一个联盟委员签批”：联盟委员会成员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3联盟委员同时签批”：只有联盟委员会成员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3联盟委员同时签批”：只有联盟委员会成员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有联盟委员同时签批”： 只有联盟委员会成员列表中的所有成员签批同意，相应的决议方可通过。'>
+          <Icon type="ios-help-circle-outline" />
+        </Tooltip>
+      </div>
+      <RadioGroup class="approval" v-model="rule">
+        <Row>
+          <Col span="6">
+          <Radio label="0">任意一个联盟委员签批</Radio>
+          </Col>
+          <Col span="6">
+          <Radio label="100">1/3联盟委员同时签批</Radio>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="6">
+          <Radio label="200">2/3联盟委员同时签批</Radio>
+          </Col>
+          <Col span="6">
+          <Radio label="300">所有联盟委员同时签批</Radio>
+          </Col>
+        </Row>
+      </RadioGroup>
+      <div class="audit-item" v-if="old_rule">
+        <div class="audit-item-content" >
+          <P>变更前：</P>
+          <div>联盟委员决议审批规则：{{ruleJson[old_rule]}}</div>
+          <div>申请人： {{applicant_name}}<span>审核通过人： <a href="javascript:;">查看</a></span></div>
         </div>
-        <RadioGroup class="approval" v-model="acceptLimit">
-          <Row>
-            <Col span="6">
-            <Radio label="0">任意一个成员签批</Radio>
-            </Col>
-            <Col span="6">
-            <Radio label="1/3">1/3成员同时签批</Radio>
-            </Col>
-            <Col span="6">
-            <Radio label="2/3">2/3成员同时签批</Radio>
-            </Col>
-            <Col span="6">
-            <Radio label="3/3">所有成员同时签批</Radio>
-            </Col>
-          </Row>
-        </RadioGroup>
-        <div class="audit-item">
-          <div class="audit-item-content">
-            <P>变更前：</P>
-            <div>联盟委员决议审批规则：1/3联盟委员同时签批</div>
-            <div>申请人： 张丽<span>审核通过人： <a href="javascript:;">查看</a></span></div>
-          </div>
-          <div class="audit-item-btns">
-            <div class="btn-inner">
-              <button class="refuse-btn">拒绝</button>
-              <button class="agree-btn">同意</button>
-            </div>
+        <div class="audit-item-btns">
+          <div class="btn-inner">
+            <button class="refuse-btn" @click="refuseRule">拒绝</button>
+            <button class="agree-btn" @click="agreeRule">同意</button>
           </div>
         </div>
       </div>
-      <div class="bg-white padding">
-        <div class="league-mem">
-          <span>联盟委员会成员</span>
-        </div>
-        <div>
-        </div>
-        <Table :columns="columns1" :data="data1"></Table>
-        <div class="page">
-          <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
-          </div>
-        </div>
-      </div>
-      <Modal
-        v-model="addModal"
-        title="添加管理"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <div class="add-modal-body">
-          <div><Input placeholder="请输入管理员名称" v-model="name" /></div>
-          <div><Input placeholder="请输入管理员身份标志地址" v-model="address" /></div>
-        </div>
-      </Modal>
     </div>
+    <div class="padding bg-white">
+      <div>
+        <div class="league-mem">
+          <span>联盟委员会成员操作明细：</span>
+        </div>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
+      </div>
+      <div class="page">
+        <div class="page-inner">
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
 <script>
+import * as api from '../api'
+import * as cApi from '@/http/api'
 export default {
   data () {
-    // let that = this
-    let columns1 = [
+    let that = this
+    let columns = [
       {
         title: '委员名称',
         key: 'name'
       },
       {
-        title: '委员身份标识',
+        title: '委员身份标志地址',
         key: 'address'
       },
       {
         title: '添加时间',
-        key: 'time'
+        key: 'join_time'
       },
       {
-        width: 150,
         title: '状态',
         key: 'status'
       },
       {
-        width: 120,
         title: '申请人',
-        key: 'applicant'
+        key: 'applicant_name'
       },
       {
-        width: 130,
         title: '审核通过人',
         render (h, p) {
-          return h('a', {}, '查看')
+          let row = p.row
+          return h('a', {
+            on: {
+              click () {
+                that.adds(row)
+              }
+            }
+          }, '查看')
         }
       },
       {
         title: '操作',
         render (h, p) {
+          let row = p.row
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -110,6 +120,7 @@ export default {
             on: {
               click () {
                 // let index = p.index
+                that.agree(row)
               }
             }
           }, '同意')
@@ -119,6 +130,7 @@ export default {
             },
             on: {
               click () {
+                that.refuse(row)
                 // let index = p.index
               }
             }
@@ -131,18 +143,35 @@ export default {
         }
       }
     ]
-    let data1 = [
-      { name: '金桥信息', address: '008b0f...effbc', applicant: '张力', time: '--', status: '添加审核中', type: '1' },
-      { name: '泛融科技', address: '008b0f...abbc3', applicant: '张力', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' }
-    ]
+    let ruleJson = {
+      '0': '任意一个联盟委员签批',
+      '100': '1/3联盟委员同时签批',
+      '200': '2/3联盟委员同时签批',
+      '300': '所有联盟委员同时签批'
+    }
     return {
-      acceptLimit: '2/3',
-      name: '',
-      address: '',
-      addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      ruleJson,
+      rule: '',
+      old_rule: '',
+      review_rule: '',
+      applicant_name: '',
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -160,7 +189,230 @@ export default {
   },
   methods: {
     init () {
-
+      api.pbqrc({
+        reviewType: 'chaincommittee',
+        'menu': 'chain_committee_rule', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        'address': sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        if (res.rows) {
+          let data = res.rows[0]
+          this.rule = data.role || ''
+          this.review_rule = data.review_id
+          this.old_rule = data.old_rule || ''
+        } else {
+          this.rule = false
+        }
+      })
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'chaincommittee',
+        reviewType: 'chain_manager',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
+    // 查看
+    async agree (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuse (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async agreeRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeRuleAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuseRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    adds (obj) {
+      this.$Modal.confirm({
+        title: '已审核人列表',
+        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+        oktext: '关闭'
+      })
     },
     ok () {
 
@@ -168,8 +420,18 @@ export default {
     cancel () {
 
     },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }
@@ -183,10 +445,9 @@ export default {
     }
   }
   .league-mem {
-    padding: 16px 0 20px 0;
+    padding: 16px 0 10px 0;
     span {
       color: #273D52;
-      font-weight: 600;
     }
     .fr {
       color: #6094FF;
@@ -218,6 +479,17 @@ export default {
     }
     .ivu-select {
       width: 60%;
+    }
+  }
+  .change-notice {
+    border:1px dashed rgba(243,163,32,.6);
+    border-radius: 2px;
+    line-height: 1.8em;
+    p {
+      font-weight: 500;
+      font-size: 16px;
+      color: rgba(245, 166, 35, 1);
+      margin-bottom: 4px;
     }
   }
 </style>

@@ -10,7 +10,7 @@
           <Col :span="6">
             业务域创建审批：
             <Icon type="ios-help-circle-outline" />
-            <!-- <Tooltip
+             <Tooltip
               placement="top"
               max-width="600"
               transfer
@@ -94,18 +94,23 @@
         </Col>
       </Row> -->
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange"/>
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
     <!-- <div class="padding bg-white clear">
       <div style="margin-bottom: 20px;color: #273D52;" class="clear">
         <span style="color: #273D52;font-weight: 600; display: block;margin-bottom: 30px;">创建许可企业列表</span>
-        <!-- <Tooltip
+        <Tooltip
           placement="top"
           max-width="600"
           transfer
@@ -153,14 +158,15 @@
         </div>
       </div> -->
   </div>
-  </div>
 </template>
 
 <script>
+import * as api from '../api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
-    let columns1 = [
+    let columns = [
       {
         title: '业务域名称',
         key: 'name'
@@ -196,7 +202,9 @@ export default {
       },
       {
         title: '操作',
+        'width': 120,
         render (h, p) {
+          let row = p.row
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -206,7 +214,8 @@ export default {
             },
             on: {
               click () {
-                let index = p.index
+                // let index = p.index
+                that.agree(row)
               }
             }
           }, '同意')
@@ -216,7 +225,8 @@ export default {
             },
             on: {
               click () {
-                let index = p.index
+                that.refuse(row)
+                // let index = p.index
               }
             }
           }, '拒绝')
@@ -228,19 +238,29 @@ export default {
         }
       }
     ]
-    let data1 = [
-      { name: '泛融存证业务', address: '00740f...aaba8', applicant: '张力', time: '2020-1-1 12:00:00', statuslabel: '创建审核中', status: '0' },
-      { name: '司法业务域', address: '00da0c...cfbe5', applicant: '张力', time: '2020-1-1 12:00:00', statuslabel: '已创建', status: '2' }
-    ]
     return {
       acceptLimit: '1/3',
       myswitch: '1',
       name: '',
       address: '',
       addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -259,7 +279,114 @@ export default {
   },
   methods: {
     init () {
-
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'storage',
+        reviewType: 'storage_biz',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
+    async agree (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeMemberAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuse (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     // 查看
     adds (obj) {
@@ -275,8 +402,18 @@ export default {
     cancel () {
 
     },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

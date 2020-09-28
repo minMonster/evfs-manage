@@ -120,19 +120,28 @@ export default {
       },
       {
         title: '操作',
-        width: 100,
+        'width': 120,
         render (h, p) {
           let row = p.row
-          console.log(row)
-          let label = row.type === '2' ? '删除' : '撤销'
-          return h('a', {
+          let del = h('a', {
+            style: {
+              marginRight: '8px'
+            },
+            domProps: {
+              href: 'javascript:;'
+            },
             on: {
               click () {
-                let index = p.index
-                that.data1.splice(index, 1)
+                // let index = p.index
+                that.del(row)
               }
             }
-          }, label)
+          }, '删除')
+          return h('div', {
+            'class': 'opt-btns'
+          }, [
+            del
+          ])
         }
       }
     ]
@@ -193,34 +202,111 @@ export default {
         this.$Message.error(err.retMsg)
       })
     },
+    async del (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_storage_id'), // 存管域ID
+        'member': row.member_address, // 变更成员地址
+        'op': 2 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'DSDomainMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
     // 添加列表功能
-    ok () {
-      // let name = this.name.trim()
-      // let address = this.address.trim()
-      // if (!name) {
-      //   this.$Message.error('请输入管理员名称')
-      //   return
-      // }
-      // if (!address) {
-      //   this.$Message.error('请输入管理员身份标识密钥')
-      //   return
-      // }
-      // this.add()
+    async ok () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_storage_id'), // 存管域ID
+        'member': this.form.address, // 变更成员地址
+        'op': 1 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'DSDomainMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                let that = this
+                setTimeout(() => {
+                  that.init()
+                }, 2000)
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     add () {
-      // let address = this.address.trim()
-      // let name = this.name.trim()
-      // this.addLoading = true
-      // let data = {
-      //   address, name
-      // }
-      // this.$http.post('', data).then(res => {
-      //   res = res.data
-      // }).catch(() => {
-      //
-      // }).then(res => {
-      //   this.cancel()
-      // })
+      this.addModal = true
     },
     cancel () {
       // this.name = ''
@@ -231,7 +317,6 @@ export default {
     search () {},
     // 修改
     async modify () {
-      console.log('modify')
       if (!this.rule) {
         this.$Message.warning('请选择联盟委员决议审批规则')
         return

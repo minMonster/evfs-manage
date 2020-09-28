@@ -30,21 +30,22 @@
           <Radio label="1" style="margin-right: 40px;">允许</Radio>
           <Radio label="0">禁止</Radio>
         </RadioGroup>
+        <Button type="primary" style="float: right;margin-top: -5px; ">修改</Button>
       </div>
-      <div>
-        <span>允许任何人域内保存文件：</span>
-        <Tooltip
-          placement="top"
-          max-width="600"
-          transfer
-        >
-          <Icon type="ios-help-circle-outline" />
-        </Tooltip>
-        <RadioGroup style="margin: 0 20px;" v-model="switch3">
-          <Radio label="1" style="margin-right: 40px;">允许</Radio>
-          <Radio label="0">禁止</Radio>
-        </RadioGroup>
-      </div>
+      <!--      <div>-->
+      <!--        <span>允许任何人域内保存文件：</span>-->
+      <!--        <Tooltip-->
+      <!--          placement="top"-->
+      <!--          max-width="600"-->
+      <!--          transfer-->
+      <!--        >-->
+      <!--          <Icon type="ios-help-circle-outline" />-->
+      <!--        </Tooltip>-->
+      <!--        <RadioGroup style="margin: 0 20px;" v-model="switch3">-->
+      <!--          <Radio label="1" style="margin-right: 40px;">允许</Radio>-->
+      <!--          <Radio label="0">禁止</Radio>-->
+      <!--        </RadioGroup>-->
+      <!--      </div>-->
     </div>
     <!-- <div class="bg-white padding">
       <div style="margin-bottom: 25px;color: #273D52;">
@@ -179,7 +180,7 @@ export default {
       console.log(this.$route.query.biz_id, 'this.$route.query.biz_id')
       api.pbqbi({
         // biz_id: this.$route.query.biz_id
-        biz_id: sessionStorage.getItem('active_biz_id')
+        biz_id: sessionStorage.getItem('fbs_biz_id')
       }).then(res => {
         this.filePermission = res.filePermission
         this.information = res.information

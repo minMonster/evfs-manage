@@ -253,7 +253,7 @@ export default {
         from: sessionStorage.getItem('fbs_address'),
         'orgAddress': row.main_company_company_id, // 节点归属组织地址
         'orgName': row.main_company_company_name, // 节点归属组织名称
-        'nodeAddr': row.chainnode_id, // 节点地址
+        'nodeAddr': row.clientnode_id, // 节点地址
         'nodeInfo': { // 节点信息
           'name': '', // 节点名称
           'cpu': '', // CPU数量

@@ -159,7 +159,6 @@ export default {
       this.addModal = true
     },
     init () {
-
     },
     ok () {
       setTimeout(() => {

@@ -32,7 +32,7 @@ const menu = [
       { text: '主节点授权', name: 'mainnode' },
       { text: '数据存管域授权', name: 'dataauth' },
       { text: '链管理员', name: 'chainmanager' },
-      { text: '行为审计', name: 'chain-configure' },
+      // { text: '行为审计', name: 'chain-configure' },
       { text: '待审核事项', name: 'chain-audit' }
     ] },
   { icon: 'icon-file',
@@ -41,22 +41,22 @@ const menu = [
     children: [
     // { text: '域内固存规则', name: 'data-rule'},
       { text: '节点准入', name: 'data-node' },
-      { text: '运行许可证', name: 'data-permission' },
+      // { text: '运行许可证', name: 'data-permission' },
       { text: '业务域授权', name: 'data-business' },
       { text: '域管理员', name: 'data-manager' },
-      { text: '行为审计', name: 'data-alliance' },
+      // { text: '行为审计', name: 'data-alliance' },
       { text: '待审核事项', name: 'data-audit' }
     ] },
   { icon: 'icon-business',
     name: 'business',
     text: '业务域',
     children: [
-      { text: '业务系统准入', name: 'business-permission' },
+      // { text: '业务系统准入', name: 'business-permission' },
       { text: '数据操作规则', name: 'business-rule' },
-      { text: '域内数据治理', name: 'business-file' },
+      // { text: '域内数据治理', name: 'business-file' },
       { text: '合约治理', name: 'business-contract' },
       { text: '域管理员', name: 'business-manager' },
-      { text: '行为审计', name: 'business-configure' },
+      // { text: '行为审计', name: 'business-configure' },
       { text: '待审核事项', name: 'business-audit' }
     ] },
   { icon: 'icon-node', name: 'node', text: '节点服务器' }
@@ -82,10 +82,10 @@ export default {
   computed: {
     showSubmenu () {
       let { mainActive, showDataSubmenu, showBusinessSubmenu } = this.$route.query
-      if ((mainActive == 'data' && showDataSubmenu == '1') ||
-        mainActive == 'chain' ||
+      if ((mainActive === 'data' && showDataSubmenu === '1') ||
+        mainActive === 'chain' ||
         !mainActive ||
-       (mainActive == 'business' && showBusinessSubmenu == '1')) {
+       (mainActive === 'business' && showBusinessSubmenu === '1')) {
         return true
       } else {
         return false
@@ -116,7 +116,7 @@ export default {
       }
     },
     mainMenu (item, index) {
-      if (this.mainActive == item.name) {
+      if (this.mainActive === item.name) {
         if (!this.activeIndex) {
           this.activeIndex = index + ''
           // this.subActive = ''

@@ -11,7 +11,7 @@
             transfer>
             <Icon type="ios-help-circle-outline" />
           </Tooltip>
-          <Button type="primary" style="float: right;">修改</Button>
+          <Button type="primary" style="float: right;" @click="edit">修改</Button>
         </div>
         <RadioGroup class="approval" v-model="rule">
           <Row>
@@ -86,8 +86,8 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <div class="add-modal-body">
-          <div><Input placeholder="请输入管理员姓名" v-model="name" /></div>
-          <div><Input placeholder="请输入管理员身份标志地址" v-model="address" /></div>
+          <div><Input placeholder="请输入管理员姓名" v-model="form.name" /></div>
+          <div><Input placeholder="请输入管理员身份标志地址" v-model="form.address" /></div>
         </div>
       </Modal>
     </div>
@@ -96,47 +96,47 @@
 
 <script>
 import * as api from './api'
-
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
     let columns = [
       {
         title: '管理员姓名',
-        key: 'name'
+        key: 'member_name'
       },
       {
         title: '管理员身份标志地址',
-        key: 'address'
+        key: 'member_address'
       },
       {
         title: '添加时间',
-        key: 'time'
-      },
-      {
-        title: '状态',
-        key: 'status'
+        key: 'join_time'
       },
       {
         title: '操作',
-        width: 100,
+        'width': 120,
         render (h, p) {
           let row = p.row
-          let label = ''
-          if (row.status == '1') {
-            label = '撤销'
-          }
-          if (row.status === '2') {
-            label = '删除'
-          }
-          return h('a', {
+          let del = h('a', {
+            style: {
+              marginRight: '8px'
+            },
+            domProps: {
+              href: 'javascript:;'
+            },
             on: {
               click () {
-                let index = p.index
-                that.data1.splice(index, 1)
+                // let index = p.index
+                that.del(row)
               }
             }
-          }, label)
+          }, '删除')
+          return h('div', {
+            'class': 'opt-btns'
+          }, [
+            del
+          ])
         }
       }
     ]
@@ -190,7 +190,151 @@ export default {
     },
     approvalRules () {
     },
-    ok () {
+    async del (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_biz_id'), // 业务域ID
+        'member': row.member_address, // 变更成员地址
+        'op': 2 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async edit () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_biz_id'), // 业务域ID
+        'rule': this.rule // 业务域决议审批规则
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainRuleApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async ok () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_biz_id'), // 业务域ID
+        'member': this.form.address, // 变更成员地址
+        'op': 1 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     cancel () {
     },

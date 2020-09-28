@@ -104,11 +104,11 @@ const routes = [
         name: 'chain-alliance',
         component: Alliance
       },
-      {
-        path: 'chain-configure',
-        name: 'chain-configure',
-        component: Configure
-      },
+      // {
+      //   path: 'chain-configure',
+      //   name: 'chain-configure',
+      //   component: Configure
+      // },
       {
         path: 'chain-nodeadmission',
         name: 'chain-nodeadmission',
@@ -200,11 +200,11 @@ const routes = [
         name: 'data-rule',
         component: datarule
       },
-      {
-        path: 'data-alliance',
-        name: 'data-alliance',
-        component: dataalliance
-      },
+      // {
+      //   path: 'data-alliance',
+      //   name: 'data-alliance',
+      //   component: dataalliance
+      // },
       {
         path: 'data-permission',
         name: 'data-permission',
