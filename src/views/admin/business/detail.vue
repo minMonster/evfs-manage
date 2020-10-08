@@ -6,26 +6,26 @@
       <div>
         <Row>
           <Col :span="8">
-          <div>业务域名称：司法业务域</div>
+          <div>业务域名称：{{bizSession.biz_name || '--'}}</div>
           </Col>
           <Col :span="8">
-          <div>业务域唯一标识：{{biz.biz_id}}</div>
+          <div>业务域唯一标识：{{bizSession.biz_id_format}}</div>
           </Col>
           <Col :span="8">
-          <div>创建时间：{{biz.join_time}}</div>
-          </Col>
-        </Row>
-        <Row>
-          <Col :span="8">
-          <div>创建企业名称：{{biz.main_storage_storage_name}}</div>
-          </Col>
-          <Col :span="8">
-          <div>创建企业身份标识：{{biz.main_storage_storage_id}}</div>
+          <div>创建时间：{{bizSession.join_time_format}}</div>
           </Col>
         </Row>
         <Row>
           <Col :span="8">
-          <div>备注：创建是描述业务域的作用。</div>
+          <div>创建企业名称：{{bizSession.main_storage_storage_name || '--'}}</div>
+          </Col>
+          <Col :span="8">
+          <div>创建企业身份标识：{{bizSession.main_storage_storage_id_format}}</div>
+          </Col>
+        </Row>
+        <Row>
+          <Col :span="8">
+          <div>备注：{{bizSession.information || '--'}}</div>
           </Col>
         </Row>
       </div>
@@ -86,6 +86,7 @@ import * as api from './api'
 export default {
   data () {
     return {
+      bizSession: null,
       biz: {
         // 占用存储容量
         occupyCapacity: '--',
@@ -108,6 +109,7 @@ export default {
   computed: {},
   mounted () {
     this.init()
+    this.bizSession = JSON.parse(sessionStorage.getItem('fbs_biz'))
   },
   methods: {
     init () {

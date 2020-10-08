@@ -237,7 +237,6 @@ export default {
   methods: {
     init () {
       api.pbqct().then(res => {
-        sessionStorage.setItem('fbs_storageId', res.storage.storageId || '')
         if (res.storage) {
           this.storage = {
             ...this.storage,
@@ -250,6 +249,7 @@ export default {
             ...res.biz
           }
         }
+        this.chianCommitteeGroupNum = res.chianCommitteeGroupNum
         if (res.node) {
           this.node = {
             ...this.node,

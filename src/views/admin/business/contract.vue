@@ -13,7 +13,7 @@
         >
           <Icon type="ios-help-circle-outline" />
         </Tooltip> -->
-        <Button type="primary"  @click="addModal = true"  style="float: right;">添加合约</Button>
+        <Button type="primary"  @click="add"  style="float: right;">添加合约</Button>
       </div>
       <Row>
         <Col span="5">
@@ -216,37 +216,62 @@ export default {
       this.popup = 1
       this.add()
     },
-    add () {
-      this.cancel()
+    async add () {
+      this.addModal = true
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'member': this.address.trim(), // 变更账户钱包地址
+        'op': 1, // 1增加；2移除
+        'opType': 1 // 1委员会变更操作；2链管理员变更操作
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+                {
+                  url: 'bs/pbdtx.do',
+                  data,
+                  // 这里要写一个闭包函数 返回 需要的 api
+                  setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+                  func: 'send_trans'
+                },
+                (resPromise) => {
+                  // resPromise 轮询的结果 在此处处理业务逻辑
+                  return resPromise.then(res => {
+                    // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+                    if (res.status === 4 || res.status === 5 || res.status === 6) {
+                      this.$Message.error(res.remark)
+                      return true
+                    }
+                    if (res.status === 3) {
+                      this.$Message.success('修改成功')
+                      this.addModal = false
+                      return true
+                    } else {
+                      return false
+                    }
+                  }).catch(() => {
+                    return false
+                  })
+                })
+      }
     },
     search () {},
     cancel () {
       this.conName = ''
       this.remarks = ''
       this.conCent = ''
-      this.addModal = false
-      this.addLoading = false
-    },
-    pageChange (val) {
 
-    },
-    // 生成二维码
-    creatQrCode () {
-      let linkData = {
-        // url:"http://47.116.17.247:9000/api/clt/pblin.do",
-        // func:"Login",
-        // data:{
-        // }
-      }
-      let qrcode = new QRCode('qrcode', {
-        text: JSON.stringify(linkData), // 需要转换为二维码的内容
-        width: 260,
-        height: 260,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: 3// 容错率，L/M/H
-      })
-      console.log(qrcode)
     }
   }
 }

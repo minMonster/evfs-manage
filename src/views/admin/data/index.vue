@@ -84,6 +84,13 @@ export default {
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 let { showBusinessSubmenu } = that.$route.query
                 sessionStorage.setItem('fbs_storage_id', row.storage_id)
+                let formatStorage = {
+                  ...row,
+                  storage_id_format: that.formatId(row.storage_id),
+                  create_org_address_format: that.formatId(row.create_org_address),
+                  join_time_format: row.join_time ? that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss') : '--'
+                }
+                sessionStorage.setItem('fbs_storage', JSON.stringify(formatStorage))
                 that.$router.push({
                   path: 'data-detail',
                   query: {
@@ -143,6 +150,15 @@ export default {
     this.init()
   },
   methods: {
+    formatId (id) {
+      if (!id) {
+        return '--'
+      }
+      let stringlength = id.length
+      let fistStr = id.substring(0, 6)
+      let lastStr = id.substring(stringlength - 6, stringlength)
+      return fistStr + '.....' + lastStr
+    },
     init () {
       this.listLoading = true
       api.pbqss({

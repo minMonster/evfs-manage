@@ -21,6 +21,7 @@ const audit = () => import('@/views/admin/chain/audit') // 链审核
 const mainnode = () => import('@/views/admin/chain/mainnode')
 const dataauth = () => import('@/views/admin/chain/dataauth')
 const chainmanager = () => import('@/views/admin/chain/chainmanager')
+const manage = () => import('@/views/admin/chain/manage')
 const chdetial = () => import('@/views/admin/chain/chdetial')
 const nextChdetial = () => import('@/views/admin/chain/nextChdetial')
 
@@ -178,6 +179,11 @@ const routes = [
         path: 'chainmanager',
         name: 'chainmanager',
         component: chainmanager
+      },
+      {
+        path: 'chain-manage',
+        name: 'manage',
+        component: manage
       },
       {
         path: 'chain-audit',

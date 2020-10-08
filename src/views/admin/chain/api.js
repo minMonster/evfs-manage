@@ -26,3 +26,4 @@ export const pbqrm = (params, opts) => request.post('cmw/pbqrm.do', params, opts
 export const pbqrc = (params, opts) => request.post('cmw/pbqrc.do', params, opts)
 // 节点服务器详情-服务器管理员列表
 export const pbqnm = (params, opts) => request.post('cmw/pbqnm.do', params, opts)
+export const pbqci = (params, opts) => request.post('cmw/pbqci.do', params, opts)

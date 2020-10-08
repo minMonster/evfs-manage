@@ -1,6 +1,6 @@
 <template>
   <div class="business-detail">
-    <data-header title="业务域内文件操作规则设置" :btn="true"/>
+    <business-header title="业务域内文件操作规则设置" :btn="true"/>
     <div class="bg-white padding" style="margin-bottom: 30px;color: #373737;">
       <span>信息监管：</span>
       <Tooltip

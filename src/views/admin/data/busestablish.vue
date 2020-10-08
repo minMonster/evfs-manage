@@ -270,6 +270,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                window.history.go(-1)
                 return true
               } else {
                 return false

@@ -116,7 +116,15 @@ export default {
       },
       {
         title: '添加时间',
-        key: 'join_time'
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       // {
       //   title: '状态',

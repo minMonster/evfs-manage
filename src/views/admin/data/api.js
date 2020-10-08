@@ -9,3 +9,4 @@ export const pbqrm = (params, opts) => request.post('cmw/pbqrm.do', params, opts
 // 链-节点准入-准入节点服务器列表
 export const pbqan = (params, opts) => request.post('cmw/pbqan.do', params, opts)
 export const pbqrc = (params, opts) => request.post('cmw/pbqrc.do', params, opts)
+export const pbqci = (params, opts) => request.post('cmw/pbqci.do', params, opts)

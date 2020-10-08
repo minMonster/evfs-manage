@@ -80,7 +80,7 @@
 
 <script>
 import * as api from './api'
-// import * as cApi from '@/http/api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
@@ -106,20 +106,44 @@ export default {
       },
       {
         title: '服务器身份标识',
-        key: 'node_server_id'
+        key: 'chainnode_id'
       },
       {
         title: '节点类型',
         key: 'node_type',
-        width: 120
+        width: 120,
+        render (h, p) {
+          let row = p.row
+          if (!row.node_type) {
+            return h('span', '--')
+          } else {
+            return h('span', row.node_type)
+          }
+        }
       },
       {
         title: '数据存管域名称',
-        key: 'main_storage_storage_name'
+        key: 'main_storage_storage_name',
+        render (h, p) {
+          let row = p.row
+          if (!row.main_storage_storage_name) {
+            return h('span', '--')
+          } else {
+            return h('span', row.main_storage_storage_name)
+          }
+        }
       },
       {
         title: '添加时间',
-        key: 'join_time'
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       // {
       //   title: '状态',
@@ -127,19 +151,28 @@ export default {
       // },
       {
         title: '操作',
-        width: 120,
+        'width': 120,
         render (h, p) {
-          let row = p.row || {}
-          let label = row.status === '2' ? '收回授权' : '撤销'
-          return h('a', {
+          let row = p.row
+          let agree = h('a', {
+            style: {
+              marginRight: '8px'
+            },
+            domProps: {
+              href: 'javascript:;'
+            },
             on: {
               click () {
-                that.$Message.warning('待确认需求')
                 // let index = p.index
-                // that.data1.splice(index, 1)
+                that.del(row)
               }
             }
-          }, label)
+          }, '删除')
+          return h('div', {
+            'class': 'opt-btns'
+          }, [
+            agree
+          ])
         }
       }
     ]
@@ -199,6 +232,66 @@ export default {
         this.$Message.error(err.retMsg)
       })
     },
+    async del (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'orgAddress': row.main_company_company_id, // 节点归属组织地址
+        'orgName': row.main_company_company_name, // 节点归属组织名称
+        'nodeAddr': row.chainnode_id, // 节点地址
+        'nodeInfo': { // 节点信息
+          'name': '司法部', // 节点名称
+          'cpu': '2', // CPU数量
+          'memory': '64G', // 内存大小
+          'disk': '1000G', // 磁盘大小
+          'bandwidth': '1000M' // 带宽大小
+        },
+        'amount': '1', // 许可证容量
+        'nodeType': 1, // 1主节点;2节点网络准入;3前置节点
+        'op': 2 // 1添加 2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'ChainNodeApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('删除成功')
+                this.addModal = false
+                this.init()
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
     ok () {
 
     },
@@ -209,8 +302,7 @@ export default {
 
     },
     confirmAdd () {
-      this.$Message.warning('待确认需求')
-      // this.$router.push('/chain-nodeManage')
+      this.$router.push('/chain-manage')
     },
     getList () {
       this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)

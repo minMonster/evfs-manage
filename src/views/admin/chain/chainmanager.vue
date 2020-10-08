@@ -51,18 +51,18 @@
               <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
             </div>
             </Col>
-            <Col span="6">
-            <div class="condition-item">
-              <span class="condition-label">状态：</span>
-              <Select v-model="form.status">
-                <Option value="0">全部</Option>
-                <Option value="1">已添加</Option>
-                <Option value="2">已删除</Option>
-                <Option value="3">添加审核中</Option>
-                <Option value="4">删除审核中</Option>
-              </Select>
-            </div>
-            </Col>
+            <!--            <Col span="6">-->
+            <!--            <div class="condition-item">-->
+            <!--              <span class="condition-label">状态：</span>-->
+            <!--              <Select v-model="form.status">-->
+            <!--                <Option value="0">全部</Option>-->
+            <!--                <Option value="1">已添加</Option>-->
+            <!--                <Option value="2">已删除</Option>-->
+            <!--                <Option value="3">添加审核中</Option>-->
+            <!--                <Option value="4">删除审核中</Option>-->
+            <!--              </Select>-->
+            <!--            </div>-->
+            <!--            </Col>-->
             <Col span="6">
             <div class="condition-item">
               <Button style="width: 80px;" type="primary">查询</Button>
@@ -106,7 +106,7 @@
 
 <script>
 import * as api from './api'
-// import * as cApi from '@/http/api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
@@ -121,7 +121,15 @@ export default {
       },
       {
         title: '添加时间',
-        key: 'join_time'
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       // {
       //   title: '状态',
@@ -132,12 +140,11 @@ export default {
         width: 100,
         render (h, p) {
           let row = p.row
-          let label = row.type === '2' ? '删除' : '撤销'
+          let label = '删除'
           return h('a', {
             on: {
               click () {
-                let index = p.index
-                that.data1.splice(index, 1)
+                that.del(row)
               }
             }
           }, label)
@@ -206,16 +213,64 @@ export default {
       })
     },
     // 添加列表功能
-    ok () {
-      // let name = this.name.trim()
-      // let address = this.address.trim()
-      // if (!name) {
-      //   this.$Message.error('请输入管理员名称')
-      //   return
-      // }
-      // if (!address) {
-      //   this.$Message.error('请输入管理员身份标识密钥')
-      // }
+    async ok () {
+      let name = this.form.name.trim()
+      let address = this.form.address.trim()
+      if (!name) {
+        this.$Message.error('请输入管理员名称')
+        return
+      }
+      if (!address) {
+        this.$Message.error('请输入管理员身份标识密钥')
+      }
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'member': address.trim(), // 变更账户钱包地址
+        'op': 1, // 1增加；2移除
+        'opType': 2 // 1委员会变更操作；2链管理员变更操作
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                this.init()
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
       // this.add()
     },
     add () {
@@ -226,9 +281,55 @@ export default {
       // this.addModal = false
       // this.addLoading = false
     },
-    del (obj) {
-      // let index = p.index
-      // that.data1.splice(index,1)
+    async del (obj) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'member': obj.member_address, // 变更账户钱包地址
+        'op': 2, // 1增加；2移除
+        'opType': 2 // 1委员会变更操作；2链管理员变更操作
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                this.init()
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
     },
     search () {},
     getList () {

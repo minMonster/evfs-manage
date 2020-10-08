@@ -116,7 +116,15 @@ export default {
       },
       {
         title: '添加时间',
-        key: 'join_time'
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       {
         title: '操作',
@@ -289,8 +297,9 @@ export default {
                 return true
               }
               if (res.status === 3) {
-                this.$Message.success('修改成功')
+                this.$Message.success('添加成功')
                 this.addModal = false
+                this.init()
                 let that = this
                 setTimeout(() => {
                   that.init()

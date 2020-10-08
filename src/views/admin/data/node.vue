@@ -120,7 +120,15 @@ export default {
       },
       {
         title: '添加时间',
-        key: 'join_time'
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       // {
       //   title: '状态',
@@ -254,6 +262,7 @@ export default {
               // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
               if (res.status === 3) {
                 this.$Message.success('删除成功')
+                this.init()
                 return true
               } else {
                 return false

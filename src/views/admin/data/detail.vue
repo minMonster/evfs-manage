@@ -3,24 +3,24 @@
     <chain-header title="数据存管域详情"/>
     <div class="business-detail-item">
       <div class="section-title"><span>数据存管域信息</span></div>
-      <div>
+      <div v-if="storage_session">
         <Row>
           <Col :span="8">
-          <div>数据存管域名称：司法业务域</div>
+          <div>数据存管域名称：{{storage_session.storage_name || '--'}}</div>
           </Col>
           <Col :span="8">
-          <div>数据存管域唯一标识：00740f...ffbc3</div>
+          <div>数据存管域唯一标识：{{storage_session.storage_id_format}}</div>
           </Col>
           <Col :span="8">
-          <div>创建时间：2020-1-5 10:21:32</div>
+          <div>创建时间：{{storage_session.join_time_format}}</div>
           </Col>
         </Row>
         <Row>
           <Col :span="8">
-          <div>创建企业名称：从法科技</div>
+          <div>创建企业名称：{{storage_session.create_org_name || '--'}}</div>
           </Col>
           <Col :span="8">
-          <div>创建企业身份标识：00740f...ccbb1</div>
+          <div>创建企业身份标识：{{storage_session.create_org_address_format}}</div>
           </Col>
         </Row>
       </div>
@@ -124,6 +124,7 @@ import * as api from '../chain/api'
 export default {
   data () {
     return {
+      storage_session: null,
       storage: {},
       biz: {
         bizNum: '--', // 业务域数量
@@ -158,6 +159,7 @@ export default {
   computed: {},
   mounted () {
     this.init()
+    this.storage_session = JSON.parse(sessionStorage.getItem('fbs_storage'))
   },
   methods: {
     init () {

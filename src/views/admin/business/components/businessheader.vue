@@ -5,38 +5,40 @@
     </h2>
     <Row class="chain-header-content">
       <Col span="8">
-      <div>链实例唯一标识：{{id}}</div>
+      <div>链实例唯一标识：{{abridge}}</div>
       </Col>
       <Col span="8">
-      <div>链实例创建时间：{{createtime}}</div>
-      </Col>
-    </Row>
-    <Row class="chain-header-content">
-      <Col span="8">
-      <div>数据存管域名称：{{name}}</div>
-      </Col>
-      <Col span="8">
-      <div>数据存管域唯一标识：{{dataid}}</div>
-      </Col>
-      <Col span="8">
-      <div>创建时间：{{datatime}}</div>
+      <div>链实例创建时间：{{formatCreatetime}}</div>
       </Col>
     </Row>
-    <Row class="chain-header-content">
+    <Row class="chain-header-content" v-if="storageSession">
       <Col span="8">
-      <div>业务域名称：司法业务域</div>
+      <div>数据存管域名称：{{storageSession.storage_name || '--'}}</div>
       </Col>
       <Col span="8">
-      <div>业务域唯一标识：00740f...ffbc3</div>
+      <div>数据存管域唯一标识：{{storageSession.storage_id_format}}</div>
       </Col>
       <Col span="8">
-      <div>创建时间：2020-1-5 10:23:24</div>
+      <div>创建时间：{{storageSession.join_time_format}}</div>
+      </Col>
+    </Row>
+    <Row class="chain-header-content" v-if="bizSession">
+      <Col span="8">
+      <div>业务域名称：{{bizSession.biz_name || '--'}}</div>
+      </Col>
+      <Col span="8">
+      <div>业务域唯一标识：{{bizSession.biz_id_format}}</div>
+      </Col>
+      <Col span="8">
+      <div>创建时间：{{bizSession.join_time_format}}</div>
       </Col>
     </Row>
   </div>
 </template>
 
 <script>
+import * as api from '../api'
+// import * as cApi from '@/http/api'
 export default {
   props: {
     title: {
@@ -46,8 +48,46 @@ export default {
       type: [String, Boolean]
     }
   },
+  computed: {
+    formatCreatetime () {
+      if (!this.createtime) {
+        return '--'
+      }
+      return this.$moment.unix(this.createtime / 1000).format('YYYY-MM-DD HH:mm:ss')
+    },
+    abridge () {
+      if (!this.id) {
+        return '--'
+      }
+      let stringlength = this.id.length
+      let fistStr = this.id.substring(0, 6)
+      let lastStr = this.id.substring(stringlength - 6, stringlength)
+      return fistStr + '.....' + lastStr
+    }
+  },
+  created () {
+    this.bizSession = JSON.parse(sessionStorage.getItem('fbs_biz'))
+    this.storageSession = JSON.parse(sessionStorage.getItem('fbs_storage'))
+    let pbqci_address = sessionStorage.getItem('pbqci_address')
+    let pbqci_joinTime = sessionStorage.getItem('pbqci_joinTime')
+    if (pbqci_address && pbqci_joinTime) {
+      this.id = pbqci_address
+      this.createtime = pbqci_joinTime
+      return
+    }
+    api.pbqci().then(res => {
+      sessionStorage.setItem('pbqci_address', res.address)
+      sessionStorage.setItem('pbqci_joinTime', res.joinTime)
+      this.id = res.address
+      this.createtime = res.joinTime
+    }).catch(err => {
+      console.log(err)
+    })
+  },
   data () {
     return {
+      bizSession: null,
+      storageSession: null,
       id: '00740f...aaba8',
       name: '从法存管域',
       dataid: '00740f...facb7',
