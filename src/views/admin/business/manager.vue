@@ -33,20 +33,20 @@
       <div class="bg-white padding">
         <div class="league-mem">
           <span>业务域管理员列表</span>
-          <Button @click="addModal = true" type="primary" class="fr">添加</Button>
+          <Button @click="add" type="primary" class="fr">添加</Button>
         </div>
         <div>
           <Row>
             <Col span="6">
             <div class="condition-item">
               <span class="condition-label">管理员姓名：</span>
-              <Input type="text" v-model="form.name" placeholder="管理员姓名"></Input>
+              <Input type="text" v-model="name" placeholder="管理员姓名"></Input>
             </div>
             </Col>
             <Col span="6">
             <div class="condition-item">
               <span class="condition-label">管理员身份标识：</span>
-              <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>
+              <Input type="text" v-model="address" placeholder="管理员身份标识"></Input>
             </div>
             </Col>
             <!--            <Col span="6">-->
@@ -198,6 +198,9 @@ export default {
     },
     approvalRules () {
     },
+    add () {
+      this.addModal = true
+    },
     async del (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
@@ -345,6 +348,8 @@ export default {
       }
     },
     cancel () {
+      this.form.address = ''
+      this.form.name = ''
     },
     search () {},
     getList () {

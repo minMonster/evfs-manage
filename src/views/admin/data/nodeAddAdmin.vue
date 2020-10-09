@@ -7,27 +7,25 @@
         <h3 style="color: #273D52;font-weight: 600;font-size:18px;">节点服务器数据存管域准入申请</h3>
       </div>
       <div class="clear chain-baseinfo">
-        <Row>
+        <Row class="chain-header-content">
           <Col span="8">
-          <div>链实例唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
+          <div>链实例唯一标识：{{abridge}}</div>
           </Col>
-          <Col>
-          <div>链实例创建时间：2020-1-5 12:00:00</div>
+          <Col span="10">
+          <div>链实例创建时间：{{formatCreatetime}}</div>
           </Col>
         </Row>
-        <div style="margin-top:10px;">
-          <Row>
-            <Col span="8">
-            <div>数据存管域名称：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
-            </Col>
-            <Col span="8">
-            <div>数据存管域唯一标识：klsjdfljsljfkklsdjfsdklsjdfljsljfkklsdjfsd</div>
-            </Col>
-            <Col span="8">
-            <div>例创建时间：2020-1-5 12:00:00</div>
-            </Col>
-          </Row>
-        </div>
+        <Row v-if="storage_session">
+          <Col :span="8">
+          <div>数据存管域名称：{{storage_session.storage_name || '--'}}</div>
+          </Col>
+          <Col :span="8">
+          <div>数据存管域唯一标识：{{storage_session.storage_id_format}}</div>
+          </Col>
+          <Col :span="8">
+          <div>创建时间：{{storage_session.join_time_format}}</div>
+          </Col>
+        </Row>
       </div>
       <div class="split-line"></div>
       <div class="set-from">
@@ -82,16 +80,21 @@
 
 <script>
 import * as cApi from '@/http/api'
+import * as api from './api'
 
 export default {
   data () {
     return {
+      storage_session: null,
+      storage: {},
       form: {
         address: '',
         name: '',
         addressAddr: '',
         nameAddr: ''
       },
+      id: '',
+      createtime: '',
       popup: 0
     }
   },
@@ -102,11 +105,40 @@ export default {
 
   },
   computed: {
-
+    formatCreatetime () {
+      if (!this.createtime) {
+        return '--'
+      }
+      return this.$moment.unix(this.createtime / 1000).format('YYYY-MM-DD HH:mm:ss')
+    },
+    abridge () {
+      if (!this.id) {
+        return '--'
+      }
+      let stringlength = this.id.length
+      let fistStr = this.id.substring(0, 6)
+      let lastStr = this.id.substring(stringlength - 6, stringlength)
+      return fistStr + '.....' + lastStr
+    }
   },
   methods: {
     init () {
-
+      this.storage_session = JSON.parse(sessionStorage.getItem('fbs_storage'))
+      let pbqci_address = sessionStorage.getItem('pbqci_address')
+      let pbqci_joinTime = sessionStorage.getItem('pbqci_joinTime')
+      if (pbqci_address && pbqci_joinTime) {
+        this.id = pbqci_address
+        this.createtime = pbqci_joinTime
+        return
+      }
+      api.pbqci().then(res => {
+        sessionStorage.setItem('pbqci_address', res.address)
+        sessionStorage.setItem('pbqci_joinTime', res.joinTime)
+        this.id = res.address
+        this.createtime = res.joinTime
+      }).catch(err => {
+        console.log(err)
+      })
     },
     async submit () {
       let jsBody = {

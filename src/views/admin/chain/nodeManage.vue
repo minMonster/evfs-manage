@@ -12,10 +12,10 @@
         </div>
         <Row>
           <Col span="8">
-          <div>链实例唯一标识：{{id}}</div>
+          <div>链实例唯一标识：{{abridge}}</div>
           </Col>
           <Col>
-          <div>链实例创建时间：{{createtime}}</div>
+          <div>链实例创建时间：{{formatCreatetime}}</div>
           </Col>
         </Row>
       </div>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-// import * as api from './api'
+import * as api from './api'
 import * as cApi from '@/http/api'
 export default {
   data () {
@@ -94,11 +94,39 @@ export default {
 
   },
   computed: {
-
+    formatCreatetime () {
+      if (!this.createtime) {
+        return '--'
+      }
+      return this.$moment.unix(this.createtime / 1000).format('YYYY-MM-DD HH:mm:ss')
+    },
+    abridge () {
+      if (!this.id) {
+        return '--'
+      }
+      let stringlength = this.id.length
+      let fistStr = this.id.substring(0, 6)
+      let lastStr = this.id.substring(stringlength - 6, stringlength)
+      return fistStr + '.....' + lastStr
+    }
   },
   methods: {
     init () {
-
+      let pbqci_address = sessionStorage.getItem('pbqci_address')
+      let pbqci_joinTime = sessionStorage.getItem('pbqci_joinTime')
+      if (pbqci_address && pbqci_joinTime) {
+        this.id = pbqci_address
+        this.createtime = pbqci_joinTime
+        return
+      }
+      api.pbqci().then(res => {
+        sessionStorage.setItem('pbqci_address', res.address)
+        sessionStorage.setItem('pbqci_joinTime', res.joinTime)
+        this.id = res.address
+        this.createtime = res.joinTime
+      }).catch(err => {
+        console.log(err)
+      })
     },
     async submit () {
       if (this.form.address === '' || this.form.nameAddr === '' || this.form.addressAddr === '' || this.form.name === '') {

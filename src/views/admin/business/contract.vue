@@ -84,9 +84,8 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
 import * as api from './api'
-// import * as cApi from '@/http/api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     // {
@@ -121,7 +120,7 @@ export default {
         title: '操作',
         render (h, p) {
           let row = p.row || {}
-          let label = '--'
+          let label = ''
           let status = row.status
           if (status === '1') {
             label = '冻结'
@@ -129,15 +128,10 @@ export default {
           if (status === '2') {
             label = '解冻'
           }
-          if (status > 2) {
-            label = '撤销'
-          }
           return h('a', {
             on: {
               click () {
-                if (status === '2') {
-
-                }
+                that.del(row, status)
               }
             }
           }, label)
@@ -182,7 +176,6 @@ export default {
   computed: {},
   mounted () {
     this.init()
-    this.creatQrCode()
   },
   methods: {
     init () {
@@ -212,20 +205,18 @@ export default {
       this.page.current = page
       this.getList()
     },
-    ok () {
-      this.popup = 1
-      this.add()
-    },
-    async add () {
-      this.addModal = true
+    async ok () {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
-        'member': this.address.trim(), // 变更账户钱包地址
-        'op': 1, // 1增加；2移除
-        'opType': 1 // 1委员会变更操作；2链管理员变更操作
+        'domainId': sessionStorage.getItem('fbs_biz_id'), // 业务域ID
+        'code': this.conCent, // 合约bin码
+        'info': {
+          'name': this.conName, // 合约名称
+          'remark': this.remarks // 合约备注
+        }
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeMemberApplyContractTxReq',
+        'method': 'BizDomainCreateContractApplyContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -238,40 +229,93 @@ export default {
       })
       if (data) {
         this.$qrCodeAuthDialog.show(
-                {
-                  url: 'bs/pbdtx.do',
-                  data,
-                  // 这里要写一个闭包函数 返回 需要的 api
-                  setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
-                  func: 'send_trans'
-                },
-                (resPromise) => {
-                  // resPromise 轮询的结果 在此处处理业务逻辑
-                  return resPromise.then(res => {
-                    // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
-                    if (res.status === 4 || res.status === 5 || res.status === 6) {
-                      this.$Message.error(res.remark)
-                      return true
-                    }
-                    if (res.status === 3) {
-                      this.$Message.success('修改成功')
-                      this.addModal = false
-                      return true
-                    } else {
-                      return false
-                    }
-                  }).catch(() => {
-                    return false
-                  })
-                })
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('添加成功')
+                this.init()
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
       }
+    },
+    async del (row, status) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_biz_id'), // 业务域ID
+        'contractAddress': row.contract_id,	// 合约地址
+        'op': status // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainCreateContractApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.init()
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    add () {
+      this.addModal = true
     },
     search () {},
     cancel () {
       this.conName = ''
       this.remarks = ''
       this.conCent = ''
-
     }
   }
 }
