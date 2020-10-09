@@ -26,13 +26,6 @@ import rule from './rule'
 import file from './file'
 import contract from './contract'
 import manager from './manager'
-let tabs = [
-  // { text: '业务系统准入', name: 'business-permission', count: 3 },
-  { text: '文件操作规则', name: 'business-rule', count: 2 },
-  // { text: '域内文件治理', name: 'business-file' },
-  { text: '域内合约治理', name: 'business-contract', count: 22 },
-  { text: '域管理员', name: 'business-manager', count: 23 }
-]
 export default {
   components: {
     permission, rule, file, contract, manager
@@ -49,7 +42,7 @@ export default {
           name: '文件操作规则',
           num: 0,
           nodeName: 'rule',
-          review_type: 'storage'
+          review_type: 'biz_file'
         },
         // 'business-file': {
         //   name: '域内文件治理',
@@ -61,36 +54,23 @@ export default {
           name: '域内合约治理',
           num: 0,
           nodeName: 'contract',
-          review_type: 'storage'
+          review_type: 'biz_contract'
         },
         'business-manager': {
           name: '域管理员',
           num: 0,
           nodeName: 'manager',
-          review_type: 'storage'
+          review_type: 'biz_manage'
         }
       },
       active: 'business-manager'
     }
   },
   watch: {
-    $route (n) {
-      this.initTab()
-    }
   },
   mounted () {
-    this.init()
   },
   methods: {
-    init () {
-      this.tabs = tabs
-      this.initTab()
-    },
-    initTab () {
-      let query = this.$route.query
-      let tab = query.tab || tabs[0].name
-      this.active = tab
-    },
     changeTab (name) {
       console.log(name)
       this.active = name

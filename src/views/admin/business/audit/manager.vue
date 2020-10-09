@@ -12,13 +12,13 @@
             <Radio label="0">任意一个成员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="1/3">1/3成员同时签批</Radio>
+            <Radio label="100">1/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="2/3">2/3成员同时签批</Radio>
+            <Radio label="200">2/3成员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="3/3">所有成员同时签批</Radio>
+            <Radio label="300">所有成员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
