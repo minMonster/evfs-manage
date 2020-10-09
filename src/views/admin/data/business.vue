@@ -189,6 +189,13 @@ export default {
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 let { showBusinessSubmenu } = that.$route.query
                 sessionStorage.setItem('fbs_biz_id', row.biz_id)
+                let formatBiz = {
+                  ...row,
+                  biz_id_format: that.formatId(row.biz_id),
+                  main_storage_storage_id_format: that.formatId(row.main_storage_storage_id),
+                  join_time_format: row.join_time ? that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss') : '--'
+                }
+                sessionStorage.setItem('fbs_biz', JSON.stringify(formatBiz))
                 that.$router.push({
                   name: 'business-detail',
                   query: {

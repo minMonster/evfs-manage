@@ -1,32 +1,34 @@
 <template>
-  <div class="data-manager">
-    <div class="content-title"><span>业务域管理员管理</span></div>
+  <div class="alliance">
+    <h2 class="content-title clear">
+      业务域管理员管理
+    </h2>
     <div>
-      <div class="bg-white padding" style="margin-bottom: 20px;">
+      <div class="bg-white padding" v-if="rule" style="margin-bottom: 20px;">
         <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
-          <span>业务域管理员决议审批规则</span>
+          <span>业务域管理员决议审批规则：</span>
         </div>
-        <RadioGroup class="approval" v-model="acceptLimit">
+        <RadioGroup class="approval" v-model="rule">
           <Row>
             <Col span="6">
-            <Radio label="0">任意一个成员签批</Radio>
+            <Radio label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="100">1/3成员同时签批</Radio>
+            <Radio label="100">1/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="200">2/3成员同时签批</Radio>
+            <Radio label="200">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="300">所有成员同时签批</Radio>
+            <Radio label="300">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
         <div class="audit-item">
           <div class="audit-item-content">
             <P>变更前：</P>
-            <div>业务域管理员决议审批规则：1/3成员同时签批</div>
-            <div>申请人： 张丽<span>审核通过人： <a href="javascript:;">查看</a></span></div>
+            <div>联盟委员决议审批规则：{{ruleJson[old_rule]}}</div>
+            <div>申请人： {{applicant_name}}<span>审核通过人： <a href="javascript:;">查看</a></span></div>
           </div>
           <div class="audit-item-btns">
             <div class="btn-inner">
@@ -37,13 +39,51 @@
         </div>
       </div>
       <div class="bg-white padding">
-        <div class="section-title">
-          <span>业务域管理员列表</span>
+        <div class="league-mem">
+          <span>链管理员列表</span>
         </div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <!--        <div>-->
+        <!--          <Row>-->
+        <!--            <Col span="6">-->
+        <!--            <div class="condition-item">-->
+        <!--              <span class="condition-label">管理员名称：</span>-->
+        <!--              <Input type="text" v-model="form.name" placeholder="管理员名称"></Input>-->
+        <!--            </div>-->
+        <!--            </Col>-->
+        <!--            <Col span="6">-->
+        <!--            <div class="condition-item">-->
+        <!--              <span class="condition-label">管理员身份标识：</span>-->
+        <!--              <Input type="text" v-model="form.address" placeholder="管理员身份标识"></Input>-->
+        <!--            </div>-->
+        <!--            </Col>-->
+        <!--            &lt;!&ndash;            <Col span="6">&ndash;&gt;-->
+        <!--            &lt;!&ndash;            <div class="condition-item">&ndash;&gt;-->
+        <!--            &lt;!&ndash;              <span class="condition-label">状态：</span>&ndash;&gt;-->
+        <!--            &lt;!&ndash;              <Select v-model="form.status">&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="0">全部</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="1">已添加</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="2">已删除</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="3">添加审核中</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;                <Option value="4">删除审核中</Option>&ndash;&gt;-->
+        <!--            &lt;!&ndash;              </Select>&ndash;&gt;-->
+        <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--            &lt;!&ndash;            </Col>&ndash;&gt;-->
+        <!--            <Col span="6">-->
+        <!--            <div class="condition-item">-->
+        <!--              <Button style="width: 80px;" type="primary">查询</Button>-->
+        <!--            </div>-->
+        <!--            </Col>-->
+        <!--          </Row>-->
+        <!--        </div>-->
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
         <div class="page">
           <div class="page-inner">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page
+              show-sizer
+              :total="page.total"
+              :current="page.current"
+              @on-change="pageChange"
+              @on-page-size-change="sizeChange"/>
           </div>
         </div>
       </div>
@@ -53,8 +93,8 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <div class="add-modal-body">
-          <div><Input placeholder="请输入管理员姓名" v-model="name" /></div>
-          <div><Input placeholder="请输入管理员身份标志地址" v-model="address" /></div>
+          <div><Input placeholder="请输入管理员名称" v-model="form.name" /></div>
+          <div><Input placeholder="请输入管理员身份标志地址" v-model="form.address" /></div>
         </div>
       </Modal>
     </div>
@@ -62,12 +102,14 @@
 </template>
 
 <script>
+import * as api from '../api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
-    let columns1 = [
+    let columns = [
       {
-        title: '管理员姓名',
+        title: '管理员名称',
         key: 'name'
       },
       {
@@ -91,12 +133,11 @@ export default {
         key: 'status'
       },
       {
-        width: 120,
         title: '申请人',
-        key: 'applicant'
+        width: 120,
+        key: 'apply'
       },
       {
-        width: 130,
         title: '审核通过人',
         render (h, p) {
           let row = p.row
@@ -111,7 +152,9 @@ export default {
       },
       {
         title: '操作',
+        'width': 120,
         render (h, p) {
+          let row = p.row
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -122,6 +165,7 @@ export default {
             on: {
               click () {
                 // let index = p.index
+                that.agree(row)
               }
             }
           }, '同意')
@@ -131,6 +175,7 @@ export default {
             },
             on: {
               click () {
+                that.refuse(row)
                 // let index = p.index
               }
             }
@@ -143,19 +188,36 @@ export default {
         }
       }
     ]
-    let data1 = [
-      { name: '郭志', address: '008b0f...effbc', applicant: '张力', time: '--', status: '添加审核中', type: '1' },
-      { name: '吴载舟', address: '008b0f...abbc3', applicant: '张力', time: '2020-1-5 10:33:02', status: '删除审核中', type: '1' },
-      { name: '张力', address: '008b0f...acfe5', applicant: '张力', time: '2020-1-5 19:41:11', status: '删除审核中', type: '2' }
-    ]
+    let ruleJson = {
+      '0': '任意一个联盟委员签批',
+      '100': '1/3联盟委员同时签批',
+      '200': '2/3联盟委员同时签批',
+      '300': '所有联盟委员同时签批'
+    }
     return {
-      acceptLimit: '2/3',
-      name: '',
-      address: '',
       addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      ruleJson,
+      rule: '',
+      old_rule: '',
+      applicant_name: '',
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      review_rule: '',
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -173,7 +235,34 @@ export default {
   },
   methods: {
     init () {
-
+      api.pbqrc({
+        reviewType: 'biz_manage_rule',
+        'menu': 'biz', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        'address': sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        if (res.rows) {
+          let data = res.rows[0]
+          this.rule = data.role || ''
+          this.old_rule = data.old_rule || ''
+          this.review_rule = data.review_id
+        } else {
+          this.rule = false
+        }
+      })
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'biz',
+        reviewType: 'biz_manage',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
     },
     // 查看
     adds (obj) {
@@ -183,14 +272,216 @@ export default {
         oktext: '关闭'
       })
     },
+    async agree (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id,
+        'domainId': sessionStorage.getItem('fbs_biz_id') // 业务域ID
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainMemberAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuse (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id,
+        'domainId': sessionStorage.getItem('fbs_biz_id') // 业务域ID
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainRuleAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async agreeRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule,
+        'domainId': sessionStorage.getItem('fbs_biz_id') // 业务域ID
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainRuleAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuseRule () {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: this.review_rule,
+        'domainId': sessionStorage.getItem('fbs_biz_id') // 业务域ID
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainRuleAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
     ok () {
 
     },
     cancel () {
 
     },
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-
+      this.page.current = page
+      this.getList()
     }
   }
 }
