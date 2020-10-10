@@ -42,7 +42,7 @@
             <Radio label="off">关闭（默认）</Radio>
           </RadioGroup>
         </div> -->
-        <div class="node-list">
+        <!-- <div class="node-list">
           <div>
             <span>准入节点服务器列表：</span>
             <Tooltip
@@ -57,7 +57,7 @@
             <Table :columns="columns1" :data="data1"></Table>
           </div>
         </div>
-        <div class="node-list">
+        <div class="node-list"> -->
           <!-- <div class="clear">
             <span>节点网络准入企业名单：</span>
             <Tooltip
@@ -86,58 +86,58 @@
 <script>
 export default {
   data () {
-    let columns1 = [
-      {
-        title: '隶属企业名称',
-        key: 'name'
-      },
-      {
-        title: '隶属企业身份标识公钥',
-        key: 'prikey'
-      },
-      {
-        title: '节点服务器身份标识公钥',
-        key: 'nodeprikey'
-      },
-      {
-        title: '操作',
-        render (h, p) {
-          return h('a', '删除')
-        }
-      }
-    ]
-    let columns2 = [
-      {
-        title: '隶属企业名称',
-        key: 'name'
-      },
-      {
-        title: '企业身份标识公钥',
-        key: 'prikey'
-      },
-      {
-        title: '操作',
-        render (h, p) {
-          return h('a', '删除')
-        }
-      }
-    ]
-    let data1 = [
-      { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…', nodeprikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
-    ]
-    let data2 = [
-      { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
-    ]
+    // let columns1 = [
+    //   {
+    //     title: '隶属企业名称',
+    //     key: 'name'
+    //   },
+    //   {
+    //     title: '隶属企业身份标识',
+    //     key: 'orgAddress'
+    //   },
+    //   {
+    //     title: '节点服务器身份标识',
+    //     key: 'nodeprikey'
+    //   },
+    //   {
+    //     title: '操作',
+    //     render (h, p) {
+    //       return h('a', '删除')
+    //     }
+    //   }
+    // ]
+    // let columns2 = [
+    //   {
+    //     title: '隶属企业名称',
+    //     key: 'name'
+    //   },
+    //   {
+    //     title: '企业身份标识公钥',
+    //     key: 'prikey'
+    //   },
+    //   {
+    //     title: '操作',
+    //     render (h, p) {
+    //       return h('a', '删除')
+    //     }
+    //   }
+    // ]
+    // let data1 = [
+    //   { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…', nodeprikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
+    // ]
+    // let data2 = [
+    //   { name: '中国工商银行', prikey: 'lksjljkfsljdflsjlfjsljflksjdflks…' }
+    // ]
     return {
       approval: 'off',
       serverName: '',
       pubKey: '', // 服务器身份标识
       entPubkey: '', // 企业身份标识
-      orgName: '', // 企业名称
-      columns1,
-      columns2,
-      data1,
-      data2
+      orgName: '' // 企业名称
+      // columns1,
+      // columns2,
+      // data1,
+      // data2
     }
   },
   mounted () {

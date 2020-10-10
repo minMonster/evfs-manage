@@ -12,12 +12,20 @@
           <Input placeholder="请输入要加入链实例的任意节点服务器访问地址" v-model="existsUrl" />
         </div>
         <div class="form-item">
+          <div class="label">IP地址</div>
+          <Input placeholder="请输入节点IP地址" v-model="ipUrl" />
+        </div>
+        <div class="form-item">
+          <div class="label">Memory参数</div>
+          <Input placeholder="请输入节点docker需要的memory地址" v-model="memory" />
+        </div>
+        <div class="form-item">
           <div class="label">服务器名称</div>
           <Input placeholder="请输入当前节点服务器名称" v-model="serverName" readonly />
         </div>
         <div class="form-item">
           <div class="label">服务器身份标识</div>
-          <Input placeholder="请输入当前节点服务器的身份标识公钥" v-model="pubKey"  />
+          <Input placeholder="请输入当前节点服务器的身份标识公钥" v-model="nodeAddress"  />
         </div>
         <div class="form-item">
           <div class="label">隶属企业名称</div>
@@ -25,7 +33,7 @@
         </div>
         <div class="form-item">
           <div class="label">隶属企业身份标识</div>
-          <Input placeholder="请输入当前节点服务器的所属企业身份标识公钥" v-model="entPubkey" />
+          <Input placeholder="请输入当前节点服务器的所属企业身份标识公钥" v-model="orgAddress" />
         </div>
         <Button class="join-btn" long type="primary" @click="apply">申请加入</Button>
       </div>
@@ -60,22 +68,26 @@
 </template>
 
 <script>
+// import * as sApi from '../setupapi'
+
 export default {
   data () {
     return {
       step: '1',
       serverName: '',
-      pubKey: '', // 服务器身份标识
-      entPubkey: '', // 企业身份标识
+      nodeAddress: '', // 服务器身份标识
+      orgAddress: '', // 企业身份标识
       orgName: '', // 企业名称
-      existsUrl: ''// 访问地址
+      existsUrl: '', // 访问地址
+      ipUrl: '', // 节点的ip地址（docker安装到哪里）
+      memory: '' // docker启动的memory
     }
   },
   watch: {
     step (n, o) {
       console.log(n, o)
       let that = this
-      if (n == 2) {
+      if (n === 2) {
         setTimeout(() => {
           that.step = '3'
         }, 3000)
@@ -86,39 +98,105 @@ export default {
     this.init()
   },
   methods: {
+    // 申请加入
     apply () {
-      let orgName = this.orgName
-      let existsUrl = this.existsUrl
-      if (!existsUrl) {
-        this.$Message.error('请输入链访问地址')
+      // 判断链的访问地址
+      if (!this.existsUrl) {
+        this.$Message.error('请输入链的访问地址')
         return
       }
-      if (!orgName) {
+      if (!this.ipUrl) {
+        this.$Message.error('请输入节点ip地址')
+        return
+      }
+      if (!this.memory) {
+        this.$Message.error('请输入docker的memory参数')
+        return
+      }
+      // 判断服务器名称
+      if (!this.serverName) {
+        this.$Message.error('请输入服务器名称')
+        return
+      }
+      // 判断服务器身份标识
+      if (!this.serverAddress) {
+        this.$Message.error('请输入服务器身份标识')
+        return
+      }
+      // 判断隶属企业名称
+      if (!this.orgName) {
         this.$Message.error('请输入企业名称')
         return
       }
-      let data = {
-        orgName, existsUrl
+      // 判断隶属企业身份标识    
+      if (!this.orgAddress) {
+        this.$Message.error('请输入企业身份标识')
+        return
       }
-      this.$http.post('/fbs/man/pbspo.do', data).then(res => {
-        res = res.data
-        if (res.retCode == 1) {
-          this.step = 2
-        }
-      }).catch(err => {
-        console.log(err)
-      }).then(() => {
-
-      })
+      let data = {
+        existsNodeUrl: this.existsNodeUrl,
+        ip: this.ipUrl,
+        memory: this.memory
+      }
+      // sApi.pbjec({
+      //   data
+      // }).then(res => {
+      //   console.log(res)
+      //   if (res && res.retCode === 1) {
+      //     this.step = 2
+      //   }
+      // }).catch(err => {
+      //   console.log('加入现有链异常：',err)
+      // })
     },
+    // apply () {
+    //   let orgName = this.orgName
+    //   let existsUrl = this.existsUrl
+    //   if (!existsUrl) {
+    //     this.$Message.error('请输入链访问地址')
+    //     return
+    //   }
+    //   if (!orgName) {
+    //     this.$Message.error('请输入企业名称')
+    //     return
+    //   }
+    //   let data = {
+    //     orgName, existsUrl
+    //   }
+    //   this.$http.post('/fbs/man/pbspo.do', data).then(res => {
+    //     res = res.data
+    //     if (res.retCode == 1) {
+    //       this.step = 2
+    //     }
+    //   }).catch(err => {
+    //     console.log(err)
+    //   }).then(() => {
+
+    //   })
+    // },
     getServerInfo () {
       // 读取服务器身份标识
       // key = org.brewchain.account.coinbase.pubkey
       // 读取企业身份标识
       // key = org.brewchain.account.org.pubkey
       // POST /fbs/man/pbgpo.do
-      this.getEntbkey()
-      this.initPubkey()
+      // 查询企业信息，查询服务器信息
+      // sApi.pbgni({}).then(res => {
+      //   if (res && res.retCode === 1) {
+      //     this.serverName = res.nodeName
+      //     this.serverAddress = res.nodeAddress
+      //   }
+      // }).catch(err => {
+
+      // })
+      // sApi.pbgno({}).then(res => {
+      //     if (res && res.retCode === 1) {
+      //       this.orgName = res.orgName
+      //       this.orgAddress = res.orgAddress
+      //     }
+      // }).catch(err => {
+
+      // })
     },
     init () {
       this.initServerName()
@@ -127,38 +205,9 @@ export default {
       let serverName = this.$cookie.get('serverName')
       this.serverName = serverName
     },
-    getEntbkey () {
-      let data = {
-        key: 'org.brewchain.account.org.pubkey'
-      }
-      this.$http.post('/fbs/man/pbgpo.do', data).then(res => {
-        res = res.data
-        if (res.retCode == '1') {
-          this.entPubkey = res.value
-        }
-      }).catch(err => {
-        console.log(err)
-      }).then(() => [
-        console.log('complete')
-      ])
-    },
-    initPubkey () {
-      let pubKey = cwv.genPubkey()
-      let data = {
-        seed: '',
-        pubKey
-      }
-      this.$http.post('/fbs/man/pbgnc.do', data).then(res => {
-        res = res.data
-        this.pubKey = res.pubKey || ''
-      }).catch(err => {
-        console.log(err)
-      }).then(() => {
-
-      })
-    },
+    // 创建--这个是 点击申请之后显示的东西
     create () {
-      let needApprove = this.approval == 'on'
+      let needApprove = this.approval === 'on'
       let orgName = this.orgName
       let data = {
         orgName: '',
@@ -170,7 +219,7 @@ export default {
       }
       this.$http.post('/fbs/man/pbscn.do', data).then(res => {
         res = res.data
-        if (res.retCode == '1') {
+        if (res.retCode === '1') {
           this.next()
         }
       })
