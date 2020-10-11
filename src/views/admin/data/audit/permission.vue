@@ -94,7 +94,7 @@
 
 <script>
 import * as api from '../api'
-import * as cApi from '@/http/api'
+// import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
@@ -245,99 +245,99 @@ export default {
     },
     async agree (row) {
       return this.$Message.error('没有接口')
-      let jsBody = {
-        from: sessionStorage.getItem('fbs_address'),
-        reqId: row.review_id
-      }
-      let data = await cApi.pbgen({
-        'method': 'CommitteeMemberAgreeContractTxReq',
-        'jsBody': JSON.stringify(jsBody)
-      }).then(res => {
-        return {
-          hexTxBody: res.hexTxBody,
-          txId: res.txId
-        }
-      }).catch(err => {
-        this.$Message.error(err.retMsg)
-        return false
-      })
-      if (data) {
-        this.$qrCodeAuthDialog.show(
-          {
-            url: 'bs/pbdtx.do',
-            data,
-            // 这里要写一个闭包函数 返回 需要的 api
-            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
-            func: 'send_trans'
-          },
-          (resPromise) => {
-            // resPromise 轮询的结果 在此处处理业务逻辑
-            return resPromise.then(res => {
-              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
-              if (res.status === 4 || res.status === 5 || res.status === 6) {
-                this.$Message.error(res.remark)
-                return true
-              }
-              if (res.status === 3) {
-                this.$Message.success('修改成功')
-                this.addModal = false
-                return true
-              } else {
-                return false
-              }
-            }).catch(() => {
-              return false
-            })
-          })
-      }
+      // let jsBody = {
+      //   from: sessionStorage.getItem('fbs_address'),
+      //   reqId: row.review_id
+      // }
+      // let data = await cApi.pbgen({
+      //   'method': 'CommitteeMemberAgreeContractTxReq',
+      //   'jsBody': JSON.stringify(jsBody)
+      // }).then(res => {
+      //   return {
+      //     hexTxBody: res.hexTxBody,
+      //     txId: res.txId
+      //   }
+      // }).catch(err => {
+      //   this.$Message.error(err.retMsg)
+      //   return false
+      // })
+      // if (data) {
+      //   this.$qrCodeAuthDialog.show(
+      //     {
+      //       url: 'bs/pbdtx.do',
+      //       data,
+      //       // 这里要写一个闭包函数 返回 需要的 api
+      //       setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+      //       func: 'send_trans'
+      //     },
+      //     (resPromise) => {
+      //       // resPromise 轮询的结果 在此处处理业务逻辑
+      //       return resPromise.then(res => {
+      //         // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+      //         if (res.status === 4 || res.status === 5 || res.status === 6) {
+      //           this.$Message.error(res.remark)
+      //           return true
+      //         }
+      //         if (res.status === 3) {
+      //           this.$Message.success('修改成功')
+      //           this.addModal = false
+      //           return true
+      //         } else {
+      //           return false
+      //         }
+      //       }).catch(() => {
+      //         return false
+      //       })
+      //     })
+      // }
     },
     async refuse (row) {
       return this.$Message.error('没有接口')
-      let jsBody = {
-        from: sessionStorage.getItem('fbs_address'),
-        reqId: row.review_id
-      }
-      let data = await cApi.pbgen({
-        'method': 'CommitteeDisagreeContractTxReq',
-        'jsBody': JSON.stringify(jsBody)
-      }).then(res => {
-        return {
-          hexTxBody: res.hexTxBody,
-          txId: res.txId
-        }
-      }).catch(err => {
-        this.$Message.error(err.retMsg)
-        return false
-      })
-      if (data) {
-        this.$qrCodeAuthDialog.show(
-          {
-            url: 'bs/pbdtx.do',
-            data,
-            // 这里要写一个闭包函数 返回 需要的 api
-            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
-            func: 'send_trans'
-          },
-          (resPromise) => {
-            // resPromise 轮询的结果 在此处处理业务逻辑
-            return resPromise.then(res => {
-              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
-              if (res.status === 4 || res.status === 5 || res.status === 6) {
-                this.$Message.error(res.remark)
-                return true
-              }
-              if (res.status === 3) {
-                this.$Message.success('修改成功')
-                this.addModal = false
-                return true
-              } else {
-                return false
-              }
-            }).catch(() => {
-              return false
-            })
-          })
-      }
+      // let jsBody = {
+      //   from: sessionStorage.getItem('fbs_address'),
+      //   reqId: row.review_id
+      // }
+      // let data = await cApi.pbgen({
+      //   'method': 'CommitteeDisagreeContractTxReq',
+      //   'jsBody': JSON.stringify(jsBody)
+      // }).then(res => {
+      //   return {
+      //     hexTxBody: res.hexTxBody,
+      //     txId: res.txId
+      //   }
+      // }).catch(err => {
+      //   this.$Message.error(err.retMsg)
+      //   return false
+      // })
+      // if (data) {
+      //   this.$qrCodeAuthDialog.show(
+      //     {
+      //       url: 'bs/pbdtx.do',
+      //       data,
+      //       // 这里要写一个闭包函数 返回 需要的 api
+      //       setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+      //       func: 'send_trans'
+      //     },
+      //     (resPromise) => {
+      //       // resPromise 轮询的结果 在此处处理业务逻辑
+      //       return resPromise.then(res => {
+      //         // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+      //         if (res.status === 4 || res.status === 5 || res.status === 6) {
+      //           this.$Message.error(res.remark)
+      //           return true
+      //         }
+      //         if (res.status === 3) {
+      //           this.$Message.success('修改成功')
+      //           this.addModal = false
+      //           return true
+      //         } else {
+      //           return false
+      //         }
+      //       }).catch(() => {
+      //         return false
+      //       })
+      //     })
+      // }
     },
     // 查看
     adds (obj) {
