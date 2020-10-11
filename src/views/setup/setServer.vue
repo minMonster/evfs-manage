@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import * as sApi from './setupapi'
 export default {
   data () {
     return {
@@ -30,20 +31,21 @@ export default {
 
     },
     set () {
-      let key = 'org.brewchain.account.name'
+      // let key = 'org.brewchain.account.name'
       let value = this.serverName.trim()
       if (!value) {
         this.$Message.error('请输入服务器名称')
         return
       }
       let timestamp = Date.now()
-      let data = {
-        key, value, timestamp
-      }
+      // let data = {
+      //   key, value, timestamp
+      // }
       this.loading = true
-      this.$http.post('/fbs/man/pbspo.do', data).then(res => {
-        res = res.data
-        if (res.retCode == 1) {
+      sApi.pbsnn({
+        'name': value
+      }).then(res => {
+        if (res.retCode === 1) {
           this.$Message.success('设置成功')
           this.$cookie.set('serverName', value)
           this.$emit('next', 'step2')
@@ -53,30 +55,54 @@ export default {
       }).then(() => {
         this.loading = false
       })
+      // this.$http.post('/fbs/man/pbspo.do', data).then(res => {
+      //   res = res.data
+      //   if (res.retCode == 1) {
+      //     this.$Message.success('设置成功')
+      //     this.$cookie.set('serverName', value)
+      //     this.$emit('next', 'step2')
+      //   }
+      // }).catch(err => {
+
+      // }).then(() => {
+      //   this.loading = false
+      // })
     }
   },
   created: function () {
-    this.$http.post('/fbs/man/pbgpo.do', { 'key': 'org.brewchain.account.name' }).then(res => {
-      res = res.data
-      if (res.retCode == 1) {
-        let pubKey = cwv.genPubkey()
-        let data = {
-          seed: '',
-          pubKey
-        }
-        this.$http.post('/fbs/man/pbgnc.do', data).then(resGnc => {
-        }).catch(err => {
-          console.log(err)
-        }).then(() => {
-
-        })
-        this.serverName = res.value
+    sApi.pbgnn({}).then(res => {
+      if (res && res.retCode === 1) {
+        this.serverName = res.name
+      }else{
+        console.log(res.retMsg)
+        this.$Message.error('查询失败')
       }
     }).catch(err => {
-
+      console.log(err)
     }).then(() => {
       this.loading = false
     })
+    // this.$http.post('/fbs/man/pbgpo.do', { 'key': 'org.brewchain.account.name' }).then(res => {
+    //   res = res.data
+    //   if (res.retCode == 1) {
+    //     let pubKey = cwv.genPubkey()
+    //     let data = {
+    //       seed: '',
+    //       pubKey
+    //     }
+    //     this.$http.post('/fbs/man/pbgnc.do', data).then(resGnc => {
+    //     }).catch(err => {
+    //       console.log(err)
+    //     }).then(() => {
+
+    //     })
+    //     this.serverName = res.value
+    //   }
+    // }).catch(err => {
+
+    // }).then(() => {
+    //   this.loading = false
+    // })
   }
 }
 </script>
