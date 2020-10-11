@@ -98,8 +98,24 @@ export default {
         key: 'applay_capacity_license'
       },
       {
-        title: '申请状态',
-        key: 'status'
+        title: '状态',
+        key: 'status',
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         title: '申请人',
@@ -112,7 +128,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                that.adds(row)
+                that.$QueryApprovedDialog.show(row)
               }
             }
           }, '查看')
@@ -120,9 +136,11 @@ export default {
       },
       {
         title: '操作',
-        'width': 120,
         render (h, p) {
           let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -197,7 +215,6 @@ export default {
       })
     },
     async agree (row) {
-      return this.$Message.error('没有接口')
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
         reqId: row.review_id
@@ -245,13 +262,12 @@ export default {
       }
     },
     async refuse (row) {
-      return this.$Message.error('没有接口')
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeDisagreeContractTxReq',
+        'method': 'AdminDisagreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

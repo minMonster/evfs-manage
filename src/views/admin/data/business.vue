@@ -287,6 +287,15 @@ export default {
 
   },
   methods: {
+    formatId (id) {
+      if (!id) {
+        return '--'
+      }
+      let stringlength = id.length
+      let fistStr = id.substring(0, 6)
+      let lastStr = id.substring(stringlength - 6, stringlength)
+      return fistStr + '.....' + lastStr
+    },
     init () {
       this.listLoading = true
       api.pbqsb({}).then(res => {

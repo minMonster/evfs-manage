@@ -77,12 +77,36 @@ export default {
         key: 'address'
       },
       {
-        title: '创建时间',
-        key: 'join_time'
+        title: '添加时间',
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       {
         title: '状态',
-        key: 'status'
+        key: 'status',
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         title: '申请人',
@@ -95,7 +119,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                that.adds(row)
+                that.$QueryApprovedDialog.show(row)
               }
             }
           }, '查看')
@@ -105,6 +129,9 @@ export default {
         title: '操作',
         render (h, p) {
           let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'

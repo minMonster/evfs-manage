@@ -165,6 +165,7 @@ export default {
                 // let index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 // let { showBusinessSubmenu } = that.$route.query
+                sessionStorage.setItem('fbs_storage_id', row.storage_id)
                 that.$router.push({
                   name: 'data-detail',
                   query: {

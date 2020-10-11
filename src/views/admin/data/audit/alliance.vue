@@ -204,7 +204,7 @@ export default {
       }).then(res => {
         if (res.rows) {
           let data = res.rows[0]
-          this.rule = data.role || ''
+          this.rule = data.rule || ''
           this.review_rule = data.review_id
           this.old_rule = data.old_rule || ''
         } else {

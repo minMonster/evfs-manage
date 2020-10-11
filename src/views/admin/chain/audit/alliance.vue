@@ -95,7 +95,23 @@ export default {
       },
       {
         title: '状态',
-        key: 'status'
+        key: 'status',
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         title: '申请人',
@@ -108,7 +124,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                that.adds(row)
+                that.$QueryApprovedDialog.show(row)
               }
             }
           }, '查看')
@@ -118,6 +134,9 @@ export default {
         title: '操作',
         render (h, p) {
           let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -204,7 +223,7 @@ export default {
       }).then(res => {
         if (res.rows) {
           let data = res.rows[0]
-          this.rule = data.role || ''
+          this.rule = data.rule || ''
           this.review_rule = data.review_id
           this.old_rule = data.old_rule || ''
         } else {
@@ -227,13 +246,16 @@ export default {
       })
     },
     // 查看
+    queryApproved (row) {
+      this.$QueryApprovedDialog.show(row)
+    },
     async agree (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeDisagreeContractTxReq',
+        'method': 'CommitteeMemberAgreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -423,10 +445,8 @@ export default {
       })
     },
     ok () {
-
     },
     cancel () {
-
     },
     getList () {
       this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)

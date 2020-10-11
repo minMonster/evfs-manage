@@ -55,7 +55,7 @@ export default {
       {
         title: '添加时间',
         key: 'join_time',
-        'width': 100,
+        'width': 200,
         render (h, p) {
           let row = p.row
           if (!row.join_time) {
@@ -68,23 +68,51 @@ export default {
       {
         title: '状态',
         key: 'user_status',
-        'width': 100
+        width: 100,
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.user_status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         title: '申请人',
         key: 'applicant_name',
-        'width': 200
-      },
-      {
-        title: '已审核人',
-        key: 'name',
         'width': 100
       },
       {
-        title: '操作',
-        'width': 120,
+        title: '审核通过人',
+        'width': 100,
         render (h, p) {
           let row = p.row
+          return h('a', {
+            on: {
+              click () {
+                that.$QueryApprovedDialog.show(row)
+              }
+            }
+          }, '查看')
+        }
+      },
+      {
+        title: '操作',
+        width: 120,
+        render (h, p) {
+          let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -120,7 +148,23 @@ export default {
       {
         title: '审核结果',
         key: 'status',
-        'width': 100
+        width: 100,
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       }
     ]
     return {
@@ -222,7 +266,7 @@ export default {
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeDisagreeContractTxReq',
+        'method': 'AdminDisagreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

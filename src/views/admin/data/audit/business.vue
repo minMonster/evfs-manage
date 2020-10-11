@@ -177,15 +177,39 @@ export default {
       },
       {
         title: '创建时间',
-        key: 'time'
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       {
         title: '状态',
-        key: 'statuslabel'
+        key: 'status',
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         title: '申请人',
-        key: 'applicant'
+        key: 'applicant_name'
       },
       {
         title: '审核通过人',

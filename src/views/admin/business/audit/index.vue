@@ -26,6 +26,7 @@ import rule from './rule'
 import file from './file'
 import contract from './contract'
 import manager from './manager'
+import * as api from '../api'
 export default {
   components: {
     permission, rule, file, contract, manager
@@ -69,8 +70,26 @@ export default {
   watch: {
   },
   mounted () {
+    this.init()
   },
   methods: {
+    init () {
+      api.pbqrm({
+        menu: 'biz', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        'address': sessionStorage.getItem('fbs_address') // 登陆人的地址
+      }).then(res => {
+        if (res.rows) {
+          res.rows.forEach(r => {
+            for (let i in this.tabs) {
+              if (this.tabs[i].review_type === r.review_type) {
+                this.tabs[i].num = r.num
+                console.log(i)
+              }
+            }
+          })
+        }
+      })
+    },
     changeTab (name) {
       console.log(name)
       this.active = name

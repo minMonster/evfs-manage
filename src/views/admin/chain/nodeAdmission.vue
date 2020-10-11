@@ -221,7 +221,7 @@ export default {
       },
       {
         title: '服务器身份标识',
-        key: 'node_server_id'
+        key: 'chainnode_id'
       },
       //   'node_type': 'accountnode' // 节点类型 accountnode:主节点-记账节点；syncnode:主节点-同步节点；resourcenode：资源节点
       {
@@ -342,7 +342,7 @@ export default {
         'orgAddress': row.main_company_company_id || '00', // 节点归属组织地址
         'orgName': row.main_company_company_name || '00', // 节点归属组织名称
         'nodeAddr': row.chainnode_id, // 节点地址
-        'amount': row.node_license_amount, // 许可证容量
+        'amount': 0, // 许可证容量
         'nodeType': 2, // 1主节点;2节点网络准入;3前置节点
         'op': 2 // 1添加；2移除
       }
@@ -376,7 +376,7 @@ export default {
                 return true
               }
               if (res.status === 3) {
-                this.$Message.success('修改成功')
+                this.$Message.success('删除成功')
                 this.init()
                 return true
               } else {

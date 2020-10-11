@@ -54,7 +54,6 @@ export default {
     .qrCodeAuthDialog {
         width: 300px;
         height: 300px;
-
     }
 
     .qrCodeAuthDialog-picture {

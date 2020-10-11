@@ -95,8 +95,13 @@ export default {
         'address': sessionStorage.getItem('fbs_address') // 登陆人的地址
       }).then(res => {
         if (res.rows) {
-          res.rows.map(r => {
-            this.tabs[r.review_type].num = r.num
+          res.rows.forEach(r => {
+            for (let i in this.tabs) {
+              if (this.tabs[i].review_type === r.review_type) {
+                this.tabs[i].num = r.num
+                console.log(i)
+              }
+            }
           })
         }
       })

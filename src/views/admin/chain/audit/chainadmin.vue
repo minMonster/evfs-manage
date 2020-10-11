@@ -19,16 +19,16 @@
         <RadioGroup class="approval" v-model="rule">
           <Row>
             <Col span="6">
-            <Radio label="0">任意一个联盟委员签批</Radio>
+            <Radio :label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="100">1/3联盟委员同时签批</Radio>
+            <Radio :label="100">1/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="200">2/3联盟委员同时签批</Radio>
+            <Radio :label="200">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="300">所有联盟委员同时签批</Radio>
+            <Radio :label="300">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -36,12 +36,12 @@
           <div class="audit-item-content">
             <P>变更前：</P>
             <div>联盟委员决议审批规则：{{ruleJson[old_rule]}}</div>
-            <div>申请人： {{applicant_name}}<span>审核通过人： <a href="javascript:;">查看</a></span></div>
+            <div>申请人： {{applicant_name}}<span>审核通过人： <a a @click="showRule">查看</a></span></div>
           </div>
           <div class="audit-item-btns">
             <div class="btn-inner">
-              <button class="refuse-btn">拒绝</button>
-              <button class="agree-btn">同意</button>
+              <button class="refuse-btn" @click="refuseRule">拒绝</button>
+              <button class="agree-btn" @click="agreeRule">同意</button>
             </div>
           </div>
         </div>
@@ -138,12 +138,27 @@ export default {
       },
       {
         title: '状态',
-        key: 'status'
+        key: 'status',
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         title: '申请人',
-        width: 120,
-        key: 'apply'
+        key: 'applicant_name'
       },
       {
         title: '审核通过人',
@@ -152,7 +167,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                that.adds(row)
+                that.$QueryApprovedDialog.show(row)
               }
             }
           }, '查看')
@@ -160,9 +175,11 @@ export default {
       },
       {
         title: '操作',
-        'width': 120,
         render (h, p) {
           let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -242,6 +259,12 @@ export default {
 
   },
   methods: {
+    showRule () {
+      let row = {
+        review_id: this.review_rule
+      }
+      this.$QueryApprovedDialog.show(row)
+    },
     init () {
       api.pbqrc({
         reviewType: 'chaincommittee',
@@ -250,7 +273,7 @@ export default {
       }).then(res => {
         if (res.rows) {
           let data = res.rows[0]
-          this.rule = data.role || ''
+          this.rule = data.rule || ''
           this.old_rule = data.old_rule || ''
           this.review_rule = data.review_id
         } else {

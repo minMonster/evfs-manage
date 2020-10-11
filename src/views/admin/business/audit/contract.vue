@@ -53,7 +53,23 @@ export default {
       },
       {
         title: '状态',
-        key: 'status'
+        key: 'status',
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         width: 120,
@@ -68,7 +84,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                that.adds(row)
+                that.$QueryApprovedDialog.show(row)
               }
             }
           }, '查看')
@@ -76,9 +92,11 @@ export default {
       },
       {
         title: '操作',
-        'width': 120,
         render (h, p) {
           let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -161,7 +179,7 @@ export default {
         'domainId': sessionStorage.getItem('fbs_biz_id') // 业务域ID
       }
       let data = await cApi.pbgen({
-        'method': 'BizDomainCreateContractAgreeContractTxReq',
+        'method': 'BizDomainContractEnableAgreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

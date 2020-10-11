@@ -95,6 +95,7 @@ export default {
     //   "status": "1", //状态
     //   "main_biz_biz_id": "1" //所属业务域id
     // },
+    let that = this
     let columns = [
       {
         title: '合约名称',
@@ -262,7 +263,7 @@ export default {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
         'domainId': sessionStorage.getItem('fbs_biz_id'), // 业务域ID
-        'contractAddress': row.contract_id,	// 合约地址
+        'contractAddress': row.contract_id, // 合约地址
         'op': status // 1添加；2移除
       }
       let data = await cApi.pbgen({
