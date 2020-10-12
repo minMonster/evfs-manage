@@ -17,9 +17,9 @@
         <div>
           <RadioGroup class="approval" v-model="acceptLimit">
             <Radio label="0">任意一个联盟委员签批</Radio>
-            <Radio label="1/3">1/3联盟委员同时签批</Radio>
-            <Radio label="2/3">2/3联盟委员同时签批</Radio>
-            <Radio label="3/3">所有联盟委员同时签批</Radio>
+            <Radio label="100">1/3联盟委员同时签批</Radio>
+            <Radio label="200">2/3联盟委员同时签批</Radio>
+            <Radio label="300">所有联盟委员同时签批</Radio>
           </RadioGroup>
         </div>
       </div>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import * as sApi from '../setupapi'
 export default {
   data () {
     let that = this
@@ -111,16 +112,23 @@ export default {
       let param = {
         name, address, acceptLimit
       }
-      this.$http.post('/fbs/man/pbsci.do', param).then(res => {
-        res = res.data
-        if (res.retCode == '1') {
+      sApi.pbsci(param).then(res => {
+        if (res && res.retCode === 1) {
           this.$emit('next', 'step4.3')
         }
       }).catch(err => {
-        // this.$Message.error('')
-      }).then(() => {
-
+        this.$Message.error('操作失败')
       })
+      // this.$http.post('/fbs/man/pbsci.do', param).then(res => {
+      //   res = res.data
+      //   if (res.retCode == '1') {
+      //     this.$emit('next', 'step4.3')
+      //   }
+      // }).catch(err => {
+      //   // this.$Message.error('')
+      // }).then(() => {
+
+      // })
     },
     ok () {
       let name = this.name.trim()
