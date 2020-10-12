@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import ViewUI from 'view-design'
-const DebugView = () => import('../views/setup/debug')
-const Guide = () => import('../views/guide')
-const Setup = () => import('../views/setup')
+const DebugView = () => import('@/views/setup/debug')
+const Guide = () => import('@/views/guide')
+const Setup = () => import('@/views/setup')
 const Admin = () => import('../views/admin')
 const ChainInfo = () => import('../views/admin/chain/chaininfo')
 const Alliance = () => import('@/views/admin/chain/alliance') // 链联盟委员会管理
