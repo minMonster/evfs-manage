@@ -52,8 +52,6 @@ export default {
 
 <style lang='less' type='text/less'>
     .qrCodeAuthDialog {
-        width: 300px;
-        height: 300px;
     }
 
     .qrCodeAuthDialog-picture {
