@@ -49,11 +49,11 @@ export default {
       },
       {
         title: '审核结果',
-        key: 'status',
+        key: 'user_status',
         render (h, p) {
           let row = p.row
           let label = '--'
-          switch (row.status) {
+          switch (row.user_status) {
           case '1':
             label = '待审批'
             break

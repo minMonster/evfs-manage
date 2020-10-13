@@ -121,7 +121,7 @@ export default {
         render (h, p) {
           let row = p.row
           let label = '--'
-          switch (row.user_status) {
+          switch (row.status) {
           case '1':
             label = '待审批'
             break

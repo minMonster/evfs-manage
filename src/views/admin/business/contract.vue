@@ -267,7 +267,7 @@ export default {
         'op': status // 1添加；2移除
       }
       let data = await cApi.pbgen({
-        'method': 'BizDomainCreateContractApplyContractTxReq',
+        'method': 'BizDomainContractEnableApplyContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

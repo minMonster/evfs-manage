@@ -67,12 +67,12 @@ export default {
       },
       {
         title: '状态',
-        key: 'user_status',
+        key: 'status',
         width: 100,
         render (h, p) {
           let row = p.row
           let label = '--'
-          switch (row.user_status) {
+          switch (row.status) {
           case '1':
             label = '待审批'
             break
@@ -147,12 +147,12 @@ export default {
       },
       {
         title: '审核结果',
-        key: 'status',
+        key: 'user_status',
         'width': 100,
         render (h, p) {
           let row = p.row
           let label = '--'
-          switch (row.status) {
+          switch (row.user_status) {
           case '1':
             label = '待审批'
             break

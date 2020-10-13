@@ -267,8 +267,8 @@ export default {
     },
     init () {
       api.pbqrc({
-        reviewType: 'chaincommittee',
-        'menu': 'chain_manager_rule', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        reviewType: 'chain_manager_rule',
+        'menu': 'chaingroup', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
         'address': sessionStorage.getItem('fbs_address')
       }).then(res => {
         if (res.rows) {
@@ -282,8 +282,8 @@ export default {
       })
       this.listLoading = true
       api.pbqrc({
-        'menu': 'chaincommittee',
-        reviewType: 'chain_committee',
+        'menu': 'chaingroup',
+        reviewType: 'chain_manager',
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false

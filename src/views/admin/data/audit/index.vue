@@ -48,7 +48,7 @@ export default {
         //   nodeName: 'rule'
         // },
         'data-node': {
-          name: '联盟委员会',
+          name: '节点准入',
           num: 0,
           nodeName: 'node',
           review_type: 'storage'

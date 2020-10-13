@@ -116,8 +116,12 @@ export default {
       },
       {
         title: '操作',
+        width: 120,
         render (h, p) {
           let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'

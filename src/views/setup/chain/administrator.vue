@@ -7,7 +7,7 @@
         <div style="margin-bottom: 20px;">
           <span>链管理员决议审批规则：</span>
           <Tooltip placement="top" max-width="600" transfer
-            content='选项说明:所有需要链管理员审批的事务，通过决议的签批规则。* “任意一个成员签批”：链管理员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3成员同时签批”：只有链管理员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3成员同时签批”：只有链管理员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有成员同时签批”： 只有链管理员列表中的所有成员签批同意，相应的决议方可通过。'>
+                   content='选项说明:所有需要链管理员审批的事务，通过决议的签批规则。* “任意一个成员签批”：链管理员列表中的任何一个成员签批同意，相应的决议即可通过。* “1/3成员同时签批”：只有链管理员列表中的任意1/3个成员签批同意，相应的决议方可通过。* “2/3成员同时签批”：只有链管理员列表中的任意2/3个成员签批同意，相应的决议方可通过。* “所有成员同时签批”： 只有链管理员列表中的所有成员签批同意，相应的决议方可通过。'>
             <Icon type="ios-information-circle-outline" />
           </Tooltip>
         </div>
@@ -78,209 +78,209 @@
 </template>
 
 <script>
-  import * as sApi from '../setupapi'
-  export default {
-    data() {
-      let that = this
-      let columns1 = [{
-          title: '管理员名称',
-          key: 'name'
-        },
-        {
-          title: '管理员身份标识公钥',
-          key: 'address'
-        },
-        {
-          title: '操作',
-          render(h, p) {
-            return h('a', {
-              on: {
-                click() {
-                  let index = p.index
-                  that.data1.splice(index, 1)
-                }
-              }
-            }, '删除')
+import * as sApi from '../setupapi'
+export default {
+  data () {
+    let that = this
+    let columns1 = [{
+      title: '管理员名称',
+      key: 'name'
+    },
+    {
+      title: '管理员身份标识公钥',
+      key: 'address'
+    },
+    {
+      title: '操作',
+      render (h, p) {
+        return h('a', {
+          on: {
+            click () {
+              let index = p.index
+              that.data1.splice(index, 1)
+            }
           }
-        }
-      ]
-      let data1 = [
+        }, '删除')
+      }
+    }
+    ]
+    let data1 = [
 
-      ]
-      return {
-        step: '1',
-        acceptLimit: '0',
-        columns1,
-        data1,
-        addModal: false,
-        name: '',
-        address: '',
-        timer: null, // 定时器
-        end: false, // 链创建是否结束
-        startdate: '', // 链创建开始时间
-        enddate: '', // 链创建结束时间
-        duration: '', // 创建耗时
-        hash: '' // 链实例唯一标识
+    ]
+    return {
+      step: '1',
+      acceptLimit: '0',
+      columns1,
+      data1,
+      addModal: false,
+      name: '',
+      address: '',
+      timer: null, // 定时器
+      end: false, // 链创建是否结束
+      startdate: '', // 链创建开始时间
+      enddate: '', // 链创建结束时间
+      duration: '', // 创建耗时
+      hash: '' // 链实例唯一标识
+    }
+  },
+  mounted () {
+    this.init()
+  },
+  destroyed () {
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
+  },
+  computed: {
+    formatDuration () {
+      let time = this.duration
+      let h = Math.floor(time / (60 * 60))
+      let m = Math.floor(time % (60 * 60) / 60)
+      let s = time % 60
+      if (h) {
+        return h + '小时' + m + '分钟' + s + '秒'
+      } else if (m) {
+        return m + '分钟' + s + '秒'
+      } else {
+        return s + '秒'
       }
-    },
-    mounted() {
-      this.init()
-    },
-    destroyed() {
-      if (this.timer) {
-        clearInterval(this.timer)
+    }
+  },
+  watch: {
+    step (n, o) {
+      console.log(n, o)
+      if (n === 2) {
+        this.creating()
       }
+    }
+  },
+  methods: {
+    init () {
+      this.initStartDate()
     },
-    computed: {
-      formatDuration() {
-        let time = this.duration
-        let h = Math.floor(time / (60 * 60))
-        let m = Math.floor(time % (60 * 60) / 60)
-        let s = time % 60
-        if (h) {
-          return h + '小时' + m + '分钟' + s + '秒'
-        } else if (m) {
-          return m + '分钟' + s + '秒'
-        } else {
-          return s + '秒'
-        }
-      }
-    },
-    watch: {
-      step(n, o) {
-        console.log(n, o)
-        if (n === 2) {
-          this.creating()
-        }
-      }
-    },
-    methods: {
-      init() {
-        this.initStartDate()
-      },
-      initStartDate() {
-        let startdate = localStorage.getItem('startdate')
-        let enddate = localStorage.getItem('enddate')
-        if (startdate && enddate) {
-          this.startdate = startdate
-          this.enddate = enddate
-          this.step = 3
-        } else if (startdate) {
-          this.step = 2
-          this.startdate = startdate
-          this.timer = setInterval(() => {
-            this.creating()
-          }, 1000)
-        }
-      },
-      // next() {
-      //   this.confirm()
-      //   // this.$emit('next', 'step4.3')
-      // },
-      next(num) {
-        this.step = num
+    initStartDate () {
+      let startdate = localStorage.getItem('startdate')
+      let enddate = localStorage.getItem('enddate')
+      if (startdate && enddate) {
+        this.startdate = startdate
+        this.enddate = enddate
+        this.step = 3
+      } else if (startdate) {
+        this.step = 2
+        this.startdate = startdate
         this.timer = setInterval(() => {
           this.creating()
         }, 1000)
-      },
-      creating() {
-        let enddate = Date.now()
-        let startdate = localStorage.getItem('startdate')
-        console.log(startdate, enddate)
-        startdate = new Date(startdate).getTime()
-        this.duration = Math.floor((enddate - startdate) / 1000)
-        console.log('这里没有查询第0块hash的接口诶～')
-        // this.$http.post('/fbs/man/pbrun.do').then(res => {
-        //   res = res.data
-        //   if (res.retCode === 1) {
-        //     clearInterval(this.timer)
-        //     let enddate = moment().format('YYYY-MM-DD HH:mm:ss')
-        //     localStorage.setItem('enddate', enddate)
-        //     this.enddate = enddate
-        //     this.end = true
-        //     this.step = 3
-        //   }
-        // }).catch(err => {
-        //   console.log(err)
-        // }).then(() => {
-
-        // })
-        // sApi.pb
-      },
-      create() {
-        let acceptLimit = this.acceptLimit
-        let data = this.data1
-        let name = []
-        let address = []
-        if (data.length) {
-          data.forEach((item, index) => {
-            name.push(item.name)
-            address.push(item.address)
-          })
-        }
-        let param = {
-          name,
-          address,
-          acceptLimit
-        }
-        sApi.pbsai(param).then(res => {
-          if (res && res.retCode === 1) {
-            // 调用方法，并且开始计时
-            // 调用接口
-            // 确认创建新链
-            sApi.pbsnc({
-              ip: sessionStorage.getItem('setup_ip'),
-              memory: sessionStorage.getItem('setup_memory')
-            }).then(() => {
-              let startdate = moment().format('YYYY-MM-DD HH:mm:ss')
-              localStorage.setItem('startdate', startdate)
-              this.startdate = startdate
-              this.duration = 0
-              this.next('2')
-            })
-            // this.$emit('next', 'step4.4')
-          }
-        }).catch(err => {
-          this.$Message.error('操作失败')
-        }).then(() => {
-
-        })
-        // this.$http.post('/fbs/man/pbsai.do', param).then(res => {
-        //   res = res.data
-        //   if (res.retCode == '1') {
-        //     this.$emit('next', 'step4.4')
-        //   }
-        // }).catch(err => {
-        //   // this.$Message.error('')
-        // }).then(() => {
-
-        // })
-      },
-      ok() {
-        let name = this.name.trim()
-        let address = this.address.trim()
-        if (!name) {
-          this.$Message.error('请输入委员名称')
-          return
-        }
-        if (!address) {
-          this.$Message.error('请输入委员身份地址')
-          return
-        }
-        let data = {
-          name,
-          address
-        }
-        this.data1.push(data)
-        this.name = ''
-        this.address = ''
-      },
-      cancel() {
-        this.name = ''
-        this.address = ''
       }
+    },
+    // next() {
+    //   this.confirm()
+    //   // this.$emit('next', 'step4.3')
+    // },
+    next (num) {
+      this.step = num
+      this.timer = setInterval(() => {
+        this.creating()
+      }, 1000)
+    },
+    creating () {
+      let enddate = Date.now()
+      let startdate = localStorage.getItem('startdate')
+      console.log(startdate, enddate)
+      startdate = new Date(startdate).getTime()
+      this.duration = Math.floor((enddate - startdate) / 1000)
+      console.log('这里没有查询第0块hash的接口诶～')
+      // this.$http.post('/fbs/man/pbrun.do').then(res => {
+      //   res = res.data
+      //   if (res.retCode === 1) {
+      //     clearInterval(this.timer)
+      //     let enddate = moment().format('YYYY-MM-DD HH:mm:ss')
+      //     localStorage.setItem('enddate', enddate)
+      //     this.enddate = enddate
+      //     this.end = true
+      //     this.step = 3
+      //   }
+      // }).catch(err => {
+      //   console.log(err)
+      // }).then(() => {
+
+      // })
+      // sApi.pb
+    },
+    create () {
+      let acceptLimit = this.acceptLimit
+      let data = this.data1
+      let name = []
+      let address = []
+      if (data.length) {
+        data.forEach((item, index) => {
+          name.push(item.name)
+          address.push(item.address)
+        })
+      }
+      let param = {
+        name,
+        address,
+        acceptLimit
+      }
+      sApi.pbsai(param).then(res => {
+        if (res && res.retCode === 1) {
+          // 调用方法，并且开始计时
+          // 调用接口
+          // 确认创建新链
+          sApi.pbsnc({
+            ip: sessionStorage.getItem('setup_ip'),
+            memory: sessionStorage.getItem('setup_memory')
+          }).then(() => {
+            let startdate = this.$moment().format('YYYY-MM-DD HH:mm:ss')
+            localStorage.setItem('startdate', startdate)
+            this.startdate = startdate
+            this.duration = 0
+            this.next('2')
+          })
+          // this.$emit('next', 'step4.4')
+        }
+      }).catch(err => {
+        this.$Message.error('操作失败')
+      }).then(() => {
+
+      })
+      // this.$http.post('/fbs/man/pbsai.do', param).then(res => {
+      //   res = res.data
+      //   if (res.retCode == '1') {
+      //     this.$emit('next', 'step4.4')
+      //   }
+      // }).catch(err => {
+      //   // this.$Message.error('')
+      // }).then(() => {
+
+      // })
+    },
+    ok () {
+      let name = this.name.trim()
+      let address = this.address.trim()
+      if (!name) {
+        this.$Message.error('请输入委员名称')
+        return
+      }
+      if (!address) {
+        this.$Message.error('请输入委员身份地址')
+        return
+      }
+      let data = {
+        name,
+        address
+      }
+      this.data1.push(data)
+      this.name = ''
+      this.address = ''
+    },
+    cancel () {
+      this.name = ''
+      this.address = ''
     }
   }
+}
 </script>
 
 <style lang="less">

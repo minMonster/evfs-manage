@@ -275,8 +275,8 @@ export default {
       })
       this.listLoading = true
       api.pbqrc({
-        'menu': 'storage_manage',
-        reviewType: 'storage',
+        'menu': 'storage',
+        reviewType: 'storage_manage',
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false

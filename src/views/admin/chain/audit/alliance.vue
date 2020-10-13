@@ -217,8 +217,8 @@ export default {
   methods: {
     init () {
       api.pbqrc({
-        reviewType: 'chaincommittee',
-        'menu': 'chain_committee_rule', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
+        reviewType: 'chain_committee_rule',
+        'menu': 'chaincommittee', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
         'address': sessionStorage.getItem('fbs_address')
       }).then(res => {
         if (res.rows) {

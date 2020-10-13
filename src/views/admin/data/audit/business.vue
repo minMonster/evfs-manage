@@ -226,9 +226,12 @@ export default {
       },
       {
         title: '操作',
-        'width': 120,
+        width: 120,
         render (h, p) {
           let row = p.row
+          if (row.status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -321,10 +324,11 @@ export default {
     async agree (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
+        domainId: sessionStorage.getItem('fbs_storage_id'),
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeMemberAgreeContractTxReq',
+        'method': 'DSDomainBizDomainAgreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -368,10 +372,12 @@ export default {
     async refuse (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
+        domainId: sessionStorage.getItem('fbs_storage_id'),
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeDisagreeContractTxReq',
+        'method': 'DSDomainDisagreeContractTxReq',
+        domainId: sessionStorage.getItem('fbs_storage_id'),
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

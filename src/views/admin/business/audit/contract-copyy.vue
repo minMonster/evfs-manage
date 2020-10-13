@@ -193,35 +193,23 @@ export default {
       },
       {
         title: '审核结果',
+        key: 'user_status',
+        width: 100,
         render (h, p) {
-          let agree = h('a', {
-            style: {
-              marginRight: '8px'
-            },
-            domProps: {
-              href: 'javascript:;'
-            },
-            on: {
-              click () {
-                // let index = p.index
-              }
-            }
-          }, '同意')
-          let refuse = h('a', {
-            domProps: {
-              href: 'javascript:;'
-            },
-            on: {
-              click () {
-                // let index = p.index
-              }
-            }
-          }, '拒绝')
-          return h('div', {
-            'class': 'opt-btns'
-          }, [
-            agree, refuse
-          ])
+          let row = p.row
+          let label = '--'
+          switch (row.user_status) {
+            case '1':
+              label = '待审批'
+              break
+            case '2':
+              label = '已同意'
+              break
+            case '3':
+              label = '审核拒绝'
+              break
+          }
+          return h('span', label)
         }
       }
     ]
