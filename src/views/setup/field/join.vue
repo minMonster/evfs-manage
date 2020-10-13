@@ -90,7 +90,7 @@ export default {
     step (n, o) {
       console.log(n, o)
       let that = this
-      if (n == 2) {
+      if (n === 2) {
         setTimeout(() => {
           that.step = '3'
         }, 30300)

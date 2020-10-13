@@ -128,16 +128,15 @@ export default {
         this.$Message.error('请输入企业名称')
         return
       }
-      // 判断隶属企业身份标识    
+      // 判断隶属企业身份标识
       if (!this.orgAddress) {
         this.$Message.error('请输入企业身份标识')
-        return
       }
-      let data = {
-        existsNodeUrl: this.existsNodeUrl,
-        ip: this.ipUrl,
-        memory: this.memory
-      }
+      // let data = {
+      //   existsNodeUrl: this.existsNodeUrl,
+      //   ip: this.ipUrl,
+      //   memory: this.memory
+      // }
       // sApi.pbjec({
       //   data
       // }).then(res => {

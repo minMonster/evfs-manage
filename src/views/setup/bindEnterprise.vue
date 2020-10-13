@@ -56,16 +56,15 @@ export default {
           this.serverAddress = res.nodeAddress
           sessionStorage.setItem('setup_node_address', this.serverAddress)
           sessionStorage.setItem('setup_org_name', this.serverName)
-        }else{
+        } else {
           this.$Message.error(res.retMsg)
         }
-      }).catch(err => {
+      }).catch(() => {
         this.$Message.error('服务器名称地址查询失败')
-        return
       }).then(() => {
 
       })
-      
+
       // let serverName = this.$cookie.get('serverName')
       // if (!serverName) {
       //   // 调用接口获取下服务器名称
@@ -99,7 +98,7 @@ export default {
               sessionStorage.setItem('setup_org_address', res.orgAddress)
               sessionStorage.setItem('setup_org_name', res.orgName)
               // this.$Message.success('绑定成功')
-               this.success = true
+              this.success = true
               return true
             } else {
               return false

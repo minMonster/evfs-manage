@@ -14,7 +14,7 @@ export const pbsno = (params, opts) => request.post('man/pbsno.do', params, opts
 // 读取服务器所属企业
 export const pbgno = (params, opts) => request.post('man/pbgno.do', params, opts)
 // 设置委员会信息
-export const pbsci = (params, opts) => request.post('man/pbsci.do', params, opts)   
+export const pbsci = (params, opts) => request.post('man/pbsci.do', params, opts)
 // 设置管理员组信息
 export const pbsai = (params, opts) => request.post('man/pbsai.do', params, opts)
 // 启动新链

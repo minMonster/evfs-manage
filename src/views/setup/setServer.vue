@@ -37,7 +37,7 @@ export default {
         this.$Message.error('请输入服务器名称')
         return
       }
-      let timestamp = Date.now()
+      // let timestamp = Date.now()
       // let data = {
       //   key, value, timestamp
       // }
@@ -50,7 +50,7 @@ export default {
           this.$cookie.set('serverName', value)
           this.$emit('next', 'step2')
         }
-      }).catch(err => {
+      }).catch(() => {
 
       }).then(() => {
         this.loading = false
@@ -73,7 +73,7 @@ export default {
     sApi.pbgnn({}).then(res => {
       if (res && res.retCode === 1) {
         this.serverName = res.name
-      }else{
+      } else {
         console.log(res.retMsg)
         this.$Message.error('查询失败')
       }

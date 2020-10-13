@@ -96,13 +96,12 @@
       </div>
     </Modal>
   </div>
-  </div>
 </template>
 
 <script>
 export default {
   data () {
-    let that = this
+    // let that = this
     let columns1 = [
       {
         title: '管理员名称',
@@ -115,7 +114,7 @@ export default {
       {
         title: '操作',
         render (h, p) {
-          let row = p.row
+          // let row = p.row
           return h('a', {
             on: {
               click () {

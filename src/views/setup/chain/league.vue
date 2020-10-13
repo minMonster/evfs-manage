@@ -117,6 +117,7 @@ export default {
           this.$emit('next', 'step4.3')
         }
       }).catch(err => {
+        console.log(err)
         this.$Message.error('操作失败')
       })
       // this.$http.post('/fbs/man/pbsci.do', param).then(res => {

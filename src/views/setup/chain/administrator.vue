@@ -241,6 +241,7 @@ export default {
           // this.$emit('next', 'step4.4')
         }
       }).catch(err => {
+        console.log(err)
         this.$Message.error('操作失败')
       }).then(() => {
 

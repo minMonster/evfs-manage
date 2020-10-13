@@ -57,7 +57,7 @@ export default {
       }
       this.$http.post('/fbs/man/pbsgo.do', data).then(res => {
         res = res.data
-        if (res.retCode == 1) {
+        if (res.retCode === 1) {
           this.$Message.success('参数设置成功')
           this.$emit('next', 'step4.5')
         } else if (res.msg) {

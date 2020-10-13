@@ -92,108 +92,109 @@
 </template>
 
 <script>
-  import * as sApi from '../setupapi'
-  export default {
-    data() {
-      return {
-        tagCreateChain: true,
-        // approval: 'off',
-        serverName: '',
-        serverAddress: '', // 服务器身份标识
-        orgAddress: '', // 企业身份标识
-        orgName: '', // 企业名称
-        memory: '', // docker的memory参数
-        ip: '' // ip地址和端口
-        // columns1,
-        // columns2,
-        // data1,
-        // data2
-      }
-    },
-    mounted() {},
-    methods: {
-      init() {
-        this.initServerInfo()
-        this.initOrgInfo()
-      },
-      initServerInfo() {
-        this.tagCreateChain = true
-        sApi.pbgni({}).then(res => {
-          if (res.retCode === 1) {
-            this.serverName = res.nodeName
-            this.serverAddress = res.nodeAddress
-            sessionStorage.setItem('setup_node_name', res.nodeName)
-            sessionStorage.setItem('setup_node_address', res.nodeAddress)
-          }
-        }).catch(err => {
-
-        }).then(() => {
-          this.tagCreateChain = false
-        })
-      },
-      initOrgInfo() {
-        this.tagCreateChain = true
-        sApi.pbgno({}).then(res => {
-          if (res.retCode === 1) {
-            this.orgAddress = res.orgAddress
-            this.orgName = res.orgName
-          }
-        }).catch(err => {
-
-        }).then(() => {
-          this.createChain = false
-        })
-      },
-      // next() {
-      //   this.$emit('next', 'step4.2')
-      // },
-
-      networkset() {
-        // let needApprove = this.approval == 'on'
-        if (!this.ip) {
-          this.$Message.error('请输入ip地址')
-          return
-        }
-        // if(!this.checkUrl(this.ip)){
-        //   this.$Message.error('ip地址格式错误')
-        //   return
-        // }
-        if (!this.memory) {
-          this.$Message.error('请输入memory')
-          return
-        }
-        sessionStorage.setItem('setup_ip', this.ip)
-        sessionStorage.setItem('setup_memory', this.memory)
-        this.$emit('next', 'step4.2')
-        // this.next()
-        // sApi.pbsnc({
-        //   ip: this.ip,
-        //   memory: this.memory
-        // }).then(res => {
-        //   if (res && res.retCode === 1){
-        //      this.next()
-        //   }
-        // }).catch(err => {
-
-        // }).then(() => {
-
-        // })
-      },
-      checkUrl(url) {
-        if (url != "") {
-          var reg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/;
-          if (!reg.test(url)) {
-            return false
-          }
-          return true
-        }
-      }
-
-    },
-    created() {
-      this.init()
+import * as sApi from '../setupapi'
+export default {
+  data () {
+    return {
+      tagCreateChain: true,
+      // approval: 'off',
+      serverName: '',
+      serverAddress: '', // 服务器身份标识
+      orgAddress: '', // 企业身份标识
+      orgName: '', // 企业名称
+      memory: '', // docker的memory参数
+      ip: '' // ip地址和端口
+      // columns1,
+      // columns2,
+      // data1,
+      // data2
     }
+  },
+  mounted () {},
+  methods: {
+    init () {
+      this.initServerInfo()
+      this.initOrgInfo()
+    },
+    initServerInfo () {
+      this.tagCreateChain = true
+      sApi.pbgni({}).then(res => {
+        if (res.retCode === 1) {
+          this.serverName = res.nodeName
+          this.serverAddress = res.nodeAddress
+          sessionStorage.setItem('setup_node_name', res.nodeName)
+          sessionStorage.setItem('setup_node_address', res.nodeAddress)
+        }
+      }).catch(() => {
+
+      }).then(() => {
+        this.tagCreateChain = false
+      })
+    },
+    initOrgInfo () {
+      this.tagCreateChain = true
+      sApi.pbgno({}).then(res => {
+        if (res.retCode === 1) {
+          this.orgAddress = res.orgAddress
+          this.orgName = res.orgName
+        }
+      }).catch(() => {
+
+      }).then(() => {
+        this.createChain = false
+      })
+    },
+    // next() {
+    //   this.$emit('next', 'step4.2')
+    // },
+
+    networkset () {
+      // let needApprove = this.approval == 'on'
+      if (!this.ip) {
+        this.$Message.error('请输入ip地址')
+        return
+      }
+      // if(!this.checkUrl(this.ip)){
+      //   this.$Message.error('ip地址格式错误')
+      //   return
+      // }
+      if (!this.memory) {
+        this.$Message.error('请输入memory')
+        return
+      }
+      sessionStorage.setItem('setup_ip', this.ip)
+      sessionStorage.setItem('setup_memory', this.memory)
+      this.$emit('next', 'step4.2')
+      // this.next()
+      // sApi.pbsnc({
+      //   ip: this.ip,
+      //   memory: this.memory
+      // }).then(res => {
+      //   if (res && res.retCode === 1){
+      //      this.next()
+      //   }
+      // }).catch(err => {
+
+      // }).then(() => {
+
+      // })
+    },
+    checkUrl (url) {
+      if (url !== '') {
+        // eslint-disable-next-line no-useless-escape
+        var reg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/
+        if (!reg.test(url)) {
+          return false
+        }
+        return true
+      }
+    }
+
+  },
+  created () {
+    this.init()
   }
+}
 </script>
 
 <style lang="less" scoped>

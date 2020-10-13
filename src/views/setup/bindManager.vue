@@ -81,7 +81,7 @@ export default {
               sessionStorage.setItem('setup_admin_address', res.address)
               sessionStorage.setItem('setup_admin_name', res.name)
               // this.$Message.success('绑定成功')
-               this.success = true
+              this.success = true
               return true
             } else {
               return false
