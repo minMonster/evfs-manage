@@ -10,7 +10,7 @@ class QueryApprovedDialog {
     vue.prototype.$QueryApprovedDialog = alert
   }
   init () {
-    let that = this
+    // let that = this
     const toastDom = new SetQueryApprovedDialog({
       data () {
         return {

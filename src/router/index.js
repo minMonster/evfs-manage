@@ -7,7 +7,7 @@ const Setup = () => import('@/views/setup')
 const Admin = () => import('../views/admin')
 const ChainInfo = () => import('../views/admin/chain/chaininfo')
 const Alliance = () => import('@/views/admin/chain/alliance') // 链联盟委员会管理
-const Configure = () => import('@/views/admin/chain/configure') // 行为审计
+// const Configure = () => import('@/views/admin/chain/configure') // 行为审计
 const NodeAdmission = () => import('@/views/admin/chain/nodeAdmission') // 节点准入许可
 const NodeManage = () => import('@/views/admin/chain/nodeManage')
 const frontNodeLicence = () => import('@/views/admin/chain/frontNodeLicence') // 前置节点访问许可
@@ -29,7 +29,7 @@ const nextChdetial = () => import('@/views/admin/chain/nextChdetial')
 const Data = () => import('../views/admin/data')
 const datadetail = () => import('../views/admin/data/detail')
 const datarule = () => import('../views/admin/data/rule')
-const dataalliance = () => import('../views/admin/data/alliance')
+// const dataalliance = () => import('../views/admin/data/alliance')
 const datapermission = () => import('../views/admin/data/permission')
 const databusiness = () => import('../views/admin/data/business')
 const datamanager = () => import('../views/admin/data/manager')
