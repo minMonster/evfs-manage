@@ -11,3 +11,4 @@ export const pbqbc = (params, opts) => request.post('cmw/pbqbc.do', params, opts
 export const pbqml = (params, opts) => request.post('cmw/pbqml.do', params, opts)
 export const pbqrc = (params, opts) => request.post('cmw/pbqrc.do', params, opts)
 export const pbqrm = (params, opts) => request.post('cmw/pbqrm.do', params, opts)
+export const pbqbs = (params, opts) => request.post('cmw/pbqbs.do', params, opts)

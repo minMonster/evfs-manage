@@ -1,7 +1,7 @@
 <template>
   <div class="data-manager">
     <div class="content-title"><span>区块链联盟委员会管理</span></div>
-    <div class="padding bg-white" style="margin-bottom: 20px;" v-if="rule">
+    <div class="padding bg-white" style="margin-bottom: 20px;" v-if="rule !== ''">
       <div style="margin-bottom: 20px;color: #273D52;">
         <span>联盟委员决议审批规则：</span>
         <Tooltip
@@ -15,22 +15,22 @@
       <RadioGroup class="approval" v-model="rule">
         <Row>
           <Col span="6">
-          <Radio label="0">任意一个联盟委员签批</Radio>
+          <Radio :label="0">任意一个联盟委员签批</Radio>
           </Col>
           <Col span="6">
-          <Radio label="100">1/3联盟委员同时签批</Radio>
+          <Radio :label="100">1/3联盟委员同时签批</Radio>
           </Col>
         </Row>
         <Row>
           <Col span="6">
-          <Radio label="200">2/3联盟委员同时签批</Radio>
+          <Radio :label="200">2/3联盟委员同时签批</Radio>
           </Col>
           <Col span="6">
-          <Radio label="300">所有联盟委员同时签批</Radio>
+          <Radio :label="300">所有联盟委员同时签批</Radio>
           </Col>
         </Row>
       </RadioGroup>
-      <div class="audit-item" v-if="old_rule">
+      <div class="audit-item" v-if="old_rule !== ''">
         <div class="audit-item-content" >
           <P>变更前：</P>
           <div>联盟委员决议审批规则：{{ruleJson[old_rule]}}</div>
@@ -62,7 +62,6 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -156,10 +155,10 @@ export default {
       }
     ]
     let ruleJson = {
-      '0': '任意一个联盟委员签批',
-      '100': '1/3联盟委员同时签批',
-      '200': '2/3联盟委员同时签批',
-      '300': '所有联盟委员同时签批'
+      0: '任意一个联盟委员签批',
+      100: '1/3联盟委员同时签批',
+      200: '2/3联盟委员同时签批',
+      300: '所有联盟委员同时签批'
     }
     return {
       ruleJson,
@@ -208,11 +207,9 @@ export default {
       }).then(res => {
         if (res.rows) {
           let data = res.rows[0]
-          this.rule = data.rule || ''
+          this.rule = data.rule
           this.review_rule = data.review_id
-          this.old_rule = data.old_rule || ''
-        } else {
-          this.rule = false
+          this.old_rule = data.old_rule
         }
       })
       this.listLoading = true
@@ -222,9 +219,11 @@ export default {
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        this.getList()
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
       }).catch(err => {
         this.listLoading = false
         this.$Message.error(err.retMsg)

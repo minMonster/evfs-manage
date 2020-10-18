@@ -247,9 +247,11 @@ export default {
     init () {
       api.pbqsl().then(res => {
         this.listLoading = false
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        this.getList()
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
       }).catch(err => {
         this.listLoading = false
         this.$Message.error(err.retMsg)

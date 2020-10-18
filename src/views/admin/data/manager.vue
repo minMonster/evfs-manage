@@ -199,12 +199,14 @@ export default {
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        if (res.rule) {
-          this.rule = res.rule
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          if (res.rule) {
+            this.rule = res.rule
+          }
+          this.getList()
         }
-        this.getList()
       }).catch(err => {
         this.listLoading = false
         this.$Message.error(err.retMsg)

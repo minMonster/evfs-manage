@@ -45,18 +45,18 @@
           <Input type="text" v-model="form.address" placeholder="业务系统身份标识"></Input>
         </div>
         </Col>
-        <Col span="6">
-        <div class="condition-item">
-          <span class="condition-label">状态：</span>
-          <Select v-model="form.status" value="0">
-            <Option value="0">全部</Option>
-            <Option value="1">已添加</Option>
-            <Option value="2">已删除</Option>
-            <Option value="3">添加审核中</Option>
-            <Option value="4">删除审核中</Option>
-          </Select>
-        </div>
-        </Col>
+        <!--        <Col span="6">-->
+        <!--        <div class="condition-item">-->
+        <!--          <span class="condition-label">状态：</span>-->
+        <!--          <Select v-model="form.status" value="0">-->
+        <!--            <Option value="0">全部</Option>-->
+        <!--            <Option value="1">已添加</Option>-->
+        <!--            <Option value="2">已删除</Option>-->
+        <!--            <Option value="3">添加审核中</Option>-->
+        <!--            <Option value="4">删除审核中</Option>-->
+        <!--          </Select>-->
+        <!--        </div>-->
+        <!--        </Col>-->
         <Col span="6">
         <div class="condition-item">
           <Button style="width: 80px;" @click="search" type="primary">查询</Button>
@@ -64,11 +64,16 @@
         </Col>
       </Row>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -76,21 +81,23 @@
 </template>
 
 <script>
+import * as api from './api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
-    let columns1 = [
+    let columns = [
       {
         title: '业务系统名称',
-        key: 'name'
+        key: 'system_name'
       },
       {
         title: '业务系统身份标识',
-        key: 'address'
+        key: 'system_id'
       },
       {
         title: '添加时间',
-        key: 'time',
+        key: 'join_time',
         render (h, p) {
           let row = p.row
           if (!row.join_time) {
@@ -101,52 +108,60 @@ export default {
         }
       },
       {
-        title: '状态',
-        key: 'statuslabel'
-      },
-      {
         title: '操作',
+        'width': 120,
         render (h, p) {
-          let row = p.row || {}
-          let label = '--'
-          let status = row.status
-          if (status == '2') {
-            label = '删除'
-          }
-          if (status == '3') {
-            label = '撤销'
-          }
-          return h('a', {
+          let row = p.row
+          let agree = h('a', {
+            style: {
+              marginRight: '8px'
+            },
+            domProps: {
+              href: 'javascript:;'
+            },
             on: {
               click () {
-                let index = p.index
-                that.data1.splice(index, 1)
+                // let index = p.index
+                that.del(row)
               }
             }
-          }, label)
+          }, '删除')
+          return h('div', {
+            'class': 'opt-btns'
+          }, [
+            agree
+          ])
         }
       }
-    ]
-    let data1 = [
-      { name: '上海公证系统', address: '00740f...aaba8', time: '2020-1-5 10:45:25', statuslabel: '已添加', status: '2' },
-      { name: '四川公证系统', address: '00da0c...cfbe5', time: '--', statuslabel: '删除审核中', status: '1' },
-      { name: '四川公证系统', address: '00da0c...cfbe5', time: '--', statuslabel: '添加审核中', status: '1' },
-      { name: '北京公证系统', address: '00740f...dadaf', time: '2020-1-1 12:00:00', statuslabel: '已授权', status: '3' }
     ]
     return {
       acceptLimit: '1/3',
       name: '',
       address: '',
       addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [
+        {
+          'system_id': '1', // 业务系统唯一标识
+          'system_name': 'xitong1', // 业务系统名称
+          'main_org_org_id': '', // 组织（公司唯一标识）
+          'main_storage_storage_id': '', // 所属数据存管域唯一标识
+          'main_biz_biz_id': 'f5f5979d7f9d573d7320af14137f41a3b4fd8230', // 业务域唯一标识
+          'join_time': 1602320951670 // 加入时间
+        }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: '',
         status: ''
-      },
-      switch1: '0'
+      }
     }
   },
   mounted () {
@@ -155,15 +170,92 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    init () {},
+    init () {
+      this.listLoading = true
+      api.pbqbs({
+        'bizId': sessionStorage.getItem('fbs_biz_id'), // 业务域id（业务域唯一标识
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
+    async del (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        'domainId': sessionStorage.getItem('fbs_biz_id'),
+        'orgAddress': row.main_storage_storage_id, // 节点归属组织地址
+        'orgName': row.main_storage_storage_id, // 节点归属组织名称
+        'bizSystem': row.system_id, // 业务系统地址(身份标识)
+        'name': row.system_name, // 业务系统名称
+        'op': 2 // 1添加；2移除
+      }
+      let data = await cApi.pbgen({
+        'method': 'CommitteeMemberApplyContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('删除成功')
+                this.init()
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
     confirmAdd () {
       this.$router.push('/business-addpermission')
     },
     ok () {},
     search () {},
-    cancel () {},
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

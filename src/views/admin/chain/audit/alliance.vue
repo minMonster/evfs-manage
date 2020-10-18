@@ -15,18 +15,18 @@
         <RadioGroup class="approval" v-model="rule">
           <Row>
             <Col span="6">
-            <Radio label="0">任意一个联盟委员签批</Radio>
+            <Radio :label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="100">1/3联盟委员同时签批</Radio>
+            <Radio :label="100">1/3联盟委员同时签批</Radio>
             </Col>
           </Row>
           <Row>
             <Col span="6">
-            <Radio label="200">2/3联盟委员同时签批</Radio>
+            <Radio :label="200">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio label="300">所有联盟委员同时签批</Radio>
+            <Radio :label="300">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
@@ -171,15 +171,15 @@ export default {
       }
     ]
     let ruleJson = {
-      '0': '任意一个联盟委员签批',
-      '100': '1/3联盟委员同时签批',
-      '200': '2/3联盟委员同时签批',
-      '300': '所有联盟委员同时签批'
+      0: '任意一个联盟委员签批',
+      100: '1/3联盟委员同时签批',
+      200: '2/3联盟委员同时签批',
+      300: '所有联盟委员同时签批'
     }
     return {
       ruleJson,
-      rule: '',
-      old_rule: '',
+      rule: '200',
+      old_rule: '100',
       review_rule: '',
       applicant_name: '',
       listLoading: false,
@@ -233,7 +233,7 @@ export default {
       this.listLoading = true
       api.pbqrc({
         'menu': 'chaincommittee',
-        reviewType: 'chain_manager',
+        reviewType: 'chain_committee',
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false

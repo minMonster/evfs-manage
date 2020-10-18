@@ -51,7 +51,7 @@ const menu = [
     name: 'business',
     text: '业务域',
     children: [
-      // { text: '业务系统准入', name: 'business-permission' },
+      { text: '业务系统准入', name: 'business-permission' },
       { text: '数据操作规则', name: 'business-rule' },
       // { text: '域内数据治理', name: 'business-file' },
       { text: '合约治理', name: 'business-contract' },

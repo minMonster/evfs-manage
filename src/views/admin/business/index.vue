@@ -46,16 +46,6 @@ import * as api from './api'
 export default {
   data () {
     let that = this
-    // {
-    //   "biz_id": "1",    // 业务域唯一标识（业务域id）
-    //   "main_storage_storage_id": "1", // 隶属数据存管域ID
-    //   "main_storage_storage_name":aa"", //隶属数据存管域名称
-    //   "biz_name": "业务域名称",			// 业务域名称
-    //   "rule": 300,
-    //   "information": "枚举暂缺",
-    //   "file_permission": "枚举暂缺",
-    //   "join_time": 1599704154000				//创建时间
-    // }
     let columns = [
       {
         title: '业务域名称',
@@ -216,9 +206,11 @@ export default {
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        this.getList()
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
       }).catch(err => {
         this.listLoading = false
         this.$Message.error(err.retMsg)

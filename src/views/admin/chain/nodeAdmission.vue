@@ -316,9 +316,11 @@ export default {
       let params = {}
       this.listLoading = true
       api.pbqan(params).then(res => {
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        this.getList()
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
         this.listLoading = false
       }).catch(err => {
         this.$Message.error(err.retMsg)

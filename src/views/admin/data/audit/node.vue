@@ -67,12 +67,12 @@ export default {
       },
       {
         title: '状态',
-        key: 'status',
+        key: 'user_status',
         width: 100,
         render (h, p) {
           let row = p.row
           let label = '--'
-          switch (row.status) {
+          switch (row.user_status) {
           case '1':
             label = '待审批'
             break
@@ -110,7 +110,7 @@ export default {
         width: 120,
         render (h, p) {
           let row = p.row
-          if (row.status !== '1') {
+          if (row.status !== '1' && row.user_status !== '1') {
             return h('span', '--')
           }
           let agree = h('a', {
@@ -197,9 +197,11 @@ export default {
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        this.getList()
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
       }).catch(err => {
         this.listLoading = false
         this.$Message.error(err.retMsg)
@@ -220,7 +222,7 @@ export default {
         domainId: sessionStorage.getItem('fbs_storage_id')
       }
       let data = await cApi.pbgen({
-        'method': 'BizDomainRuleAgreeContractTxReq',
+        'method': 'DSDomainDSNodeAgreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -264,10 +266,11 @@ export default {
     async refuse (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
+        domainId: sessionStorage.getItem('fbs_storage_id'),
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'CommitteeDisagreeContractTxReq',
+        'method': 'DSDomainDisagreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

@@ -157,7 +157,7 @@ export default {
         width: 120,
         render (h, p) {
           let row = p.row
-          if (row.status !== '1') {
+          if (row.status !== '1' && row.user_status !== '1') {
             return h('span', '--')
           }
           let agree = h('a', {
@@ -235,9 +235,11 @@ export default {
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        this.getList()
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
       }).catch(err => {
         this.listLoading = false
         this.$Message.error(err.retMsg)
