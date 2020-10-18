@@ -309,7 +309,7 @@ export default {
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'ChainNodeAgreeContractTxReq',
+        'method': 'CommitteeMemberAgreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

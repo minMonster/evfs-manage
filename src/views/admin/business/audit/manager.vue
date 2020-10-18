@@ -288,14 +288,6 @@ export default {
         this.$Message.error(err.retMsg)
       })
     },
-    // 查看
-    adds (obj) {
-      this.$Modal.confirm({
-        title: '已审核人列表',
-        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
-        oktext: '关闭'
-      })
-    },
     async agree (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),

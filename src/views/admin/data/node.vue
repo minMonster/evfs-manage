@@ -112,7 +112,7 @@ export default {
       },
       {
         title: '服务器身份标识',
-        key: 'node_server_id'
+        key: 'chainnode_id'
       },
       {
         title: '节点类型',

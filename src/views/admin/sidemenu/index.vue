@@ -28,7 +28,7 @@ const menu = [
       { text: '链联盟委员会', name: 'chain-alliance' },
       { text: '节点准入', name: 'chain-nodeadmission' },
       { text: '前置节点准入', name: 'chain-frontnodelicence' },
-      { text: '运行证许可', name: 'chain-operation' },
+      { text: '运行许可证', name: 'chain-operation' },
       { text: '主节点授权', name: 'mainnode' },
       { text: '数据存管域授权', name: 'dataauth' },
       { text: '链管理员', name: 'chainmanager' },

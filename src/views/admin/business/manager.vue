@@ -155,6 +155,8 @@ export default {
       columns,
       oldList: [],
       list: [],
+      name: '',
+      address: '',
       page: {
         total: 1,
         current: 1,

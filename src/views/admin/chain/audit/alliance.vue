@@ -237,12 +237,14 @@ export default {
         address: sessionStorage.getItem('fbs_address')
       }).then(res => {
         this.listLoading = false
-        this.oldList = res.rows
-        this.page.total = this.oldList.length
-        this.getList()
+        if (res.rows) {
+          this.oldList = res.rows
+          this.page.total = this.oldList.length
+          this.getList()
+        }
       }).catch(err => {
-        this.listLoading = false
         this.$Message.error(err.retMsg)
+        this.listLoading = false
       })
     },
     // 查看
@@ -438,11 +440,11 @@ export default {
       }
     },
     adds (obj) {
-      this.$Modal.confirm({
-        title: '已审核人列表',
-        content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
-        oktext: '关闭'
-      })
+      // this.$Modal.confirm({
+      //   title: '已审核人列表',
+      //   content: 'name：' + obj.name + '<br> address：' + obj.address + ' <br>time：' + obj.time + '',
+      //   oktext: '关闭'
+      // })
     },
     ok () {
     },

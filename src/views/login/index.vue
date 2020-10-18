@@ -85,7 +85,6 @@ export default {
       }
       .header-info {
         margin-top: 18px;
-        width: 420px;
         height: 22px;
         font-size: 16px;
         font-family: PingFangSC, PingFangSC-Semibold;
@@ -114,7 +113,6 @@ export default {
           line-height: 25px;
         }
         p:first-child {
-          width: 169px;
           height: 20px;
           font-size: 14px;
           font-family: PingFangSC, PingFangSC-Regular;

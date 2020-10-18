@@ -144,7 +144,15 @@ export default {
       },
       {
         title: '创建时间',
-        key: 'join_time'
+        key: 'join_time',
+        render (h, p) {
+          let row = p.row
+          if (!row.join_time) {
+            return h('span', '--')
+          } else {
+            return h('span', that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss'))
+          }
+        }
       },
       // {
       //   title: '状态',
@@ -165,6 +173,13 @@ export default {
                 // let index = p.index
                 // let { mainActive, showDataSubmenu, showBusinessSubmenu } = that.$route.query
                 // let { showBusinessSubmenu } = that.$route.query
+                let formatStorage = {
+                  ...row,
+                  storage_id_format: that.formatId(row.storage_id),
+                  create_org_address_format: that.formatId(row.create_org_address),
+                  join_time_format: row.join_time ? that.$moment.unix(row.join_time / 1000).format('YYYY-MM-DD HH:mm:ss') : '--'
+                }
+                sessionStorage.setItem('fbs_storage', JSON.stringify(formatStorage))
                 sessionStorage.setItem('fbs_storage_id', row.storage_id)
                 that.$router.push({
                   name: 'data-detail',
@@ -220,6 +235,15 @@ export default {
 
   },
   methods: {
+    formatId (id) {
+      if (!id) {
+        return '--'
+      }
+      let stringlength = id.length
+      let fistStr = id.substring(0, 6)
+      let lastStr = id.substring(stringlength - 6, stringlength)
+      return fistStr + '.....' + lastStr
+    },
     init () {
       api.pbqsl().then(res => {
         this.listLoading = false

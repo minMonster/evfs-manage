@@ -338,7 +338,7 @@ export default {
         rule: this.rule
       }
       let data = await cApi.pbgen({
-        'method': 'AdminRuleApplyContractTxReq',
+        'method': 'CommitteeRuleApplyContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {

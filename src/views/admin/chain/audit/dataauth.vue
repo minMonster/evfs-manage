@@ -206,10 +206,11 @@ export default {
     async agree (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
+        domainId: row.address,
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'DSDomainAgreeContractTxReq',
+        'method': 'DSDomainMemberAgreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -253,10 +254,11 @@ export default {
     async refuse (row) {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
+        domainId: row.address,
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'AdminDisagreeContractTxReq',
+        'method': 'DSDomainDisagreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
