@@ -29,11 +29,16 @@
         </span>
       </div>
       <div>
-        <Table :columns="columns1" :data="data1"></Table>
+        <Table :columns="columns" :loading="listLoading" :data="list"></Table>
       </div>
       <div class="page">
         <div class="page-inner">
-          <Page :total="total" @on-change="pageChange" />
+          <Page
+            show-sizer
+            :total="page.total"
+            :current="page.current"
+            @on-change="pageChange"
+            @on-page-size-change="sizeChange"/>
         </div>
       </div>
     </div>
@@ -41,10 +46,12 @@
 </template>
 
 <script>
+import * as api from '../api'
+import * as cApi from '@/http/api'
 export default {
   data () {
     let that = this
-    let columns1 = [
+    let columns = [
       {
         title: '业务系统名称',
         key: 'name'
@@ -55,7 +62,7 @@ export default {
       },
       {
         title: '添加时间',
-        key: 'time',
+        key: 'join_time',
         render (h, p) {
           let row = p.row
           if (!row.join_time) {
@@ -67,12 +74,28 @@ export default {
       },
       {
         title: '状态',
-        key: 'statuslabel'
+        key: 'status',
+        render (h, p) {
+          let row = p.row
+          let label = '--'
+          switch (row.status) {
+          case '1':
+            label = '待审批'
+            break
+          case '2':
+            label = '已同意'
+            break
+          case '3':
+            label = '审核拒绝'
+            break
+          }
+          return h('span', label)
+        }
       },
       {
         width: 120,
         title: '申请人',
-        key: 'applicant'
+        key: 'applicant_name'
       },
       {
         width: 130,
@@ -82,7 +105,7 @@ export default {
           return h('a', {
             on: {
               click () {
-                that.adds(row)
+                that.$QueryApprovedDialog.show(row)
               }
             }
           }, '查看')
@@ -91,6 +114,10 @@ export default {
       {
         title: '操作',
         render (h, p) {
+          let row = p.row
+          if (row.status !== '1' || row.user_status !== '1') {
+            return h('span', '--')
+          }
           let agree = h('a', {
             style: {
               marginRight: '8px'
@@ -101,6 +128,7 @@ export default {
             on: {
               click () {
                 // let index = p.index
+                that.agree(row)
               }
             }
           }, '同意')
@@ -110,6 +138,7 @@ export default {
             },
             on: {
               click () {
+                that.refuse(row)
                 // let index = p.index
               }
             }
@@ -122,19 +151,24 @@ export default {
         }
       }
     ]
-    let data1 = [
-      { name: '上海公证系统', address: '00740f...aaba8', applicant: '张力', time: '2020-1-5 10:45:25', statuslabel: '删除审核中', status: '2' },
-      { name: '四川公证系统', address: '00da0c...cfbe5', applicant: '张力', time: '--', statuslabel: '添加审核中', status: '1' },
-      { name: '四川公证系统', address: '00da0c...cfbe5', applicant: '张力', time: '--', statuslabel: '添加审核中', status: '1' }
-    ]
     return {
-      acceptLimit: '1/3',
-      name: '',
-      address: '',
-      addModal: false,
-      columns1,
-      data1,
-      total: 100,
+      listLoading: false,
+      columns,
+      oldList: [
+        // {
+        //   'member_id': 1,
+        //   'member_address': '1',
+        //   'main_committeegroup_group_id': '1',
+        //   'join_time': 1598345923000,
+        //   'member_name': '名称'
+        // }
+      ],
+      list: [],
+      page: {
+        total: 1,
+        current: 1,
+        size: 10
+      },
       form: {
         name: '',
         address: ''
@@ -148,7 +182,22 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    init () {},
+    init () {
+      this.listLoading = true
+      api.pbqrc({
+        'menu': 'biz',
+        reviewType: 'biz_node',
+        address: sessionStorage.getItem('fbs_address')
+      }).then(res => {
+        this.listLoading = false
+        this.oldList = res.rows
+        this.page.total = this.oldList.length
+        this.getList()
+      }).catch(err => {
+        this.listLoading = false
+        this.$Message.error(err.retMsg)
+      })
+    },
     // 查看
     adds (obj) {
       this.$Modal.confirm({
@@ -157,10 +206,117 @@ export default {
         oktext: '关闭'
       })
     },
+    async agree (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id,
+        'domainId': sessionStorage.getItem('fbs_biz_id') // 业务域ID
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainBizSysAgreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                this.init()
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
+    async refuse (row) {
+      let jsBody = {
+        from: sessionStorage.getItem('fbs_address'),
+        reqId: row.review_id,
+        'domainId': sessionStorage.getItem('fbs_biz_id') // 业务域ID
+      }
+      let data = await cApi.pbgen({
+        'method': 'BizDomainDisagreeContractTxReq',
+        'jsBody': JSON.stringify(jsBody)
+      }).then(res => {
+        return {
+          hexTxBody: res.hexTxBody,
+          txId: res.txId
+        }
+      }).catch(err => {
+        this.$Message.error(err.retMsg)
+        return false
+      })
+      if (data) {
+        this.$qrCodeAuthDialog.show(
+          {
+            url: 'bs/pbdtx.do',
+            data,
+            // 这里要写一个闭包函数 返回 需要的 api
+            setIntervalFunc: () => cApi.pbgts({ txId: data.txId }),
+            func: 'send_trans'
+          },
+          (resPromise) => {
+            // resPromise 轮询的结果 在此处处理业务逻辑
+            return resPromise.then(res => {
+              // 1待提交；2执行中；3执行完成；4执行失败；5提交失败；6未知状态
+              if (res.status === 4 || res.status === 5 || res.status === 6) {
+                this.$Message.error(res.remark)
+                return true
+              }
+              if (res.status === 3) {
+                this.$Message.success('修改成功')
+                this.addModal = false
+                return true
+              } else {
+                return false
+              }
+            }).catch(() => {
+              return false
+            })
+          })
+      }
+    },
     ok () {},
     cancel () {},
+    getList () {
+      this.list = this.oldList.slice((this.page.current - 1) * this.page.size, this.page.size * this.page.current)
+    },
+    sizeChange (size) {
+      this.page.current = 1
+      this.page.size = size
+      this.getList()
+    },
+    // 分页
     pageChange (page) {
-      console.log(page)
+      this.page.current = page
+      this.getList()
     }
   }
 }

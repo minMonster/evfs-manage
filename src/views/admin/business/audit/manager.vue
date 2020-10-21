@@ -169,7 +169,7 @@ export default {
         title: '操作',
         render (h, p) {
           let row = p.row
-          if (row.status !== '1') {
+          if (row.status !== '1' || row.user_status !== '1') {
             return h('span', '--')
           }
           let agree = h('a', {
@@ -389,7 +389,7 @@ export default {
     async agreeRule () {
       let jsBody = {
         from: sessionStorage.getItem('fbs_address'),
-        'domainId': sessionStorage.getItem('fbs_storage_id'), // 存管域ID
+        'domainId': sessionStorage.getItem('fbs_biz_id'), // 存管域ID
         reqId: this.review_rule
       }
       let data = await cApi.pbgen({

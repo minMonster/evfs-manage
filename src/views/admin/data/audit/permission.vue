@@ -157,7 +157,7 @@ export default {
         width: 120,
         render (h, p) {
           let row = p.row
-          if (row.status !== '1' && row.user_status !== '1') {
+          if (row.status !== '1' || row.user_status !== '1') {
             return h('span', '--')
           }
           let agree = h('a', {

@@ -34,12 +34,12 @@ export default {
   data () {
     return {
       tabs: {
-        // 'business-permission': {
-        //   name: '业务系统准入',
-        //   num: 0,
-        //   nodeName: 'permission'
-        // },
         'business-permission': {
+          name: '业务系统准入',
+          num: 0,
+          nodeName: 'permission'
+        },
+        'biz_file': {
           name: '文件操作规则',
           num: 0,
           nodeName: 'rule',

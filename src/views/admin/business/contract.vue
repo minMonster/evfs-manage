@@ -115,10 +115,7 @@ export default {
       },
       {
         title: '状态',
-        key: 'status'
-      },
-      {
-        title: '操作',
+        key: 'status',
         render (h, p) {
           let row = p.row || {}
           let label = ''
@@ -129,10 +126,28 @@ export default {
           if (status === '2') {
             label = '解冻'
           }
+          return h('span', label)
+        }
+      },
+      {
+        title: '操作',
+        render (h, p) {
+          let row = p.row || {}
+          let label = ''
+          let status = row.status
+          let params = 1
+          if (status === '1') {
+            label = '解冻'
+            params = 2
+          }
+          if (status === '2') {
+            label = '冻结'
+            params = 1
+          }
           return h('a', {
             on: {
               click () {
-                that.del(row, status)
+                that.del(row, params)
               }
             }
           }, label)
