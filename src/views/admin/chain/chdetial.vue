@@ -224,6 +224,7 @@ export default {
                 this.$Message.success('添加成功')
                 this.$router.go(-1)
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false

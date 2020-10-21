@@ -266,6 +266,7 @@ export default {
                 this.$Message.success('添加成功')
                 this.init()
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false
@@ -316,6 +317,7 @@ export default {
                 this.$Message.success('修改成功')
                 this.init()
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false

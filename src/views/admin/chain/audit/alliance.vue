@@ -1,7 +1,7 @@
 <template>
   <div class="alliance">
     <div>
-      <div class="padding bg-white" style="margin-bottom: 20px;" v-if="rule">
+      <div class="padding bg-white" style="margin-bottom: 20px;" v-if="rule !== ''">
         <div style="margin-bottom: 20px;color: #273D52;">
           <span>联盟委员决议审批规则：</span>
           <Tooltip
@@ -15,28 +15,28 @@
         <RadioGroup class="approval" v-model="rule">
           <Row>
             <Col span="6">
-            <Radio :label="0">任意一个联盟委员签批</Radio>
+            <Radio :disabled="rule !== 0" :label="0">任意一个联盟委员签批</Radio>
             </Col>
             <Col span="6">
-            <Radio :label="100">1/3联盟委员同时签批</Radio>
+            <Radio :disabled="rule !== 100" :label="100">1/3联盟委员同时签批</Radio>
             </Col>
           </Row>
           <Row>
             <Col span="6">
-            <Radio :label="200">2/3联盟委员同时签批</Radio>
+            <Radio :disabled="rule !== 200" :label="200">2/3联盟委员同时签批</Radio>
             </Col>
             <Col span="6">
-            <Radio :label="300">所有联盟委员同时签批</Radio>
+            <Radio :disabled="rule !== 300" :label="300">所有联盟委员同时签批</Radio>
             </Col>
           </Row>
         </RadioGroup>
-        <div class="audit-item" v-if="old_rule">
+        <div class="audit-item" v-if="old_rule !== ''">
           <div class="audit-item-content" >
             <P>变更前：</P>
             <div>联盟委员决议审批规则：{{ruleJson[old_rule]}}</div>
             <div>申请人： {{applicant_name}}<span>审核通过人： <a href="javascript:;">查看</a></span></div>
           </div>
-          <div class="audit-item-btns">
+          <div class="audit-item-btns" v-if="ruleInfo.status === '1' && ruleInfo.user_status === '1'">
             <div class="btn-inner">
               <button class="refuse-btn" @click="refuseRule">拒绝</button>
               <button class="agree-btn" @click="agreeRule">同意</button>
@@ -181,6 +181,7 @@ export default {
       rule: '200',
       old_rule: '100',
       review_rule: '',
+      ruleInfo: null,
       applicant_name: '',
       listLoading: false,
       columns,
@@ -223,9 +224,10 @@ export default {
       }).then(res => {
         if (res.rows) {
           let data = res.rows[0]
-          this.rule = data.rule || ''
+          this.rule = data.rule
           this.review_rule = data.review_id
-          this.old_rule = data.old_rule || ''
+          this.old_rule = data.old_rule
+          this.ruleInfo = data
         } else {
           this.rule = false
         }
@@ -288,6 +290,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false
@@ -335,6 +338,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false
@@ -382,6 +386,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false
@@ -429,6 +434,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false

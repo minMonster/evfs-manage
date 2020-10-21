@@ -182,6 +182,7 @@ export default {
                 this.$router.go(-1)
                 this.$Message.success('保存成功！')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false

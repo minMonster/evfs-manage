@@ -120,8 +120,13 @@ export default {
           res.rows.forEach(r => {
             for (let i in this.tabs) {
               if (i === r.review_type) {
-                this.tabs[i].num = r.num
-                console.log(i)
+                this.tabs[i].num += r.num
+              }
+              if (r.review_type === 'chain_manager_rule') {
+                this.tabs['chain_manager_rule'].num += r.num
+              }
+              if (r.review_type === 'chain_committee_rule') {
+                this.tabs['chain_committee_rule'].num += r.num
               }
             }
           })

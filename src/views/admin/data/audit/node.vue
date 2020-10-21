@@ -253,6 +253,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false
@@ -301,6 +302,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false

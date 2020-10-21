@@ -212,7 +212,7 @@ export default {
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'DSDomainMemberAgreeContractTxReq',
+        'method': 'DSDomainAgreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -243,6 +243,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false
@@ -260,7 +261,7 @@ export default {
         reqId: row.review_id
       }
       let data = await cApi.pbgen({
-        'method': 'DSDomainDisagreeContractTxReq',
+        'method': 'AdminDisagreeContractTxReq',
         'jsBody': JSON.stringify(jsBody)
       }).then(res => {
         return {
@@ -291,6 +292,7 @@ export default {
               if (res.status === 3) {
                 this.$Message.success('修改成功')
                 this.addModal = false
+                this.init()
                 return true
               } else {
                 return false
