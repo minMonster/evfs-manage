@@ -1,6 +1,6 @@
 <template>
   <div class="alliance">
-    <div class="nodeback" @click="back" style="cursor: pointer;margin-bottom:10px;">< 退出</div>
+    <div class="nodeback" @click="back" style="cursor: pointer;margin-bottom:10px;">&lt; 退出</div>
     <div style="margin-bottom: 15px;color: #273D52;font-weight: 600;">
       <span>基本信息</span>
       <div>

@@ -91,7 +91,7 @@ export default {
       active: ''
     }
   },
-  mounted () {
+  created () {
     this.init()
     let query = this.$route.query
     let mapRoute = {
@@ -112,21 +112,23 @@ export default {
   },
   methods: {
     init () {
+      let that = this
       api.pbqrm({
         menu: 'chaingroup', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
         'address': sessionStorage.getItem('fbs_address') // 登陆人的地址
       }).then(res => {
         if (res.rows) {
+          console.log(that.tabs)
           res.rows.forEach(r => {
-            for (let i in this.tabs) {
+            for (let i in that.tabs) {
               if (i === r.review_type) {
-                this.tabs[i].num += r.num
+                that.tabs[i].num += r.num
               }
               if (r.review_type === 'chain_manager_rule') {
-                this.tabs['chain_manager_rule'].num += r.num
+                that.tabs['chain_committee'].num += r.num
               }
               if (r.review_type === 'chain_committee_rule') {
-                this.tabs['chain_committee_rule'].num += r.num
+                that.tabs['chain_manager'].num += r.num
               }
             }
           })

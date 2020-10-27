@@ -47,25 +47,25 @@ export default {
         //   num: 0,
         //   nodeName: 'rule'
         // },
-        'data-node': {
+        'storage': {
           name: '节点准入',
           num: 0,
           nodeName: 'node',
           review_type: 'storage'
         },
-        'data-permission': {
+        'storage_license': {
           name: '运营许可证',
           num: 0,
           nodeName: 'permission',
           review_type: 'storage_license'
         },
-        'data-business': {
+        'storage_biz': {
           name: '业务域',
           num: 0,
           nodeName: 'business',
           review_type: 'storage_biz'
         },
-        'data-manager': {
+        'storage_manage': {
           name: '域管理员',
           num: 0,
           nodeName: 'manager',
@@ -77,7 +77,13 @@ export default {
         //   nodeName: 'alliance'
         // }
       },
-      active: 'data-node'
+      routeMap: {
+        'data-node': 'storage',
+        'storage_license': 'storage_license',
+        'data-business': 'storage_biz',
+        'data-manager': 'storage_manage'
+      },
+      active: 'storage_manage'
     }
   },
   watch: {
@@ -90,16 +96,19 @@ export default {
   },
   methods: {
     init () {
+      let that = this
       api.pbqrm({
         menu: 'storage', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
         'address': sessionStorage.getItem('fbs_address') // 登陆人的地址
       }).then(res => {
         if (res.rows) {
           res.rows.forEach(r => {
-            for (let i in this.tabs) {
-              if (this.tabs[i].review_type === r.review_type) {
-                this.tabs[i].num = r.num
-                console.log(i)
+            for (let i in that.tabs) {
+              if (i === r.review_type) {
+                that.tabs[i].num += r.num
+              }
+              if (r.review_type === 'biz_manage_rule') {
+                that.tabs['biz_manage'].num += r.num
               }
             }
           })
@@ -110,10 +119,10 @@ export default {
     initTab () {
       let query = this.$route.query
       let tab = query.tab
-      if (this.tabs[tab]) {
-        this.active = tab
+      if (this.routeMap[tab]) {
+        this.active = this.routeMap[tab]
       } else {
-        this.active = 'data-node'
+        this.active = 'storage_manage'
       }
     },
     changeTab (name) {

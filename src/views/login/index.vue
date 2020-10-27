@@ -63,7 +63,8 @@ export default {
 
 <style lang='less' type='text/less'>
     .login {
-      height: 900px;
+      height: 100vh;
+      min-height: 900px;
       overflow: hidden;
       background-color: #f5f6f9;
       box-sizing: content-box;

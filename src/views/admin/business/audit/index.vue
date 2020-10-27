@@ -34,10 +34,11 @@ export default {
   data () {
     return {
       tabs: {
-        'business-permission': {
+        'biz_node': {
           name: '业务系统准入',
           num: 0,
-          nodeName: 'permission'
+          nodeName: 'permission',
+          review_type: 'biz_node'
         },
         'biz_file': {
           name: '文件操作规则',
@@ -51,44 +52,66 @@ export default {
         //   nodeName: 'file',
         //   review_type: 'storage'
         // },
-        'business-contract': {
+        'biz_contract': {
           name: '域内合约治理',
           num: 0,
           nodeName: 'contract',
           review_type: 'biz_contract'
         },
-        'business-manager': {
+        'biz_manage': {
           name: '域管理员',
           num: 0,
           nodeName: 'manager',
           review_type: 'biz_manage'
         }
       },
-      active: 'business-manager'
+      routeMap: {
+        'business-permission': 'biz_node',
+        'business-rule': 'biz_file',
+        'business-contract': 'biz_contract',
+        'business-manager': 'biz_manage'
+      },
+      active: 'biz_manage'
     }
   },
   watch: {
+    $route (n) {
+      this.initTab()
+    }
   },
   mounted () {
     this.init()
   },
   methods: {
     init () {
+      let that = this
       api.pbqrm({
         menu: 'biz', // 身份角色：审批人员类型[chaincommittee 联盟委员会,chaingroup 链管理员,storage 数据存管域,biz 业务域]
         'address': sessionStorage.getItem('fbs_address') // 登陆人的地址
       }).then(res => {
         if (res.rows) {
           res.rows.forEach(r => {
-            for (let i in this.tabs) {
-              if (this.tabs[i].review_type === r.review_type) {
-                this.tabs[i].num = r.num
-                console.log(i)
+            for (let i in that.tabs) {
+              if (i === r.review_type) {
+                that.tabs[i].num += r.num
+              }
+              if (r.review_type === 'biz_manage_rule') {
+                that.tabs['biz_manage'].num += r.num
               }
             }
           })
         }
       })
+      that.initTab()
+    },
+    initTab () {
+      let query = this.$route.query
+      let tab = query.tab
+      if (this.routeMap[tab]) {
+        this.active = this.routeMap[tab]
+      } else {
+        this.active = 'biz_manage'
+      }
     },
     changeTab (name) {
       console.log(name)

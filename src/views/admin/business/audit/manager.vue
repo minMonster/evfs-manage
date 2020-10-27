@@ -30,7 +30,7 @@
             <div>业务域管理员决议审批规则：{{ruleJson[old_rule]}}</div>
             <div>申请人： {{applicant_name}}<span>审核通过人： <a @click="showRule">查看</a></span></div>
           </div>
-          <div class="audit-item-btns" v-if="ruleInfo.status === '1' && ruleInfo.user_status === '1'">
+          <div class="audit-item-btns" v-if="ruleInfo && ruleInfo.status === '1' && ruleInfo.user_status === '1'">
             <div class="btn-inner">
               <button class="refuse-btn" @click="refuseRule">拒绝</button>
               <button class="agree-btn" @click="agreeRule">同意</button>
@@ -271,7 +271,7 @@ export default {
           this.review_rule = data.review_id
           this.ruleInfo = data
         } else {
-          this.rule = false
+          this.rule = ''
         }
       })
       this.listLoading = true

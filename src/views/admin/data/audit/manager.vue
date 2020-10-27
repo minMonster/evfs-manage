@@ -270,6 +270,8 @@ export default {
           this.old_rule = data.old_rule
           this.review_rule = data.review_id
           this.ruleInfo = data
+        } else {
+          this.rule = ''
         }
       })
       this.listLoading = true
